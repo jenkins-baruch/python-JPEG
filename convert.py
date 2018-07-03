@@ -1,5 +1,5 @@
 import numpy as np
-
+from PIL import Image
 
 def get_bitmap_from_bmp(path: str) -> np.ndarray:
     """Method to read .bmp file and return the image bitmap
@@ -10,4 +10,9 @@ def get_bitmap_from_bmp(path: str) -> np.ndarray:
     Returns:
         np.ndarray -- 2D array that present the bitmap
     """
+
+    # HowTo:
+    # Search "python read image matrix with PIL"
+    # Search "python PIL image to numpy array"
+
     pass
