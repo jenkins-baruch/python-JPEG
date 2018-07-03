@@ -16,3 +16,4 @@ def get_bitmap_from_bmp(path: str) -> np.ndarray:
     # Search "python PIL image to numpy array"
 
     pass
+# try
