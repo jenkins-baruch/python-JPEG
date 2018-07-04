@@ -14,6 +14,6 @@ def get_bitmap_from_bmp(path: str) -> np.ndarray:
     # HowTo:
     # Search "python read image matrix with PIL"
     # Search "python PIL image to numpy array"
-    # Or read the .bmp directly and parse it by bmp format. this is harder
+    # Or read the .bmp directly and parse it by bmp format. this is harder 
 
     pass
