@@ -1,0 +1,14 @@
+language: python
+python:
+  - "3.6"
+# command to install dependencies
+install:
+  - pip install nosexcover
+  - pip install pylint
+  - pip install pipreqs
+  - pipreq ./
+  - pip install -r requirements.txt
+# command to run tests
+script:
+  - nosetests --with-xcoverage --with-xunit --cover-package=myapp --cover-erase
+  - pylint -f parseable python-jpeg/ | tee pylint.out
