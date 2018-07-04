@@ -11,8 +11,9 @@ def get_bitmap_from_bmp(path: str) -> np.ndarray:
         np.ndarray -- 2D array that present the bitmap
     """
 
-    # HowTo:
+    # HowTo do it:
     # Search "python read image matrix with PIL"
     # Search "python PIL image to numpy array"
+    # Or read the .bmp directly and parse it by bmp format. this is harder 
 
     pass
