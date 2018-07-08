@@ -42,6 +42,41 @@ def YCbCr_Downstream(matrix:ndarray)->ndarray:
     Returns:
         ndarray -- The new image matrix with downstreamed YCbCr
     """
+    pass
+
+def split_matrix_into_submatrixs(matrix:ndarray)->list:
+    """Split the bitmap to 8*8 matrixs
+    
+    Arguments:
+        matrix {ndarray} -- The image bitmap
+    
+    Returns:
+        list -- list of all 8*8 ndarrays matrix
+    """
+
+    pass
+
+def centering_values_to_zero(submatrix:ndarray)->ndarray:
+    """Normalize YCbCr values- remove 128 from each object
+    
+    Arguments:
+        submatrix {ndarray} -- 8*8 Submatrix
+    
+    Returns:
+        ndarray -- 8*8 normalized submatrix
+    """
+
+    pass
+
+def discerete_cosine_transform(submatrix: ndarray)->ndarray:
+    """Calculate the DCT that discaide here- https://en.wikipedia.org/wiki/JPEG#Discrete_cosine_transform
+    
+    Arguments:
+        submatrix {ndarray} -- 8*8 matrix with normalized YCbCr
+    
+    Returns:
+        ndarray -- DCTed submatrix
+    """
 
     pass
 
