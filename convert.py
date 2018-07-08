@@ -44,6 +44,8 @@ def YCbCr_Downstream(matrix:ndarray)->ndarray:
     """
     pass
 
+# split into Y, Cb, Cr?? where? what is more helpfull?
+
 def split_matrix_into_submatrixs(matrix:ndarray)->list:
     """Split the bitmap to 8*8 matrixs
     
