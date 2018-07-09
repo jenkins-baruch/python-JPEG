@@ -17,7 +17,6 @@ def generate_one_color_matrix(x, y, pixel):
 
 class Test_get_bitmap_from_bmp(unittest.TestCase):
 
-    @unittest.expectedFailure
     def test_whiteImage_getAllWhite(self):
         test_matrix = generate_one_color_matrix(
             8**3, 8**3, [255, 255, 255])

@@ -1,24 +1,11 @@
 import sys
 from numpy import ndarray
 from PIL import Image
+import matplotlib
 
 
-def get_bitmap_from_bmp(path: str) -> ndarray:
-    """Method to read .bmp file and return the image bitmap
+get_bitmap_from_bmp = lambda path: matplotlib.image.imread(path)
 
-    Arguments:
-        path {str} -- The .bmp file path
-
-    Returns:
-        np.ndarray -- 2D array that present the bitmap,
-                      each pixel is array of [R,G,B]
-    """
-
-    # HowTo:
-    # Search "python read image matrix with PIL"
-    # Search "python PIL image to numpy array"
-
-    pass
 
 
 def RGB_to_YCbCr(matrix: ndarray)->ndarray:
