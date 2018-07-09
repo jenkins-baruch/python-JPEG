@@ -14,7 +14,6 @@ def get_colored_matrix(x, y):
 def generate_one_color_matrix(x, y, pixel):
     return np.array([[pixel for i in range(y)]for j in range(x)])
 
-
 class Test_get_bitmap_from_bmp(unittest.TestCase):
 
     def test_whiteImage_getAllWhite(self):
@@ -24,7 +23,6 @@ class Test_get_bitmap_from_bmp(unittest.TestCase):
             convert.get_bitmap_from_bmp(os.path.join("img", "white.bmp")),
             test_matrix)
 
-    @unittest.expectedFailure
     def test_BlackImage_getAllWhite(self):
         test_matrix = generate_one_color_matrix(
             8**3, 8**3, [0, 0, 0])
@@ -32,7 +30,6 @@ class Test_get_bitmap_from_bmp(unittest.TestCase):
             convert.get_bitmap_from_bmp(os.path.join("img", "black.bmp")),
             test_matrix)
 
-    @unittest.expectedFailure
     def test_ColoredImage_getAllWhite(self):
         test_matrix = get_colored_matrix(255, 255)
         np.testing.assert_array_equal(
