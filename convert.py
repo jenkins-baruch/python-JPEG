@@ -11,7 +11,7 @@ def get_bitmap_from_bmp(path: str) -> ndarray:
 
     Returns:
         np.ndarray -- 2D array that present the bitmap,
-        each pixel is array of [R,G,B]
+                      each pixel is array of [R,G,B]
     """
 
     # HowTo:
