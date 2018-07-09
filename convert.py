@@ -82,5 +82,8 @@ def discerete_cosine_transform(submatrix: ndarray)->ndarray:
 
     pass
 
+def quantization(submatrix: ndarray)->ndarray:
+    pass
+
 if __name__ == "__main__":
     get_bitmap_from_bmp(sys.argv[0])
