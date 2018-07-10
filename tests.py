@@ -44,21 +44,24 @@ class case_rgb_pixel_to_ycbcr(unittest.TestCase):
         expected = [255, 128, 128]
         actual = convert.rgb_pixel_to_ycbcr(*original)
         self.assertSequenceEqual(expected, actual,
-                                 f"The original pixel- {original} converted to {actual} and not to {expected} that expected")
+                                 "The original pixel- {} converted to {} and not to {} that expected"
+                                 .format(original, actual, expected))
 
     def test_blackpixel(self):
         original = [0, 0, 0]
         expected = [0, 128, 128]
         actual = convert.rgb_pixel_to_ycbcr(*original)
         self.assertSequenceEqual(expected, actual,
-                                 f"The original pixel- {original} converted to {actual} and not to {expected} that expected")
+                                 "The original pixel- {} converted to {} and not to {} that expected"
+                                 .format(original, actual, expected))
 
     def test_colorpixel(self):
         original = [48, 113, 219]  # #3071db Tchelet
         expected = [106, 192, 87]
         actual = convert.rgb_pixel_to_ycbcr(*original)
         self.assertSequenceEqual(expected, actual,
-                                 f"The original pixel- {original} converted to {actual} and not to {expected} that expected")
+                                 "The original pixel- {} converted to {} and not to {} that expected"
+                                 .format(original, actual, expected))
 
 
 if __name__ == "__main__":
