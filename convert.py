@@ -1,22 +1,22 @@
 import sys
 import numpy as np
 from PIL import Image
-import matplotlib
+from matplotlib import image, pyplot
 
 
 def get_bitmap_from_bmp(
-    path: str)->np.ndarray: return matplotlib.image.imread(path)
+    path: str)->np.ndarray: return image.imread(path)
 
 
-def rgb_pixel_to_ycbcr(r: int, g: int, b: int)->tuple:
-    return (
-        int(0 + .299 * r + .587 * g + .114 * b),         # Y'
-        int(128 - .168736 * r - .331264 * g + .5 * b),    # Cb
-        int(128 + .5 * r - .418688 * g - .081312 * b)    # Cr
-    )
+def rgb_pixel_to_ycbcr(r: int, g: int, b: int):
+    return [
+        int(round(0 + .299 * r + .587 * g + .114 * b)),         # Y'
+        int(round(128 - .168736 * r - .331264 * g + .5 * b)),    # Cb
+        int(round(128 + .5 * r - .418688 * g - .081312 * b))    # C
+    ]
 
 
-def RGB_to_YCbCr(matrix: np.ndarray)->np.ndarray:
+def RGB_to_YCbCr(matrix):
     """Converting pixels from RGB (Red, Green, Blue) to YCbCr (luma, blue-difference, red-difference)
 
     Arguments:
@@ -25,7 +25,7 @@ def RGB_to_YCbCr(matrix: np.ndarray)->np.ndarray:
     Returns:
         ndarray -- The new Bitmap with YCbCr as 2D array
     """
-    pass
+    return ((rgb_pixel_to_ycbcr(y[0],y[1],y[2]) for y in x) for x in matrix)
 
 
 def YCbCr_Downstream(matrix: np.ndarray)->np.ndarray:
