@@ -12,7 +12,7 @@ def rgb_pixel_to_ycbcr(r: int, g: int, b: int):
     return [
         int(round(0 + .299 * r + .587 * g + .114 * b)),         # Y'
         int(round(128 - .168736 * r - .331264 * g + .5 * b)),    # Cb
-        int(round(128 + .5 * r - .418688 * g - .081312 * b))    # C
+        int(round(128 + .5 * r - .418688 * g - .081312 * b))    # Cr
     ]
 
 
@@ -25,7 +25,7 @@ def RGB_to_YCbCr(matrix):
     Returns:
         ndarray -- The new Bitmap with YCbCr as 2D array
     """
-    return ((rgb_pixel_to_ycbcr(y[0],y[1],y[2]) for y in x) for x in matrix)
+    return ((rgb_pixel_to_ycbcr(y[0], y[1], y[2]) for y in x) for x in matrix)
 
 
 def YCbCr_Downstream(matrix: np.ndarray)->np.ndarray:

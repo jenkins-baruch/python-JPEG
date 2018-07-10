@@ -14,7 +14,8 @@ def get_colored_matrix(x, y):
 def generate_one_color_matrix(x, y, pixel):
     return np.array([[pixel for i in range(y)]for j in range(x)])
 
-class Test_get_bitmap_from_bmp(unittest.TestCase):
+
+class case_get_bitmap_from_bmp(unittest.TestCase):
 
     def test_whiteImage_getAllWhite(self):
         test_matrix = generate_one_color_matrix(
@@ -35,6 +36,29 @@ class Test_get_bitmap_from_bmp(unittest.TestCase):
         np.testing.assert_array_equal(
             convert.get_bitmap_from_bmp(os.path.join("img", "colored.bmp")),
             test_matrix)
+
+
+class case_rgb_pixel_to_ycbcr(unittest.TestCase):
+    def test_whitepixel(self):
+        original = [255, 255, 255]
+        expected = [255, 128, 128]
+        actual = convert.rgb_pixel_to_ycbcr(*original)
+        self.assertSequenceEqual(expected, actual,
+                                 f"The original pixel- {original} converted to {actual} and not to {expected} that expected")
+
+    def test_blackpixel(self):
+        original = [0, 0, 0]
+        expected = [0, 128, 128]
+        actual = convert.rgb_pixel_to_ycbcr(*original)
+        self.assertSequenceEqual(expected, actual,
+                                 f"The original pixel- {original} converted to {actual} and not to {expected} that expected")
+
+    def test_colorpixel(self):
+        original = [48, 113, 219]  # #3071db Tchelet
+        expected = [106, 192, 87]
+        actual = convert.rgb_pixel_to_ycbcr(*original)
+        self.assertSequenceEqual(expected, actual,
+                                 f"The original pixel- {original} converted to {actual} and not to {expected} that expected")
 
 
 if __name__ == "__main__":
