@@ -28,7 +28,7 @@ def RGB_to_YCbCr(matrix):
     return ((rgb_pixel_to_ycbcr(col[0], col[1], col[2]) for col in row) for row in matrix)
 
 
-def YCbCr_Downstream(matrix: np.ndarray)->np.ndarray:
+def YCbCr_Downstream(matrix):
     """Downstream the Cb and Cr with 4:2:0 correlation
 
     Arguments:
@@ -37,6 +37,7 @@ def YCbCr_Downstream(matrix: np.ndarray)->np.ndarray:
     Returns:
         ndarray -- The new image matrix with downstreamed YCbCr
     """
+    
     pass
 
 # split into Y, Cb, Cr?? where? what is more helpfull?
