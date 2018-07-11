@@ -8,7 +8,11 @@ path = os.getcwd()
 
 
 def get_colored_matrix(x, y):
-    return np.array([[[row % 255, col % 255, (row+col) % 255] for col in range(y)] for row in range(x)])
+    return np.array([
+        [
+            [row % 255, col % 255, (row+col) % 255] for col in range(y)
+        ] for row in range(x)
+    ])
 
 
 def generate_one_color_matrix(x, y, pixel):
@@ -67,17 +71,21 @@ class case_rgb_pixel_to_ycbcr(unittest.TestCase):
 class case_RGB_to_YCbCr(unittest.TestCase):
     def test_matrix(self):
         original = [
-            [(255, 255, 255),(48, 113, 219),(0,0,0),(48, 113, 219),(255,255,255)],
-            [(48, 113, 219),(0,0,0),(255,255,255),(48, 113, 219),(255,255,255)]
+            [(255, 255, 255), (48, 113, 219), (0, 0, 0),
+             (48, 113, 219), (255, 255, 255)],
+            [(48, 113, 219), (0, 0, 0), (255, 255, 255),
+             (48, 113, 219), (255, 255, 255)]
         ]
         expected = [
-            [(255, 128, 128),(106, 192, 87),(0,128,128),(106, 192, 87),(255,128,128)],
-            [(106, 192, 87),(0,128,128),(255,128,128),(106, 192, 87),(255,128,128)]
+            [(255, 128, 128), (106, 192, 87), (0, 128, 128),
+             (106, 192, 87), (255, 128, 128)],
+            [(106, 192, 87), (0, 128, 128), (255, 128, 128),
+             (106, 192, 87), (255, 128, 128)]
         ]
         actual = list(list(x) for x in convert.RGB_to_YCbCr(original))
         np.testing.assert_array_equal(expected, actual,
-                                 "The original pixel- {} converted to {} and not to {} that expected"
-                                 .format(original, actual, expected))
+                                      "The original pixel- {} converted to {} and not to {} that expected"
+                                      .format(original, actual, expected))
 
 
 if __name__ == "__main__":

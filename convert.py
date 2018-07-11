@@ -37,7 +37,7 @@ def YCbCr_Downstream(matrix):
     Returns:
         ndarray -- The new image matrix with downstreamed YCbCr
     """
-    
+
     pass
 
 # split into Y, Cb, Cr?? where? what is more helpfull?
