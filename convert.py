@@ -25,7 +25,7 @@ def RGB_to_YCbCr(matrix):
     Returns:
         ndarray -- The new Bitmap with YCbCr as 2D array
     """
-    return ((rgb_pixel_to_ycbcr(y[0], y[1], y[2]) for y in x) for x in matrix)
+    return ((rgb_pixel_to_ycbcr(col[0], col[1], col[2]) for col in row) for row in matrix)
 
 
 def YCbCr_Downstream(matrix: np.ndarray)->np.ndarray:
