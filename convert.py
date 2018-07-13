@@ -39,7 +39,7 @@ def YCbCr_Downstream(matrix):
         ndarray -- The new image matrix with downstreamed YCbCr
     """
 
-    return [[matrix[j-j%2][i-i%2] for i in range(len(matrix[j]))]for j in range(len(matrix))]
+    return ((matrix[j-j%2][i-i%2] for i in range(len(matrix[j])))for j in range(len(matrix)))
 
 
 # split into Y, Cb, Cr?? where? what is more helpfull?
