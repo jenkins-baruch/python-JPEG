@@ -38,11 +38,16 @@ def YCbCr_Downstream(matrix):
     Returns:
         ndarray -- The new image matrix with downstreamed YCbCr
     """
-
-    return ((matrix[j-j%2][i-i%2] for i in range(len(matrix[j])))for j in range(len(matrix)))
-
-
-# split into Y, Cb, Cr?? where? what is more helpfull?
+    return (
+        (
+            [
+                matrix[j][i][0],                # Y
+                matrix[j-j % 2][i-i % 2][1],    # Cb downstream
+                matrix[j-j % 2][i-i % 2][2]     # Cr downstrem
+            ]
+            for i in range(len(matrix[j]))      # index in row
+        ) for j in range(len(matrix))           # index in column
+    )
 
 
 def split_matrix_into_submatrixs(matrix):
@@ -54,8 +59,16 @@ def split_matrix_into_submatrixs(matrix):
     Returns:
         list -- list of all 8*8 ndarrays matrix
     """
-    
-    pass
+    return (
+        (
+            (
+                (matrix[row_index][col_index]
+                 for col_index in range(col, min(col+8, len(matrix[0]))))
+            )  # row in matrix
+            for row_index in range(row, min(row+8, len(matrix)))
+        )  # 8*8 matrix
+        for col in range(0, len(matrix[0]), 8) for row in range(0, len(matrix), 8)
+    )
 
 
 def centering_values_to_zero(submatrix: np.ndarray) -> np.ndarray:
