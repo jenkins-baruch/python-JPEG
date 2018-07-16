@@ -41,12 +41,11 @@ def YCbCr_Downstream(matrix):
     return (
         (
             [
-                matrix[j][i][0],                # Y
-                matrix[j-j % 2][i-i % 2][1],    # Cb downstream
-                matrix[j-j % 2][i-i % 2][2]     # Cr downstrem
-            ]
-            for i in range(len(matrix[j]))      # index in row
-        ) for j in range(len(matrix))           # index in column
+                matrix[j][i][0],  # Y
+                matrix[j - j % 2][i - i % 2][1],  # Cb downstream
+                matrix[j - j % 2][i - i % 2][2]  # Cr downstrem
+            ] for i in range(len(matrix[j]))  # index in row
+        ) for j in range(len(matrix))  # index in column
     )
 
 
@@ -61,17 +60,16 @@ def split_matrix_into_submatrixs(matrix):
     """
     return (
         (
-            (
-                (matrix[row_index][col_index]
-                 for col_index in range(col, min(col+8, len(matrix[0]))))
-            )  # row in matrix
-            for row_index in range(row, min(row+8, len(matrix)))
+            ((matrix[row_index][col_index]
+              for col_index in range(col, min(col + 8, len(matrix[0]))))
+             )  # row in matrix
+            for row_index in range(row, min(row + 8, len(matrix)))
         )  # 8*8 matrix
-        for col in range(0, len(matrix[0]), 8) for row in range(0, len(matrix), 8)
-    )
+        for col in range(0, len(matrix[0]), 8)
+        for row in range(0, len(matrix), 8))
 
 
-def centering_values_to_zero(submatrix: np.ndarray) -> np.ndarray:
+def centering_values_to_zero(submatrix):
     """Normalize YCbCr values- remove 128 from each object
 
     Arguments:
@@ -80,8 +78,8 @@ def centering_values_to_zero(submatrix: np.ndarray) -> np.ndarray:
     Returns:
         ndarray -- 8*8 normalized submatrix
     """
-
-    pass
+    return (([col[0] - 128, col[1] - 128, col[2] - 128] for col in row)
+            for row in submatrix)
 
 
 def discerete_cosine_transform(submatrix: np.ndarray) -> np.ndarray:

@@ -121,18 +121,14 @@ class case_YCbCr_Downstream(unittest.TestCase):
 
 class case_split_matrix_into_submatrixs(unittest.TestCase):
     def test_split_matrix_into_submatrixs(self):
-        original = [[x*y for x in range(16)] for y in range(16)]
-        expected = [
-            [[x*y for x in range(8)] for y in range(8)],
-            [[x*y for x in range(8)] for y in range(8, 16)],
-            [[x*y for x in range(8, 16)] for y in range(8)],
-            [[x*y for x in range(8, 16)] for y in range(8, 16)]
-        ]
+        original = [[x * y for x in range(16)] for y in range(16)]
+        expected = [[[x * y for x in range(8)] for y in range(8)],
+                    [[x * y for x in range(8)] for y in range(8, 16)],
+                    [[x * y for x in range(8, 16)] for y in range(8)],
+                    [[x * y for x in range(8, 16)] for y in range(8, 16)]]
         actual = list(
-            list(
-                list(list(row) for row in submatrix)
-            ) for submatrix in convert.split_matrix_into_submatrixs(original)
-        )
+            list(list(list(row) for row in submatrix))
+            for submatrix in convert.split_matrix_into_submatrixs(original))
 
         np.testing.assert_array_equal(
             expected, actual,
@@ -140,18 +136,32 @@ class case_split_matrix_into_submatrixs(unittest.TestCase):
             .format(original, actual, expected))
 
     def test_split_matrix_into_submatrixs_odd(self):
-        original = [[x*y for x in range(9)] for y in range(9)]
-        expected = [
-            [[x*y for x in range(8)] for y in range(8)],
-            [[x*y for x in range(8)] for y in range(8, 9)],
-            [[x*y for x in range(8, 9)] for y in range(8)],
-            [[x*y for x in range(8, 9)] for y in range(8, 9)]
-        ]
+        original = [[x * y for x in range(9)] for y in range(9)]
+        expected = [[[x * y for x in range(8)] for y in range(8)],
+                    [[x * y for x in range(8)] for y in range(8, 9)],
+                    [[x * y for x in range(8, 9)] for y in range(8)],
+                    [[x * y for x in range(8, 9)] for y in range(8, 9)]]
         actual = list(
-            list(
-                list(list(row) for row in submatrix)
-            ) for submatrix in convert.split_matrix_into_submatrixs(original)
-        )
+            list(list(list(row) for row in submatrix))
+            for submatrix in convert.split_matrix_into_submatrixs(original))
+
+        np.testing.assert_array_equal(
+            expected, actual,
+            "The original matrix- {} converted to {} and not to {} that expected"
+            .format(original, actual, expected))
+
+
+class case_centering_values_to_zero(unittest.TestCase):
+    def test_centering_values_to_zero(self):
+        original = [[[52, 55, 61], [66, 70, 61]],
+                    [[63, 59, 55], [90, 109, 85]], [[62, 59, 68],
+                                                    [113, 144, 104]]]
+        expected = [[[-76, -73, -67], [-62, -58, -67]],
+                    [[-65, -69, -73], [-38, -19, -43]], [[-66, -69, -60],
+                                                         [-15, 16, -24]]]
+        actual = list(
+            list(list(list(row) for row in submatrix))
+            for submatrix in convert.centering_values_to_zero(original))
 
         np.testing.assert_array_equal(
             expected, actual,
