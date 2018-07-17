@@ -1,4 +1,5 @@
 import sys
+import math
 import numpy as np
 from PIL import Image
 from matplotlib import image, pyplot
@@ -82,7 +83,23 @@ def centering_values_to_zero(submatrix):
             for row in submatrix)
 
 
-def discerete_cosine_transform(submatrix: np.ndarray) -> np.ndarray:
+def __alpha(u):
+    return 1 / math.sqrt(2) if u == 0 else 1
+
+
+def __G_uv(u, v, matrix):
+    return (1 / 4) * __alpha(u) * __alpha(v) * sum(
+        matrix[x][y] * math.cos((2 * x + 1) * u * math.pi / 16) * math.cos(
+            (2 * y + 1) * v * math.pi / 16) for x in range(len(matrix))
+        for y in range(len(matrix[0])))
+
+
+def discerete_cosine_transform(matrix):
+    return ((round(__G_uv(y, x, matrix), 2) for x in range(len(matrix[y])))
+            for y in range(len(matrix)))
+
+
+def dct_submatrixes(submatrix):
     """Calculate the DCT that discaide here- https://en.wikipedia.org/wiki/JPEG#Discrete_cosine_transform
 
     Arguments:
