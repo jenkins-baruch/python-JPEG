@@ -1,5 +1,5 @@
 import unittest
-import encode as convert
+import encode
 import numpy as np
 from matplotlib import pyplot
 import os
@@ -22,25 +22,25 @@ class case_get_bitmap_from_bmp(unittest.TestCase):
     def test_whiteImage_getAllWhite(self):
         test_matrix = generate_one_color_matrix(8**3, 8**3, [255, 255, 255])
         np.testing.assert_array_equal(
-            convert.get_bitmap_from_bmp(os.path.join("img", "white.bmp")),
+            encode.get_bitmap_from_bmp(os.path.join("img", "white.bmp")),
             test_matrix)
 
     def test_BlackImage_getAllBlack(self):
         test_matrix = generate_one_color_matrix(8**3, 8**3, [0, 0, 0])
         np.testing.assert_array_equal(
-            convert.get_bitmap_from_bmp(os.path.join("img", "black.bmp")),
+            encode.get_bitmap_from_bmp(os.path.join("img", "black.bmp")),
             test_matrix)
 
     def test_ColoredImage_getAllColored(self):
         test_matrix = get_colored_matrix(255, 255)
         np.testing.assert_array_equal(
-            convert.get_bitmap_from_bmp(os.path.join("img", "colored.bmp")),
+            encode.get_bitmap_from_bmp(os.path.join("img", "colored.bmp")),
             test_matrix)
 
     def test_NotProd8Size_ColoredImage(self):
         test_matrix = get_colored_matrix(100, 100)
         np.testing.assert_array_equal(
-            convert.get_bitmap_from_bmp(
+            encode.get_bitmap_from_bmp(
                 os.path.join("img", "colored_100x100.bmp")), test_matrix)
 
 
@@ -49,7 +49,7 @@ class case_rgb_pixel_to_ycbcr(unittest.TestCase):
     def test_whitepixel(self):
         original = [255, 255, 255]
         expected = [255, 128, 128]
-        actual = convert.rgb_pixel_to_ycbcr(*original)
+        actual = encode.rgb_pixel_to_ycbcr(*original)
         self.assertSequenceEqual(
             expected, actual,
             "The original pixel- {} converted to {} and not to {} that expected"
@@ -58,7 +58,7 @@ class case_rgb_pixel_to_ycbcr(unittest.TestCase):
     def test_blackpixel(self):
         original = [0, 0, 0]
         expected = [0, 128, 128]
-        actual = convert.rgb_pixel_to_ycbcr(*original)
+        actual = encode.rgb_pixel_to_ycbcr(*original)
         self.assertSequenceEqual(
             expected, actual,
             "The original pixel- {} converted to {} and not to {} that expected"
@@ -67,7 +67,7 @@ class case_rgb_pixel_to_ycbcr(unittest.TestCase):
     def test_colorpixel(self):
         original = [48, 113, 219]  # #3071db Tchelet
         expected = [106, 192, 87]
-        actual = convert.rgb_pixel_to_ycbcr(*original)
+        actual = encode.rgb_pixel_to_ycbcr(*original)
         self.assertSequenceEqual(
             expected, actual,
             "The original pixel- {} converted to {} and not to {} that expected"
@@ -89,7 +89,7 @@ class case_RGB_to_YCbCr(unittest.TestCase):
             [(106, 192, 87), (0, 128, 128), (0, 128, 128)],
             [(255, 128, 128), (106, 192, 87), (255, 128, 128)]
         ]
-        actual = list(list(x) for x in convert.RGB_to_YCbCr(original))
+        actual = list(list(x) for x in encode.RGB_to_YCbCr(original))
         np.testing.assert_array_equal(
             expected, actual,
             "The original pixel- {} converted to {} and not to {} that expected"
@@ -111,7 +111,7 @@ class case_YCbCr_Downstream(unittest.TestCase):
             [(48, 113, 219), (0, 113, 219)],
             [(255, 113, 219), (48, 113, 219)]
         ]
-        actual = list(list(x) for x in convert.YCbCr_Downstream(original))
+        actual = list(list(x) for x in encode.YCbCr_Downstream(original))
         np.testing.assert_array_equal(
             expected, actual,
             "The original pixel- {} converted to {} and not to {} that expected"
@@ -128,7 +128,7 @@ class case_YCbCr_Downstream(unittest.TestCase):
             [(0, 255, 255), (48, 255, 255), (4, 2, 3)],
             [(48, 113, 219), (0, 113, 219), (7, 8, 9)]
         ]
-        actual = list(list(x) for x in convert.YCbCr_Downstream(original))
+        actual = list(list(x) for x in encode.YCbCr_Downstream(original))
         np.testing.assert_array_equal(
             expected, actual,
             "The original pixel- {} converted to {} and not to {} that expected"
@@ -146,7 +146,7 @@ class case_split_matrix_into_submatrixs(unittest.TestCase):
         actual = list(
             list(list(list(row)
                       for row in submatrix))
-            for submatrix in convert.split_matrix_into_submatrixs(original))
+            for submatrix in encode.split_matrix_into_submatrixs(original))
 
         np.testing.assert_array_equal(
             expected, actual,
@@ -162,7 +162,7 @@ class case_split_matrix_into_submatrixs(unittest.TestCase):
         actual = list(
             list(list(list(row)
                       for row in submatrix))
-            for submatrix in convert.split_matrix_into_submatrixs(original))
+            for submatrix in encode.split_matrix_into_submatrixs(original))
 
         np.testing.assert_array_equal(
             expected, actual,
@@ -186,7 +186,7 @@ class case_centering_values_to_zero(unittest.TestCase):
         actual = list(
             list(list(list(row)
                       for row in submatrix))
-            for submatrix in convert.centering_values_to_zero(original))
+            for submatrix in encode.centering_values_to_zero(original))
 
         np.testing.assert_array_equal(
             expected, actual,
@@ -219,7 +219,7 @@ class case_discerete_cosine_transform(unittest.TestCase):
         ]
         actual = [
             [col for col in row]
-            for row in convert.discerete_cosine_transform(original)
+            for row in encode.discerete_cosine_transform(original)
         ]
 
         np.testing.assert_array_almost_equal(
@@ -259,7 +259,7 @@ class case_quantization(unittest.TestCase):
         ]
         actual = [[col
                    for col in row]
-                  for row in convert.quantization(original)]
+                  for row in encode.quantization(original)]
 
         np.testing.assert_array_equal(
             expected, actual, "The original matrix- {} converted to {} and not to {} that expected".format(original, actual, expected))
