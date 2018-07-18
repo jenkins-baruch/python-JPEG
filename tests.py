@@ -1,5 +1,5 @@
 import unittest
-import convert
+import encode as convert
 import numpy as np
 from matplotlib import pyplot
 import os
