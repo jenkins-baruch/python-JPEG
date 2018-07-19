@@ -1,5 +1,8 @@
 pipeline {
   agent any
+environment {
+    PATH = "$PATH:/var/lib/jenkins/.local/bin"
+  }
   stages {
     stage('status'){
         when { changeRequest target: 'master' }
@@ -9,7 +12,6 @@ pipeline {
     }
     stage('environment') {
       steps {
-        sh 'export PATH=$PATH:/var/lib/jenkins/.local/bin'
         sh 'touch $WORKSPACE/nosetests.xml'
         echo 'Generate requirements file'
         sh 'pipreqs --force $WORKSPACE/'
