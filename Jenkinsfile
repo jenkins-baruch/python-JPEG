@@ -20,8 +20,8 @@ environment {
     }
     stage('test'){
         steps{
-            sh "FILES=`ls -dm *.py | tr -d ' ' | tr -d '.py'`"
-            sh 'nosetests --with-coverage --cover-package=$FILES --cover-erase --cover-inclusive --cover-min-percentage=80'
+            //sh "FILES=`ls -dm *.py | tr -d ' ' | tr -d '.py'`"
+            sh "nosetests --with-coverage --cover-package=`ls -dm *.py | tr -d ' ' | tr -d '.py'` --cover-erase --cover-inclusive --cover-min-percentage=80"
         }
     }
   }
