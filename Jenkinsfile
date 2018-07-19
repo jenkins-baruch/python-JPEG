@@ -1,6 +1,9 @@
 pipeline {
   agent any
   stages {
+      stage('status'){
+          when { changeRequest target: 'master' }
+      }
     stage('build') {
       steps {
         sh 'pwd'
