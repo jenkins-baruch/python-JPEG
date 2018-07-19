@@ -3,6 +3,7 @@ pipeline {
   stages {
       stage('status'){
           when { changeRequest target: 'master' }
+          steps{}
       }
     stage('build') {
       steps {
