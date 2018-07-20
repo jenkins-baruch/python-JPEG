@@ -18,8 +18,8 @@ pipeline {
     }
     stage('publish') {
       steps {
-        //junit '**/nosetests.xml'
         cobertura(coberturaReportFile: '**/coverage.xml')
+        warnings(includePattern: 'pylint.out')
       }
     }
   }
