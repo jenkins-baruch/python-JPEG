@@ -6,3 +6,4 @@ localscript.py
 .noseids
 .coverage
 coverage.xml
+pylint.out

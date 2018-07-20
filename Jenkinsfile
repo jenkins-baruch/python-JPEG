@@ -19,7 +19,7 @@ pipeline {
     stage('publish') {
       steps {
         junit '**/nosetests.xml'
-        cobertura(coberturaReportFile: '**/coverage.xml')
+        //cobertura(coberturaReportFile: '**/coverage.xml')
       }
     }
   }
