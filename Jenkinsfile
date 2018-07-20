@@ -19,7 +19,6 @@ pipeline {
     stage('publish') {
       steps {
         cobertura(coberturaReportFile: '**/coverage.xml')
-        warnings(includePattern: 'pylint.out')
       }
     }
   }
