@@ -5,3 +5,4 @@ __pycache__/
 localscript.py
 .noseids
 .coverage
+coverage.xml
