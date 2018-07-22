@@ -4,16 +4,14 @@ import numpy as np
 from PIL import Image
 from matplotlib import image, pyplot
 
-quantization_matrix = [
-    [16, 11, 10, 16, 24, 40, 51, 61],
-    [12, 12, 14, 19, 26, 58, 60, 55],
-    [14, 13, 16, 24, 40, 57, 69, 56],
-    [14, 17, 22, 29, 51, 87, 80, 62],
-    [18, 22, 37, 56, 68, 109, 103, 77],
-    [24, 35, 55, 64, 81, 104, 113, 92],
-    [49, 64, 78, 87, 103, 121, 120, 101],
-    [72, 92, 95, 98, 112, 100, 103, 99]
-]
+quantization_matrix = [[16, 11, 10, 16, 24, 40, 51,
+                        61], [12, 12, 14, 19, 26, 58, 60,
+                              55], [14, 13, 16, 24, 40, 57, 69,
+                                    56], [14, 17, 22, 29, 51, 87, 80, 62],
+                       [18, 22, 37, 56, 68, 109, 103,
+                        77], [24, 35, 55, 64, 81, 104, 113,
+                              92], [49, 64, 78, 87, 103, 121, 120,
+                                    101], [72, 92, 95, 98, 112, 100, 103, 99]]
 
 
 def get_bitmap_from_bmp(path: str) -> np.ndarray:
@@ -75,7 +73,7 @@ def split_matrix_into_submatrixs(matrix):
         (
             ((matrix[row_index][col_index]
               for col_index in range(col, min(col + 8, len(matrix[0]))))
-             )  # row in matrix
+            )  # row in matrix
             for row_index in range(row, min(row + 8, len(matrix)))
         )  # 8*8 matrix
         for col in range(0, len(matrix[0]), 8)
@@ -100,12 +98,12 @@ def cos_element(x, u):
     return math.cos((2 * x + 1) * u * math.pi / 16)
 
 
-def __alpha(u):
+def alpha(u):
     return 1 / math.sqrt(2) if u == 0 else 1
 
 
 def __G_uv(u, v, matrix):
-    return (1 / 4) * __alpha(u) * __alpha(v) * sum(
+    return (1 / 4) * alpha(u) * alpha(v) * sum(
         matrix[x][y] * cos_element(x, u) * cos_element(y, v)
         for x in range(len(matrix))
         for y in range(len(matrix[0])))
@@ -118,12 +116,6 @@ def discerete_cosine_transform(matrix):
 
 
 def quantization(submatrix):
-    return (
-        (round(submatrix[row][col]/quantization_matrix[row][col])
-         for col in range(len(submatrix[row])))
-        for row in range(len(submatrix))
-    )
-
-
-if __name__ == "__main__":
-    get_bitmap_from_bmp(sys.argv[0])
+    return ((round(submatrix[row][col] / quantization_matrix[row][col])
+             for col in range(len(submatrix[row])))
+            for row in range(len(submatrix)))
