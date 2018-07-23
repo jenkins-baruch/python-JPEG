@@ -22,6 +22,16 @@ pipeline {
         cobertura(coberturaReportFile: '**/coverage.xml')
       }
     }
+    stage('format'){
+      when {
+        branch 'master'
+      }
+      steps{
+        sh 'yapf -i --style .github/.style.yapf `ls -dm *.py | tr -d \' \' | tr -d \'.py\'`'
+        sh 'git commit -m "format"'
+        sh 'git push'
+      }
+    }
   }
   environment {
     PATH = "$PATH:/var/lib/jenkins/.local/bin"
