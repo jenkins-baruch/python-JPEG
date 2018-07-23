@@ -6,7 +6,7 @@ from matplotlib import pyplot
 import os
 
 path = os.getcwd()
-
+ 
 
 def get_colored_matrix(x, y):
     return np.array([[[row % x, col % y, (row + col) % x] for col in range(y)]
