@@ -9,8 +9,7 @@ path = os.getcwd()
 
 
 def get_colored_matrix(x, y):
-    return np.array([[[row % x, col % y, (row + col) % x]
-                      for col in range(y)]
+    return np.array([[[row % x, col % y, (row + col) % x] for col in range(y)]
                      for row in range(x)])
 
 
@@ -19,7 +18,6 @@ def generate_one_color_matrix(x, y, pixel):
 
 
 class case_get_bitmap_from_bmp(unittest.TestCase):
-
     def test_whiteImage_getAllWhite(self):
         test_matrix = generate_one_color_matrix(8**3, 8**3, [255, 255, 255])
         np.testing.assert_array_equal(
@@ -46,7 +44,6 @@ class case_get_bitmap_from_bmp(unittest.TestCase):
 
 
 class case_rgb_pixel_to_ycbcr(unittest.TestCase):
-
     def test_whitepixel(self):
         original = [255, 255, 255]
         expected = [255, 128, 128]
@@ -76,7 +73,6 @@ class case_rgb_pixel_to_ycbcr(unittest.TestCase):
 
 
 class case_RGB_to_YCbCr(unittest.TestCase):
-
     def test_matrix(self):
         original = [[(255, 255, 255), (48, 113, 219),
                      (0, 0, 0)], [(0, 0, 0), (48, 113, 219), (255, 255, 255)],
@@ -95,15 +91,14 @@ class case_RGB_to_YCbCr(unittest.TestCase):
 
 
 class case_YCbCr_Downstream(unittest.TestCase):
-
     def test_YCbCr_Downstream(self):
         original = [[(255, 255, 255), (0, 0, 0)], [(0, 0, 0), (48, 113, 219)],
                     [(48, 113, 219), (0, 0, 0)], [(255, 255, 255), (48, 113,
                                                                     219)]]
         expected = [[(255, 255, 255), (0, 255, 255)], [(0, 255, 255), (48, 255,
                                                                        255)],
-                    [(48, 113, 219), (0, 113, 219)], [(255, 113, 219), (48, 113,
-                                                                        219)]]
+                    [(48, 113, 219), (0, 113, 219)], [(255, 113, 219),
+                                                      (48, 113, 219)]]
         actual = list(list(x) for x in encode.YCbCr_Downstream(original))
         np.testing.assert_array_equal(
             expected, actual,
@@ -125,7 +120,6 @@ class case_YCbCr_Downstream(unittest.TestCase):
 
 
 class case_split_matrix_into_submatrixs(unittest.TestCase):
-
     def test_split_matrix_into_submatrixs(self):
         original = [[x * y for x in range(16)] for y in range(16)]
         expected = [[[x * y for x in range(8)] for y in range(8)],
@@ -133,8 +127,7 @@ class case_split_matrix_into_submatrixs(unittest.TestCase):
                     [[x * y for x in range(8, 16)] for y in range(8)],
                     [[x * y for x in range(8, 16)] for y in range(8, 16)]]
         actual = list(
-            list(list(list(row)
-                      for row in submatrix))
+            list(list(list(row) for row in submatrix))
             for submatrix in encode.split_matrix_into_submatrixs(original))
 
         np.testing.assert_array_equal(
@@ -149,8 +142,7 @@ class case_split_matrix_into_submatrixs(unittest.TestCase):
                     [[x * y for x in range(8, 9)] for y in range(8)],
                     [[x * y for x in range(8, 9)] for y in range(8, 9)]]
         actual = list(
-            list(list(list(row)
-                      for row in submatrix))
+            list(list(list(row) for row in submatrix))
             for submatrix in encode.split_matrix_into_submatrixs(original))
 
         np.testing.assert_array_equal(
@@ -160,16 +152,15 @@ class case_split_matrix_into_submatrixs(unittest.TestCase):
 
 
 class case_centering_values_to_zero(unittest.TestCase):
-
     def test_centering_values_to_zero(self):
-        original = [[[52, 55, 61], [66, 70, 61]], [[63, 59, 55], [90, 109, 85]],
-                    [[62, 59, 68], [113, 144, 104]]]
+        original = [[[52, 55, 61], [66, 70, 61]],
+                    [[63, 59, 55], [90, 109, 85]], [[62, 59, 68],
+                                                    [113, 144, 104]]]
         expected = [[[-76, -73, -67], [-62, -58, -67]],
                     [[-65, -69, -73], [-38, -19, -43]], [[-66, -69, -60],
                                                          [-15, 16, -24]]]
         actual = list(
-            list(list(list(row)
-                      for row in submatrix))
+            list(list(list(row) for row in submatrix))
             for submatrix in encode.centering_values_to_zero(original))
 
         np.testing.assert_array_equal(
@@ -179,16 +170,15 @@ class case_centering_values_to_zero(unittest.TestCase):
 
 
 class case_discerete_cosine_transform(unittest.TestCase):
-
     def test_discerete_cosine_transform(self):
         original = [[-76, -73, -67, -62, -58, -67, -64,
                      -55], [-65, -69, -73, -38, -19, -43, -59,
-                            -56], [-66, -69, -60, -15, 16, -24, -62,
-                                   -55], [-65, -70, -57, -6, 26, -22, -58, -59],
-                    [-61, -67, -60, -24, -2, -40, -60,
-                     -58], [-49, -63, -68, -58, -51, -60, -70,
-                            -53], [-43, -57, -64, -69, -73, -67, -63, -45],
-                    [-41, -49, -59, -60, -63, -52, -50, -34]]
+                            -56], [-66, -69, -60, -15, 16, -24, -62, -55],
+                    [-65, -70, -57, -6, 26, -22, -58,
+                     -59], [-61, -67, -60, -24, -2, -40, -60,
+                            -58], [-49, -63, -68, -58, -51, -60, -70, -53],
+                    [-43, -57, -64, -69, -73, -67, -63,
+                     -45], [-41, -49, -59, -60, -63, -52, -50, -34]]
         expected = [[
             -415.38, -30.19, -61.20, 27.24, 56.12, -20.10, -2.39, 0.46
         ], [4.47, -21.86, -60.76, 10.25, 13.15, -7.09, -8.54, 4.88], [
@@ -198,8 +188,7 @@ class case_discerete_cosine_transform(unittest.TestCase):
                     3.14], [-7.73, 2.91, 2.38, -5.94, -2.38, 0.94, 4.30, 1.85],
                     [-1.03, 0.18, 0.42, -2.42, -0.88, -3.02, 4.12, -0.66],
                     [-0.17, 0.14, -1.07, -4.19, -1.17, -0.10, 0.50, 1.68]]
-        actual = [[col
-                   for col in row]
+        actual = [[col for col in row]
                   for row in encode.discerete_cosine_transform(original)]
 
         np.testing.assert_array_almost_equal(
@@ -216,7 +205,6 @@ class case_discerete_cosine_transform(unittest.TestCase):
 
 
 class case_quantization(unittest.TestCase):
-
     def test_quantization(self):
         original = [[
             -415.38, -30.19, -61.20, 27.24, 56.12, -20.10, -2.39, 0.46
@@ -232,7 +220,8 @@ class case_quantization(unittest.TestCase):
                                                   0], [1, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0,
                                                0], [0, 0, 0, 0, 0, 0, 0, 0]]
-        actual = [[col for col in row] for row in encode.quantization(original)]
+        actual = [[col for col in row]
+                  for row in encode.quantization(original)]
 
         np.testing.assert_array_equal(
             expected, actual,
@@ -241,48 +230,54 @@ class case_quantization(unittest.TestCase):
 
 
 class case_un_quantization(unittest.TestCase):
-
     def test_un_quantization(self):
-        original = [[-26, -3, -6, 2, 2, -1, 0, 0], [0, -2, -4, 1, 1, 0, 0, 0],
-                    [-3, 1, 5, -1, -1, 0, 0, 0], [-3, 1, 2, -1, 0, 0, 0,
-                                                  0], [1, 0, 0, 0, 0, 0, 0, 0]]
-        expected = [[-416, -33, -60, 32, 48, -40, 0,
-                     0], [0, -24, -56, 19, 26, 0, 0,
-                          0], [-42, 13, 80, -24, -40, 0, 0, 0],
-                    [-42, 17, 44, -29, 0, 0, 0, 0], [18, 0, 0, 0, 0, 0, 0, 0]]
-        actual = [
-            [col for col in row] for row in decode.un_quantization(original)
+        original = [
+            [-26, -3, -6, 2, 2, -1, 0, 0],
+            [0, -2, -4, 1, 1, 0, 0, 0],
+            [-3, 1, 5, -1, -1, 0, 0, 0],
+            [-3, 1, 2, -1, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0, 0, 0]
         ]
+        expected = [
+            [-416, -33, -60, 32, 48, -40, 0, 0],
+            [0, -24, -56, 19, 26, 0, 0, 0],
+            [-42, 13, 80, -24, -40, 0, 0, 0],
+            [-42, 17, 44, -29, 0, 0, 0, 0],
+            [18, 0, 0, 0, 0, 0, 0, 0]
+        ]
+        actual = [[col for col in row]
+                  for row in decode.un_quantization(original)]
 
         np.testing.assert_array_equal(
             expected, actual,
             "The original matrix- {} converted to {} and not to {} that expected".
             format(original, actual, expected))
 
+
 class case_inverse_DCT(unittest.TestCase):
     def test_inverse_DCT(self):
-        original = [[-416, -33, -60, 32, 48, -40, 0,
-                     0], [0, -24, -56, 19, 26, 0, 0,
-                          0], [-42, 13, 80, -24, -40, 0, 0, 0],
-                    [-42, 17, 44, -29, 0, 0, 0, 0],
-                     [18, 0, 0, 0, 0, 0, 0, 0],
-                     [0,0,0,0,0,0,0,0],
-                     [0,0,0,0,0,0,0,0],
-                     [0,0,0,0,0,0,0,0]
-                     ]
+        original = [
+            [-416, -33, -60, 32, 48, -40, 0, 0],
+            [0, -24, -56, 19, 26, 0, 0, 0],
+            [-42, 13, 80, -24, -40, 0, 0, 0],
+            [-42, 17, 44, -29, 0, 0, 0, 0],
+            [18, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0]
+        ] 
         expected = [
-            [-66,-63-71,-68,-56,-65,-68,-46],
-            [-71,-73,-72,-46,-20,-41,-66,-57],
-            [-70,-78,-68,-17,20,-14,-61,-63],
-            [-63,-73,-62,-8,27,-14,-60,-58],
-            [-58,-65,-61,-27,-6,-40,-68,-50],
-            [-57,-57,-64,-58,-48,-66,-72,-47],
-            [-53,-46,-61,-74,-65,-63,-62,-45],
-            [-47,-34,-53,-74,-60,-47,-47,-41]
+            [-66, -63, -71, -68, -56, -65, -68,-46],
+            [-71, -73, -72, -46, -20, -41, -66, -57],
+            [-70, -78, -68, -17, 20, -14, -61, -63],
+            [-63, -73, -62, -8, 27, -14, -60, -58],
+            [-58, -65, -61, -27, -6, -40, -68,  -50],
+            [-57, -57, -64, -58, -48, -66, -72, -47],
+            [-53, -46, -61, -74, -65, -63, -62, -45],
+            [-47, -34, -53, -74, -60, -47, -47, -41]
         ]
-        actual = [
-            [col for col in row] for row in decode.inverse_DCT(original)
-        ]
+        actual = [[col for col in row]
+                        for row in decode.inverse_DCT(original)]
 
         np.testing.assert_array_equal(
             expected, actual,
