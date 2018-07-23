@@ -27,7 +27,7 @@ pipeline {
         branch 'master'
       }
       steps{
-        sh 'yapf -i --style .github/.style.yapf `ls -dm *.py | tr -d \' \' | tr -d \'.py\'`'
+        sh 'yapf -i --style .github/.style.yapf `ls *.py`'
         sh 'git commit -m "format"'
         sh 'git push'
       }
