@@ -19,9 +19,6 @@ def __f_xy(x, y, matrix):
 
 
 def inverse_DCT(matrix):
-    # for row in range(len(matrix)):
-    #     for col in range(len(matrix[row])):
-    #         print(__f_xy(row,col,matrix))
     return ((__f_xy(x, y, matrix)
              for x in range(len(matrix[y])))
             for y in range(len(matrix)))

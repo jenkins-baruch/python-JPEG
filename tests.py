@@ -283,3 +283,33 @@ class case_inverse_DCT(unittest.TestCase):
             expected, actual,
             "The original matrix- {} converted to {} and not to {} that expected".
             format(original, actual, expected))
+
+class case_un_normalize(unittest.TestCase):
+    def test_un_normalize(self):
+        original = [
+            [-66, -63, -71, -68, -56, -65, -68,-46],
+            [-71, -73, -72, -46, -20, -41, -66, -57],
+            [-70, -78, -68, -17, 20, -14, -61, -63],
+            [-63, -73, -62, -8, 27, -14, -60, -58],
+            [-58, -65, -61, -27, -6, -40, -68,  -50],
+            [-57, -57, -64, -58, -48, -66, -72, -47],
+            [-53, -46, -61, -74, -65, -63, -62, -45],
+            [-47, -34, -53, -74, -60, -47, -47, -41]
+        ] 
+        expected = [
+            [62, 65, 57, 60, 72, 63, 60, 82],
+            [57, 55, 56, 82, 108, 87, 62, 71],
+            [58, 50, 60, 111, 148, 114, 67, 65],
+            [65, 55, 66, 120, 155, 114, 68, 70],
+            [70, 63, 67, 101, 122, 88, 60, 78],
+            [71, 71, 64, 70, 80, 62, 56, 81],
+            [75, 82, 67, 54, 63, 65, 66, 83],
+            [81, 94, 75, 54, 68, 81, 81, 87]
+        ]
+        actual = [[col for col in row]
+                        for row in decode.un_normalize(original)]
+
+        np.testing.assert_array_equal(
+            expected, actual,
+            "The original matrix- {} converted to {} and not to {} that expected".
+            format(original, actual, expected))
