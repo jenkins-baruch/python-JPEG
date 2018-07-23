@@ -198,10 +198,6 @@ class case_discerete_cosine_transform(unittest.TestCase):
             err_msg=
             "The original matrix- {} converted to {} and not to {} that expected"
             .format(original, actual, expected))
-        # np.testing.assert_array_equal(
-        #     expected, actual,
-        #     "The original matrix- {} converted to {} and not to {} that expected"
-        #     .format(original, actual, expected))
 
 
 class case_quantization(unittest.TestCase):
