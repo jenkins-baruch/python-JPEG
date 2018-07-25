@@ -6,7 +6,7 @@ from matplotlib import pyplot
 import os
 
 path = os.getcwd()
-
+ 
 
 def get_colored_matrix(x, y):
     return np.array([[[row % x, col % y, (row + col) % x] for col in range(y)]
@@ -198,10 +198,6 @@ class case_discerete_cosine_transform(unittest.TestCase):
             err_msg=
             "The original matrix- {} converted to {} and not to {} that expected"
             .format(original, actual, expected))
-        # np.testing.assert_array_equal(
-        #     expected, actual,
-        #     "The original matrix- {} converted to {} and not to {} that expected"
-        #     .format(original, actual, expected))
 
 
 class case_quantization(unittest.TestCase):
