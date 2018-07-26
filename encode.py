@@ -1,6 +1,5 @@
 import sys
 import math
-import argparse
 import numpy as np
 from PIL import Image
 from matplotlib import image, pyplot
@@ -38,7 +37,7 @@ def RGB_to_YCbCr(matrix3D):
     """
     return ((rgb_pixel_to_ycbcr(col[0], col[1], col[2])
              for col in row)
-            for row in matrix)
+            for row in matrix3D)
 
 
 def YCbCr_Downstream(matrix3D):
@@ -53,11 +52,11 @@ def YCbCr_Downstream(matrix3D):
     return (
         (
             [
-                matrix[j][i][0],  # Y
-                matrix[j - j % 2][i - i % 2][1],  # Cb downstream
-                matrix[j - j % 2][i - i % 2][2]  # Cr downstrem
-            ] for i in range(len(matrix[j]))  # index in row
-        ) for j in range(len(matrix))  # index in column
+                matrix3D[j][i][0],  # Y
+                matrix3D[j - j % 2][i - i % 2][1],  # Cb downstream
+                matrix3D[j - j % 2][i - i % 2][2]  # Cr downstrem
+            ] for i in range(len(matrix3D[j]))  # index in row
+        ) for j in range(len(matrix3D))  # index in column
     )
 
 
@@ -74,7 +73,7 @@ def split_matrix_into_submatrixs(matrix):
         (
             ((matrix[row_index][col_index]
               for col_index in range(col, min(col + 8, len(matrix[0]))))
-            )  # row in matrix
+             )  # row in matrix
             for row_index in range(row, min(row + 8, len(matrix)))
         )  # 8*8 matrix
         for col in range(0, len(matrix[0]), 8)
@@ -95,38 +94,30 @@ def centering_values_to_zero(submatrix):
             for row in submatrix)
 
 
-def cos_element(x, u):
-    return math.cos((2 * x + 1) * u * math.pi / 16)
-
-
-def alpha(u):
-    return 1 / math.sqrt(2) if u == 0 else 1
-
-
-def __G_uv(u, v, matrix):
-    return (1 / 4) * alpha(u) * alpha(v) * sum(
-        matrix[x][y] * cos_element(x, u) * cos_element(y, v)
-        for x in range(len(matrix))
-        for y in range(len(matrix[0])))
-
-
-def discerete_cosine_transform(matrix):
-    return ((round(__G_uv(y, x, matrix), 2)
-             for x in range(len(matrix[y])))
-            for y in range(len(matrix)))
-
-
 def quantization(submatrix):
     return ((round(submatrix[row][col] / quantization_matrix[row][col])
              for col in range(len(submatrix[row])))
             for row in range(len(submatrix)))
 
+
 def compress_image(path):
     bitmap = get_bitmap_from_bmp(path)
     ycbcr_bitmap = YCbCr_Downstream(RGB_to_YCbCr(bitmap))
 
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Compress image by JPEG algorithm')
-    parser.add_argument('-p','--path')
-    x = parser.parse_args(sys.argv)
-    #compress_image(sys.argv[0])
+    import argparse
+    from pyfiglet import Figlet
+
+    # fonts from http://www.figlet.org/examples.html
+    print(Figlet(font='alligator').renderText('J P E G'))
+    print(Figlet(font='big').renderText('By'))
+    print(Figlet(font='colossal').renderText('Meny'))
+    print(Figlet(font='colossal').renderText('Baruch'))
+    print(Figlet(font='colossal').renderText('L i t a l'))
+
+    parser = argparse.ArgumentParser(
+        description='Compress image by JPEG algorithm')
+    parser.add_argument('PATH')
+    args = parser.parse_args()
+    print(args.PATH)
