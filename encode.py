@@ -31,21 +31,21 @@ def RGB_to_YCbCr(matrix3D):
             for row in matrix3D)
 
 
-def YCbCr_Downstream(matrix3D):
-    """Downstream the Cb and Cr with 4:2:0 correlation
+def YCbCr_Downsample(matrix3D):
+    """Downsample the Cb and Cr with 4:2:0 correlation
 
     Arguments:
         matrix {ndarray} -- The image matrix as YCbCr
 
     Returns:
-        ndarray -- The new image matrix with downstreamed YCbCr
+        ndarray -- The new image matrix with Downsampled YCbCr
     """
     return (
         (
             [
                 matrix3D[j][i][0],  # Y
-                matrix3D[j - j % 2][i - i % 2][1],  # Cb downstream
-                matrix3D[j - j % 2][i - i % 2][2]  # Cr downstrem
+                matrix3D[j - j % 2][i - i % 2][1],  # Cb Downsample
+                matrix3D[j - j % 2][i - i % 2][2]  # Cr Downsample
             ] for i in range(len(matrix3D[j]))  # index in row
         ) for j in range(len(matrix3D))  # index in column
     )
@@ -71,7 +71,28 @@ def split_matrix_into_submatrixs(matrix):
         for row in range(0, len(matrix), 8))
 
 
-def centering_values_to_zero(submatrix3D):
+def average(matrix):
+    return round(
+        sum(
+            (sum(cell for cell in row))
+            for row in matrix) /
+        (len(matrix)*len(matrix[0]))
+    )
+
+
+def padding_matrix_to_8_8(matrix):
+    return (
+        (
+            matrix[row][col]
+            if col < len(matrix[0]) and row < len(matrix)
+            else average(matrix)
+            for col in range(8)
+        )
+        for row in range(8)
+    )
+
+
+def normalize_to_zero(submatrix3D):
     """Normalize YCbCr values- remove 128 from each object
 
     Arguments:
@@ -91,7 +112,7 @@ def un_normalize(matrix):
 
 def compress_image(path):
     bitmap = get_bitmap_from_bmp(path)
-    ycbcr_bitmap = YCbCr_Downstream(RGB_to_YCbCr(bitmap))
+    ycbcr_bitmap = YCbCr_Downsample(RGB_to_YCbCr(bitmap))
 
 
 if __name__ == "__main__":
