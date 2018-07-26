@@ -1,5 +1,6 @@
 import sys
 import math
+import argparse
 import numpy as np
 from PIL import Image
 from matplotlib import image, pyplot
@@ -26,7 +27,7 @@ def rgb_pixel_to_ycbcr(r: int, g: int, b: int):
     ]
 
 
-def RGB_to_YCbCr(matrix):
+def RGB_to_YCbCr(matrix3D):
     """Converting pixels from RGB (Red, Green, Blue) to YCbCr (luma, blue-difference, red-difference)
 
     Arguments:
@@ -40,7 +41,7 @@ def RGB_to_YCbCr(matrix):
             for row in matrix)
 
 
-def YCbCr_Downstream(matrix):
+def YCbCr_Downstream(matrix3D):
     """Downstream the Cb and Cr with 4:2:0 correlation
 
     Arguments:
@@ -119,3 +120,13 @@ def quantization(submatrix):
     return ((round(submatrix[row][col] / quantization_matrix[row][col])
              for col in range(len(submatrix[row])))
             for row in range(len(submatrix)))
+
+def compress_image(path):
+    bitmap = get_bitmap_from_bmp(path)
+    ycbcr_bitmap = YCbCr_Downstream(RGB_to_YCbCr(bitmap))
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Compress image by JPEG algorithm')
+    parser.add_argument('-p','--path')
+    x = parser.parse_args(sys.argv)
+    #compress_image(sys.argv[0])
