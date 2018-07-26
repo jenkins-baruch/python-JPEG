@@ -1,8 +1,10 @@
 import sys
 import math
+import dct
 import numpy as np
 from PIL import Image
 from matplotlib import image, pyplot
+import itertools
 
 
 def get_bitmap_from_bmp(path: str) -> np.ndarray:
@@ -34,13 +36,14 @@ def seperate_y_cb_cr(YCbCr_matrix):
     return ((cell[0] for cell in row) for row in YCbCr_matrix), ((cell[1] for cell in row) for row in YCbCr_matrix), ((cell[2] for cell in row) for row in YCbCr_matrix)
 
 def YCbCr_Downsample(matrix):
-    return(
-        (
-            matrix[row][col] 
-            for col in range(0, len(matrix[row]), 2)
-            )
-        for row in range(0,len(matrix), 2)
-    )
+    return (itertools.islice(row,0,None,2) for row in itertools.islice(matrix,0,None,2))
+    # (
+    #     (
+    #         matrix[row][col] 
+    #         for col in range(0, len(matrix[row]), 2)
+    #         )
+    #     for row in range(0,len(matrix), 2)
+    # )
 
 
 def YCbCr_Downsamplex(matrix3D):
@@ -124,8 +127,18 @@ def un_normalize(matrix):
 
 def compress_image(path):
     bitmap = get_bitmap_from_bmp(path)
-    ycbcr_bitmap = YCbCr_Downsample(RGB_to_YCbCr(bitmap))
+    ycbcr_bitmap = RGB_to_YCbCr(bitmap)
     y, cb, cr = seperate_y_cb_cr(ycbcr_bitmap)
+    cb_downsample = YCbCr_Downsample(cb)
+    cr_downsample = YCbCr_Downsample(cr)
+    
+    y_split = split_matrix_into_submatrixs(y)
+    cb_split = split_matrix_into_submatrixs(cb_downsample)
+    cr_split = split_matrix_into_submatrixs(cr_downsample)
+
+    y_dct = (dct.discerete_cosine_transform(submatrix) for submatrix in y_split)
+    cb_dct = (dct.discerete_cosine_transform(submatrix) for submatrix in cb_split)
+    cr_dct = (dct.discerete_cosine_transform(submatrix) for submatrix in cr_split)
 
 
 if __name__ == "__main__":
@@ -144,3 +157,4 @@ if __name__ == "__main__":
     parser.add_argument('PATH')
     args = parser.parse_args()
     print(args.PATH)
+    compress_image(args.PATH)
