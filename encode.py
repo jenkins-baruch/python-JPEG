@@ -30,8 +30,20 @@ def RGB_to_YCbCr(matrix3D):
              for col in row)
             for row in matrix3D)
 
+def seperate_y_cb_cr(YCbCr_matrix):
+    return ((cell[0] for cell in row) for row in YCbCr_matrix), ((cell[1] for cell in row) for row in YCbCr_matrix), ((cell[2] for cell in row) for row in YCbCr_matrix)
 
-def YCbCr_Downsample(matrix3D):
+def YCbCr_Downsample(matrix):
+    return(
+        (
+            matrix[row][col] 
+            for col in range(0, len(matrix[row]), 2)
+            )
+        for row in range(0,len(matrix), 2)
+    )
+
+
+def YCbCr_Downsamplex(matrix3D):
     """Downsample the Cb and Cr with 4:2:0 correlation
 
     Arguments:
@@ -113,6 +125,7 @@ def un_normalize(matrix):
 def compress_image(path):
     bitmap = get_bitmap_from_bmp(path)
     ycbcr_bitmap = YCbCr_Downsample(RGB_to_YCbCr(bitmap))
+    y, cb, cr = seperate_y_cb_cr(ycbcr_bitmap)
 
 
 if __name__ == "__main__":

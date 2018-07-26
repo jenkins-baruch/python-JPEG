@@ -95,15 +95,15 @@ class case_RGB_to_YCbCr(unittest.TestCase):
 class case_YCbCr_Downsample(unittest.TestCase):
     def test_YCbCr_Downsample(self):
         original = [
-            [(255, 255, 255), (0, 0, 0)],
-            [(0, 0, 0), (48, 113, 219)],
-            [(48, 113, 219), (0, 0, 0)],
-            [(255, 255, 255), (48, 113, 219)]
+            [150, 2, 255, 100],
+            [123,234,23,34],
+            [65,87,234,166],
+            [68,253,0,165]
         ]
-        expected = [[(255, 255, 255), (0, 255, 255)], [(0, 255, 255), (48, 255,
-                                                                       255)],
-                    [(48, 113, 219), (0, 113, 219)], [(255, 113, 219),
-                                                      (48, 113, 219)]]
+        expected = [
+            [150, 255],
+            [65,234]
+        ]
         actual = list(list(x) for x in encode.YCbCr_Downsample(original))
         np.testing.assert_array_equal(
             expected, actual,
@@ -111,18 +111,59 @@ class case_YCbCr_Downsample(unittest.TestCase):
             .format(original, actual, expected))
 
     def test_YCbCr_Downsample_odd(self):
-        original = [[(255, 255, 255), (0, 0, 0),
-                     (1, 2, 3)], [(0, 0, 0), (48, 113, 219), (4, 5, 6)],
-                    [(48, 113, 219), (0, 0, 0), (7, 8, 9)]]
-        expected = [[(255, 255, 255), (0, 255, 255),
-                     (1, 2, 3)], [(0, 255, 255), (48, 255, 255), (4, 2, 3)],
-                    [(48, 113, 219), (0, 113, 219), (7, 8, 9)]]
+        original = [
+            [150, 2, 255, 100, 89],
+            [123,234,23,34, 0],
+            [65,87,234,166, 176],
+            [68,253,0,165, 56],
+            [57,10,187,34,76]
+        ]
+        expected = [
+            [150,255,89],
+            [65,234,176],
+            [57,187,76]
+        ]
         actual = list(list(x) for x in encode.YCbCr_Downsample(original))
         np.testing.assert_array_equal(
             expected, actual,
             "The original pixel- {} converted to {} and not to {} that expected"
             .format(original, actual, expected))
 
+class case_seperate_y_cb_cr(unittest.TestCase):
+    def test_seperate_y_cb_cr(self):
+        original = [
+            [[52, 55, 61], [66, 70, 61]],
+            [[63, 59, 55], [90, 109, 85]],
+            [[62, 59, 68], [113, 144, 104]]
+        ]
+        expected = [
+            [
+                [52,66],
+                [63,90],
+                [62,113]
+            ],
+            [
+                [55,70],
+                [59,109],
+                [59,144]
+            ],
+            [
+                [61,61],
+                [55,85],
+                [68,104]
+            ]
+        ]
+        y, cb, cr = encode.seperate_y_cb_cr(original)
+        actual = [
+            [[cell for cell in row] for row in y],
+            [[cell for cell in row] for row in cb],
+            [[cell for cell in row] for row in cr]
+        ]
+
+        np.testing.assert_array_equal(
+            expected, actual,
+            "The original matrix- {} converted to {} and not to {} that expected"
+            .format(original, actual, expected))
 
 class case_split_matrix_into_submatrixs(unittest.TestCase):
     def test_split_matrix_into_submatrixs(self):
