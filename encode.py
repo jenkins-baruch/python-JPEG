@@ -4,15 +4,6 @@ import numpy as np
 from PIL import Image
 from matplotlib import image, pyplot
 
-quantization_matrix = [[16, 11, 10, 16, 24, 40, 51,
-                        61], [12, 12, 14, 19, 26, 58, 60,
-                              55], [14, 13, 16, 24, 40, 57, 69,
-                                    56], [14, 17, 22, 29, 51, 87, 80, 62],
-                       [18, 22, 37, 56, 68, 109, 103,
-                        77], [24, 35, 55, 64, 81, 104, 113,
-                              92], [49, 64, 78, 87, 103, 121, 120,
-                                    101], [72, 92, 95, 98, 112, 100, 103, 99]]
-
 
 def get_bitmap_from_bmp(path: str) -> np.ndarray:
     return image.imread(path)
@@ -80,7 +71,7 @@ def split_matrix_into_submatrixs(matrix):
         for row in range(0, len(matrix), 8))
 
 
-def centering_values_to_zero(submatrix):
+def centering_values_to_zero(submatrix3D):
     """Normalize YCbCr values- remove 128 from each object
 
     Arguments:
@@ -91,13 +82,11 @@ def centering_values_to_zero(submatrix):
     """
     return (([col[0] - 128, col[1] - 128, col[2] - 128]
              for col in row)
-            for row in submatrix)
+            for row in submatrix3D)
 
 
-def quantization(submatrix):
-    return ((round(submatrix[row][col] / quantization_matrix[row][col])
-             for col in range(len(submatrix[row])))
-            for row in range(len(submatrix)))
+def un_normalize(matrix):
+    return ((cell + 128 for cell in row) for row in matrix)
 
 
 def compress_image(path):

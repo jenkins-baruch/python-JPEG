@@ -1,6 +1,6 @@
 import unittest
 import encode
-import decode
+import dct
 import numpy as np
 from matplotlib import pyplot
 import os
@@ -189,7 +189,7 @@ class case_discerete_cosine_transform(unittest.TestCase):
                     [-1.03, 0.18, 0.42, -2.42, -0.88, -3.02, 4.12, -0.66],
                     [-0.17, 0.14, -1.07, -4.19, -1.17, -0.10, 0.50, 1.68]]
         actual = [[col for col in row]
-                  for row in encode.discerete_cosine_transform(original)]
+                  for row in dct.discerete_cosine_transform(original)]
 
         np.testing.assert_array_almost_equal(
             expected,
@@ -217,7 +217,7 @@ class case_quantization(unittest.TestCase):
                     [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0,
                                                0], [0, 0, 0, 0, 0, 0, 0, 0]]
         actual = [[col for col in row]
-                  for row in encode.quantization(original)]
+                  for row in dct.quantization(original)]
 
         np.testing.assert_array_equal(
             expected, actual,
@@ -242,7 +242,7 @@ class case_un_quantization(unittest.TestCase):
             [18, 0, 0, 0, 0, 0, 0, 0]
         ]
         actual = [[col for col in row]
-                  for row in decode.un_quantization(original)]
+                  for row in dct.un_quantization(original)]
 
         np.testing.assert_array_equal(
             expected, actual,
@@ -273,7 +273,7 @@ class case_inverse_DCT(unittest.TestCase):
             [-47, -34, -53, -74, -60, -47, -47, -41]
         ]
         actual = [[col for col in row]
-                        for row in decode.inverse_DCT(original)]
+                        for row in dct.inverse_DCT(original)]
 
         np.testing.assert_array_equal(
             expected, actual,
@@ -303,7 +303,7 @@ class case_un_normalize(unittest.TestCase):
             [81, 94, 75, 54, 68, 81, 81, 87]
         ]
         actual = [[col for col in row]
-                        for row in decode.un_normalize(original)]
+                        for row in encode.un_normalize(original)]
 
         np.testing.assert_array_equal(
             expected, actual,
