@@ -12,14 +12,14 @@ def get_bitmap_from_bmp(path: str) -> np.ndarray:
     return image.imread(path)
 
 
-def rgb_pixel_to_ycbcr(r: int, g: int, b: int):
+def rgb_pixel_to_ycbcr(rgb: list)->[int, int, int]:
     return [
-        int(round(0 + .299 * r + .587 * g + .114 * b)),  # Y'
-        int(round(128 - .168736 * r - .331264 * g + .5 * b)),  # Cb
-        int(round(128 + .5 * r - .418688 * g - .081312 * b))  # Cr
+        int(round(0 + .299 * rgb[0] + .587 * rgb[1] + .114 * rgb[2])),  # Y'
+        int(round(128 - .168736 * rgb[0] - .331264 * rgb[1] + .5 * rgb[2])),  # Cb
+        int(round(128 + .5 * rgb[0] - .418688 * rgb[1] - .081312 * rgb[2]))  # Cr
     ]
 
-
+    
 def RGB_to_YCbCr(matrix3D:np.ndarray)->np.ndarray:
     """Converting pixels from RGB (Red, Green, Blue) to YCbCr (luma, blue-difference, red-difference)
 
@@ -29,12 +29,11 @@ def RGB_to_YCbCr(matrix3D:np.ndarray)->np.ndarray:
     Returns:
         ndarray -- The new Bitmap with YCbCr as 2D array
     """
-    return [[rgb_pixel_to_ycbcr(col[0], col[1], col[2])
-             for col in row]
-            for row in matrix3D]
+    return np.apply_along_axis(rgb_pixel_to_ycbcr, 2, matrix3D)
 
-def seperate_y_cb_cr(YCbCr_matrix):
-    return [[cell[0] for cell in row] for row in YCbCr_matrix], [[cell[1] for cell in row] for row in YCbCr_matrix], [[cell[2] for cell in row] for row in YCbCr_matrix]
+def seperate_y_cb_cr(YCbCr_matrix:np.ndarray):
+    return [YCbCr_matrix[...,0], YCbCr_matrix[...,1], YCbCr_matrix[...,2]]
+    # [[cell[0] for cell in row] for row in YCbCr_matrix], [[cell[1] for cell in row] for row in YCbCr_matrix], [[cell[2] for cell in row] for row in YCbCr_matrix]
 
 def YCbCr_Downsample(matrix):
     return [row[::2] for row in matrix[::2]]

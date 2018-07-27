@@ -48,7 +48,7 @@ class case_rgb_pixel_to_ycbcr(unittest.TestCase):
     def test_whitepixel(self):
         original = [255, 255, 255]
         expected = [255, 128, 128]
-        actual = encode.rgb_pixel_to_ycbcr(*original)
+        actual = encode.rgb_pixel_to_ycbcr(original)
         self.assertSequenceEqual(
             expected, actual,
             "The original pixel- {} converted to {} and not to {} that expected"
@@ -57,7 +57,7 @@ class case_rgb_pixel_to_ycbcr(unittest.TestCase):
     def test_blackpixel(self):
         original = [0, 0, 0]
         expected = [0, 128, 128]
-        actual = encode.rgb_pixel_to_ycbcr(*original)
+        actual = encode.rgb_pixel_to_ycbcr(original)
         self.assertSequenceEqual(
             expected, actual,
             "The original pixel- {} converted to {} and not to {} that expected"
@@ -66,7 +66,7 @@ class case_rgb_pixel_to_ycbcr(unittest.TestCase):
     def test_colorpixel(self):
         original = [48, 113, 219]  # #3071db Tchelet
         expected = [106, 192, 87]
-        actual = encode.rgb_pixel_to_ycbcr(*original)
+        actual = encode.rgb_pixel_to_ycbcr(original)
         self.assertSequenceEqual(
             expected, actual,
             "The original pixel- {} converted to {} and not to {} that expected"
@@ -132,11 +132,11 @@ class case_YCbCr_Downsample(unittest.TestCase):
 
 class case_seperate_y_cb_cr(unittest.TestCase):
     def test_seperate_y_cb_cr(self):
-        original = [
+        original = np.array([
             [[52, 55, 61], [66, 70, 61]],
             [[63, 59, 55], [90, 109, 85]],
             [[62, 59, 68], [113, 144, 104]]
-        ]
+        ])
         expected = [
             [
                 [52,66],
