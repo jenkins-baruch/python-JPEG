@@ -95,36 +95,36 @@ class case_RGB_to_YCbCr(unittest.TestCase):
 
 class case_YCbCr_Downsample(unittest.TestCase):
     def test_YCbCr_Downsample(self):
-        original = [
+        original = np.array([
             [150, 2, 255, 100],
             [123,234,23,34],
             [65,87,234,166],
             [68,253,0,165]
-        ]
+        ])
         expected = [
             [150, 255],
             [65,234]
         ]
-        actual = list(list(x) for x in encode.YCbCr_Downsample(original))
+        actual = encode.YCbCr_Downsample(original)
         np.testing.assert_array_equal(
             expected, actual,
             "The original pixel- {} converted to {} and not to {} that expected"
             .format(original, actual, expected))
 
     def test_YCbCr_Downsample_odd(self):
-        original = [
+        original = np.array([
             [150, 2, 255, 100, 89],
             [123,234,23,34, 0],
             [65,87,234,166, 176],
             [68,253,0,165, 56],
             [57,10,187,34,76]
-        ]
+        ])
         expected = [
             [150,255,89],
             [65,234,176],
             [57,187,76]
         ]
-        actual = list(list(x) for x in encode.YCbCr_Downsample(original))
+        actual = encode.YCbCr_Downsample(original)
         np.testing.assert_array_equal(
             expected, actual,
             "The original pixel- {} converted to {} and not to {} that expected"
@@ -208,7 +208,6 @@ class case_split_matrix_into_submatrixs(unittest.TestCase):
             "The original matrix- {} converted to {} and not to {} that expected"
             .format(original, actual, expected))
 
-
 class case_padding_matrix_to_8_8(unittest.TestCase):
     def test_padding_matrix_to_8_8(self):
         original = [
@@ -243,7 +242,7 @@ class case_padding_matrix_to_8_8(unittest.TestCase):
 
 class case_discerete_cosine_transform(unittest.TestCase):
     def test_discerete_cosine_transform(self):
-        original = [
+        original = np.array([
             [52, 55, 61, 66, 70, 61, 64, 73],
             [63, 59, 55, 90, 109, 85, 69, 72],
             [62, 59, 68, 113, 144, 104, 66, 73],
@@ -252,7 +251,7 @@ class case_discerete_cosine_transform(unittest.TestCase):
             [79, 65, 60, 70, 77, 68, 58, 75],
             [85, 71, 64, 59, 55, 61, 65, 83],
             [87, 79, 69, 68, 65, 76, 78, 94]
-        ]
+        ])
         expected = [[
             -415.38, -30.19, -61.20, 27.24, 56.12, -20.10, -2.39, 0.46
         ], [4.47, -21.86, -60.76, 10.25, 13.15, -7.09, -8.54, 4.88], [

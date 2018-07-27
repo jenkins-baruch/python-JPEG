@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 quantization_matrix = [[16, 11, 10, 16, 24, 40, 51,
                         61], [12, 12, 14, 19, 26, 58, 60,
@@ -9,7 +10,7 @@ quantization_matrix = [[16, 11, 10, 16, 24, 40, 51,
                               92], [49, 64, 78, 87, 103, 121, 120,
                                     101], [72, 92, 95, 98, 112, 100, 103, 99]]
 
-def __normalize_to_zero(matrix):
+def __normalize_to_zero(matrix:np.ndarray):
     """Normalize YCbCr values- remove 128 from each object
 
     Arguments:
@@ -18,9 +19,7 @@ def __normalize_to_zero(matrix):
     Returns:
         ndarray -- 8*8 normalized submatrix
     """
-    return [[col - 128
-             for col in row]
-            for row in matrix]
+    return matrix - 128
 
 
 def __un_normalize(matrix):
@@ -41,7 +40,7 @@ def __G_uv(u, v, matrix):
         for y in range(len(matrix[0])))
 
 
-def __discerete_cosine_transform(matrix):
+def __discerete_cosine_transform(matrix:np.ndarray)->np.ndarray:
     return [[round(__G_uv(y, x, matrix), 2)
              for x in range(len(matrix[y]))]
             for y in range(len(matrix))]
@@ -74,7 +73,7 @@ def un_quantization(matrix):
              for col in range(len(matrix[row]))]
             for row in range(len(matrix))]
 
-def DCT(matrix):
+def DCT(matrix:np.ndarray)->np.ndarray:
     return __discerete_cosine_transform(__normalize_to_zero(matrix))
 
 

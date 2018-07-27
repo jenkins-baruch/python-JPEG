@@ -6,6 +6,7 @@ from PIL import Image
 from matplotlib import image, pyplot
 import itertools
 import entropy as ent
+from typing import List
 
 
 def get_bitmap_from_bmp(path: str) -> np.ndarray:
@@ -33,16 +34,16 @@ def RGB_to_YCbCr(matrix3D:np.ndarray)->np.ndarray:
 
 def seperate_y_cb_cr(YCbCr_matrix:np.ndarray):
     return [YCbCr_matrix[...,0], YCbCr_matrix[...,1], YCbCr_matrix[...,2]]
-    # [[cell[0] for cell in row] for row in YCbCr_matrix], [[cell[1] for cell in row] for row in YCbCr_matrix], [[cell[2] for cell in row] for row in YCbCr_matrix]
 
-def YCbCr_Downsample(matrix):
-    return [row[::2] for row in matrix[::2]]
+def YCbCr_Downsample(matrix: np.ndarray):
+    return matrix[::2,::2]
+    #  [row[::2] for row in matrix[::2]]
 
 def CbCr_Upsample(matrix:np.ndarray)->np.ndarray:
     return matrix.repeat(2, axis=0).repeat(2, axis=1)
 
 
-def split_matrix_into_submatrixs(matrix:list):
+def split_matrix_into_submatrixs(matrix:np.ndarray)->List[np.ndarray]:
     """Split the bitmap to 8*8 matrixs
 
     Arguments:
@@ -52,12 +53,12 @@ def split_matrix_into_submatrixs(matrix:list):
         list -- list of all 8*8 ndarrays matrix
     """
     return [
-        [
+        np.array([
             [matrix[row_index][col_index]
               for col_index in range(col, min(col + 8, len(matrix[0])))
             ]  # row in matrix
             for row_index in range(row, min(row + 8, len(matrix)))
-        ]  # 8*8 matrix
+        ])  # 8*8 matrix
         for col in range(0, len(matrix[0]), 8)
         for row in range(0, len(matrix), 8)]
 
@@ -106,6 +107,7 @@ def compress_image(path, entropy=False):
     cr_split = split_matrix_into_submatrixs(cr_downsample)
 
     print("paddings")
+    # TODO padding
 
     print("DCT")
     y_dct = [dct.DCT(padding_matrix_to_8_8(submatrix)) for submatrix in y_split]
