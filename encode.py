@@ -28,45 +28,18 @@ def RGB_to_YCbCr(matrix3D):
     Returns:
         ndarray -- The new Bitmap with YCbCr as 2D array
     """
-    return ((rgb_pixel_to_ycbcr(col[0], col[1], col[2])
-             for col in row)
-            for row in matrix3D)
+    return [[rgb_pixel_to_ycbcr(col[0], col[1], col[2])
+             for col in row]
+            for row in matrix3D]
 
 def seperate_y_cb_cr(YCbCr_matrix):
-    return ((cell[0] for cell in row) for row in YCbCr_matrix), ((cell[1] for cell in row) for row in YCbCr_matrix), ((cell[2] for cell in row) for row in YCbCr_matrix)
+    return [[cell[0] for cell in row] for row in YCbCr_matrix], [[cell[1] for cell in row] for row in YCbCr_matrix], [[cell[2] for cell in row] for row in YCbCr_matrix]
 
 def YCbCr_Downsample(matrix):
-    return (itertools.islice(row,0,None,2) for row in itertools.islice(matrix,0,None,2))
-    # (
-    #     (
-    #         matrix[row][col] 
-    #         for col in range(0, len(matrix[row]), 2)
-    #         )
-    #     for row in range(0,len(matrix), 2)
-    # )
+    return [row[::2] for row in matrix[::2]]
 
 
-def YCbCr_Downsamplex(matrix3D):
-    """Downsample the Cb and Cr with 4:2:0 correlation
-
-    Arguments:
-        matrix {ndarray} -- The image matrix as YCbCr
-
-    Returns:
-        ndarray -- The new image matrix with Downsampled YCbCr
-    """
-    return (
-        (
-            [
-                matrix3D[j][i][0],  # Y
-                matrix3D[j - j % 2][i - i % 2][1],  # Cb Downsample
-                matrix3D[j - j % 2][i - i % 2][2]  # Cr Downsample
-            ] for i in range(len(matrix3D[j]))  # index in row
-        ) for j in range(len(matrix3D))  # index in column
-    )
-
-
-def split_matrix_into_submatrixs(matrix):
+def split_matrix_into_submatrixs(matrix:list):
     """Split the bitmap to 8*8 matrixs
 
     Arguments:
@@ -107,24 +80,6 @@ def padding_matrix_to_8_8(matrix):
     )
 
 
-def normalize_to_zero(submatrix3D):
-    """Normalize YCbCr values- remove 128 from each object
-
-    Arguments:
-        submatrix {ndarray} -- 8*8 Submatrix
-
-    Returns:
-        ndarray -- 8*8 normalized submatrix
-    """
-    return (([col[0] - 128, col[1] - 128, col[2] - 128]
-             for col in row)
-            for row in submatrix3D)
-
-
-def un_normalize(matrix):
-    return ((cell + 128 for cell in row) for row in matrix)
-
-
 def compress_image(path):
     bitmap = get_bitmap_from_bmp(path)
     ycbcr_bitmap = RGB_to_YCbCr(bitmap)
@@ -140,6 +95,7 @@ def compress_image(path):
     cb_dct = (dct.discerete_cosine_transform(submatrix) for submatrix in cb_split)
     cr_dct = (dct.discerete_cosine_transform(submatrix) for submatrix in cr_split)
 
+    # y_quantization = 
 
 if __name__ == "__main__":
     import argparse

@@ -197,26 +197,6 @@ class case_split_matrix_into_submatrixs(unittest.TestCase):
             .format(original, actual, expected))
 
 
-class case_normalize_to_zero(unittest.TestCase):
-    def test_normalize_to_zero(self):
-        original = [
-            [[52, 55, 61], [66, 70, 61]],
-            [[63, 59, 55], [90, 109, 85]],
-            [[62, 59, 68], [113, 144, 104]]
-        ]
-        expected = [[[-76, -73, -67], [-62, -58, -67]],
-                    [[-65, -69, -73], [-38, -19, -43]], [[-66, -69, -60],
-                                                         [-15, 16, -24]]]
-        actual = list(
-            list(list(list(row) for row in submatrix))
-            for submatrix in encode.normalize_to_zero(original))
-
-        np.testing.assert_array_equal(
-            expected, actual,
-            "The original matrix- {} converted to {} and not to {} that expected"
-            .format(original, actual, expected))
-
-
 class case_padding_matrix_to_8_8(unittest.TestCase):
     def test_padding_matrix_to_8_8(self):
         original = [
@@ -252,14 +232,14 @@ class case_padding_matrix_to_8_8(unittest.TestCase):
 class case_discerete_cosine_transform(unittest.TestCase):
     def test_discerete_cosine_transform(self):
         original = [
-            [-76, -73, -67, -62, -58, -67, -64, -55],
-            [-65, -69, -73, -38, -19, -43, -59, -56],
-            [-66, -69, -60, -15, 16, -24, -62, -55],
-            [-65, -70, -57, -6, 26, -22, -58, -59],
-            [-61, -67, -60, -24, -2, -40, -60, -58],
-            [-49, -63, -68, -58, -51, -60, -70, -53],
-            [-43, -57, -64, -69, -73, -67, -63, -45],
-            [-41, -49, -59, -60, -63, -52, -50, -34]
+            [52, 55, 61, 66, 70, 61, 64, 73],
+            [63, 59, 55, 90, 109, 85, 69, 72],
+            [62, 59, 68, 113, 144, 104, 66, 73],
+            [63, 58, 71, 122, 154, 106, 70, 69],
+            [67, 61, 68, 104, 126, 88, 68, 70],
+            [79, 65, 60, 70, 77, 68, 58, 75],
+            [85, 71, 64, 59, 55, 61, 65, 83],
+            [87, 79, 69, 68, 65, 76, 78, 94]
         ]
         expected = [[
             -415.38, -30.19, -61.20, 27.24, 56.12, -20.10, -2.39, 0.46
@@ -271,37 +251,7 @@ class case_discerete_cosine_transform(unittest.TestCase):
             [-1.03, 0.18, 0.42, -2.42, -0.88, -3.02, 4.12, -0.66],
             [-0.17, 0.14, -1.07, -4.19, -1.17, -0.10, 0.50, 1.68]]
         actual = [[col for col in row]
-                  for row in dct.discerete_cosine_transform(original)]
-
-        np.testing.assert_array_almost_equal(
-            expected,
-            actual,
-            decimal=2,
-            err_msg="The original matrix- {} converted to {} and not to {} that expected"
-            .format(original, actual, expected))
-
-    def test_discerete_cosine_transform_with_padding(self):
-        original = [
-            [-76, -73, -67, -62, -58, -67, -64, -55],
-            [-65, -69, -73, -38, -19, -43, -59, -56],
-            [-66, -69, -60, -15, 16, -24, -62, -55],
-            [-65, -70, -57, -6, 26, -22, -58, -59],
-            [-61, -67, -60, -24, -2, -40, -60, -58],
-            [-49, -63, -68, -58, -51, -60, -70, -53],
-            [-43, -57, -64, -69, -73, -67, -63, -45],
-            [-41, -49, -59, -60, -63, -52, -50, -34]
-        ]
-        expected = [[
-            -415.38, -30.19, -61.20, 27.24, 56.12, -20.10, -2.39, 0.46
-        ], [4.47, -21.86, -60.76, 10.25, 13.15, -7.09, -8.54, 4.88], [
-            -46.83, 7.37, 77.13, -24.56, -28.91, 9.93, 5.42, -5.65
-        ], [-48.53, 12.07, 34.10, -14.76, -10.24, 6.30, 1.83,
-            1.95], [12.12, -6.55, -13.20, -3.95, -1.87, 1.75, -2.79,
-                    3.14], [-7.73, 2.91, 2.38, -5.94, -2.38, 0.94, 4.30, 1.85],
-            [-1.03, 0.18, 0.42, -2.42, -0.88, -3.02, 4.12, -0.66],
-            [-0.17, 0.14, -1.07, -4.19, -1.17, -0.10, 0.50, 1.68]]
-        actual = [[col for col in row]
-                  for row in dct.discerete_cosine_transform(original)]
+                  for row in dct.DCT(original)]
 
         np.testing.assert_array_almost_equal(
             expected,
@@ -374,37 +324,6 @@ class case_inverse_DCT(unittest.TestCase):
             [0, 0, 0, 0, 0, 0, 0, 0]
         ]
         expected = [
-            [-66, -63, -71, -68, -56, -65, -68, -46],
-            [-71, -73, -72, -46, -20, -41, -66, -57],
-            [-70, -78, -68, -17, 20, -14, -61, -63],
-            [-63, -73, -62, -8, 27, -14, -60, -58],
-            [-58, -65, -61, -27, -6, -40, -68,  -50],
-            [-57, -57, -64, -58, -48, -66, -72, -47],
-            [-53, -46, -61, -74, -65, -63, -62, -45],
-            [-47, -34, -53, -74, -60, -47, -47, -41]
-        ]
-        actual = [[col for col in row]
-                  for row in dct.inverse_DCT(original)]
-
-        np.testing.assert_array_equal(
-            expected, actual,
-            "The original matrix- {} converted to {} and not to {} that expected".
-            format(original, actual, expected))
-
-
-class case_un_normalize(unittest.TestCase):
-    def test_un_normalize(self):
-        original = [
-            [-66, -63, -71, -68, -56, -65, -68, -46],
-            [-71, -73, -72, -46, -20, -41, -66, -57],
-            [-70, -78, -68, -17, 20, -14, -61, -63],
-            [-63, -73, -62, -8, 27, -14, -60, -58],
-            [-58, -65, -61, -27, -6, -40, -68,  -50],
-            [-57, -57, -64, -58, -48, -66, -72, -47],
-            [-53, -46, -61, -74, -65, -63, -62, -45],
-            [-47, -34, -53, -74, -60, -47, -47, -41]
-        ]
-        expected = [
             [62, 65, 57, 60, 72, 63, 60, 82],
             [57, 55, 56, 82, 108, 87, 62, 71],
             [58, 50, 60, 111, 148, 114, 67, 65],
@@ -415,7 +334,7 @@ class case_un_normalize(unittest.TestCase):
             [81, 94, 75, 54, 68, 81, 81, 87]
         ]
         actual = [[col for col in row]
-                  for row in encode.un_normalize(original)]
+                  for row in dct.inverse_DCT(original)]
 
         np.testing.assert_array_equal(
             expected, actual,
