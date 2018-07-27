@@ -81,21 +81,33 @@ def padding_matrix_to_8_8(matrix):
 
 
 def compress_image(path):
+    print("Reading file")
     bitmap = get_bitmap_from_bmp(path)
+
+    print("Converting to YCbCr")
     ycbcr_bitmap = RGB_to_YCbCr(bitmap)
+
+    print("Seperating bitmap to Y, Cb, Cr matrixes")
     y, cb, cr = seperate_y_cb_cr(ycbcr_bitmap)
+    
+    print("Downsampling")
     cb_downsample = YCbCr_Downsample(cb)
     cr_downsample = YCbCr_Downsample(cr)
     
+    print("Splitting to 8x8 submatrixes")
     y_split = split_matrix_into_submatrixs(y)
     cb_split = split_matrix_into_submatrixs(cb_downsample)
     cr_split = split_matrix_into_submatrixs(cr_downsample)
 
-    y_dct = (dct.discerete_cosine_transform(submatrix) for submatrix in y_split)
-    cb_dct = (dct.discerete_cosine_transform(submatrix) for submatrix in cb_split)
-    cr_dct = (dct.discerete_cosine_transform(submatrix) for submatrix in cr_split)
+    print("DCT")
+    y_dct = (dct.DCT(padding_matrix_to_8_8(submatrix)) for submatrix in y_split)
+    cb_dct = (dct.DCT(padding_matrix_to_8_8(submatrix)) for submatrix in cb_split)
+    cr_dct = (dct.DCT(padding_matrix_to_8_8(submatrix)) for submatrix in cr_split)
 
-    # y_quantization = 
+    print("Quantization")
+    y_quantization = (dct.quantization(submatrix) for submatrix in y_dct)
+    cb_quantization = (dct.quantization(submatrix) for submatrix in cb_dct)
+    cr_quantization = (dct.quantization(submatrix) for submatrix in cr_dct)
 
 if __name__ == "__main__":
     import argparse

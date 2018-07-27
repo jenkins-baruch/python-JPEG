@@ -63,7 +63,7 @@ def __f_xy(x, y, matrix):
     )
 
 
-def quantization(submatrix):
+def quantization(submatrix : list):
     return [[round(submatrix[row][col] / quantization_matrix[row][col])
              for col in range(len(submatrix[row]))]
             for row in range(len(submatrix))]
