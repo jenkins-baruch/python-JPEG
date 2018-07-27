@@ -173,9 +173,10 @@ class case_split_matrix_into_submatrixs(unittest.TestCase):
                     [[x * y for x in range(8)] for y in range(8, 16)],
                     [[x * y for x in range(8, 16)] for y in range(8)],
                     [[x * y for x in range(8, 16)] for y in range(8, 16)]]
-        actual = list(
-            list(list(list(row) for row in submatrix))
-            for submatrix in encode.split_matrix_into_submatrixs(original))
+        actual = encode.split_matrix_into_submatrixs(original)
+        # list(
+        #     list(list(list(row) for row in submatrix))
+        #     for submatrix in )
 
         np.testing.assert_array_equal(
             expected, actual,

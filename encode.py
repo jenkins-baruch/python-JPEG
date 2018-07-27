@@ -5,6 +5,7 @@ import numpy as np
 from PIL import Image
 from matplotlib import image, pyplot
 import itertools
+import entropy as ent
 
 
 def get_bitmap_from_bmp(path: str) -> np.ndarray:
@@ -19,7 +20,7 @@ def rgb_pixel_to_ycbcr(r: int, g: int, b: int):
     ]
 
 
-def RGB_to_YCbCr(matrix3D):
+def RGB_to_YCbCr(matrix3D:np.ndarray)->np.ndarray:
     """Converting pixels from RGB (Red, Green, Blue) to YCbCr (luma, blue-difference, red-difference)
 
     Arguments:
@@ -48,15 +49,15 @@ def split_matrix_into_submatrixs(matrix:list):
     Returns:
         list -- list of all 8*8 ndarrays matrix
     """
-    return (
-        (
-            ((matrix[row_index][col_index]
-              for col_index in range(col, min(col + 8, len(matrix[0]))))
-             )  # row in matrix
+    return [
+        [
+            [matrix[row_index][col_index]
+              for col_index in range(col, min(col + 8, len(matrix[0])))
+            ]  # row in matrix
             for row_index in range(row, min(row + 8, len(matrix)))
-        )  # 8*8 matrix
+        ]  # 8*8 matrix
         for col in range(0, len(matrix[0]), 8)
-        for row in range(0, len(matrix), 8))
+        for row in range(0, len(matrix), 8)]
 
 
 def average(matrix):
@@ -69,20 +70,23 @@ def average(matrix):
 
 
 def padding_matrix_to_8_8(matrix):
-    return (
-        (
+    return [
+        [
             matrix[row][col]
             if col < len(matrix[0]) and row < len(matrix)
             else average(matrix)
             for col in range(8)
-        )
+        ]
         for row in range(8)
-    )
+    ]
 
 
-def compress_image(path):
+def compress_image(path, entropy=False):
     print("Reading file")
     bitmap = get_bitmap_from_bmp(path)
+
+    if entropy:
+        print("Bitmap entropy: " + str(ent.entropy(bitmap)))
 
     print("Converting to YCbCr")
     ycbcr_bitmap = RGB_to_YCbCr(bitmap)
@@ -99,18 +103,25 @@ def compress_image(path):
     cb_split = split_matrix_into_submatrixs(cb_downsample)
     cr_split = split_matrix_into_submatrixs(cr_downsample)
 
+    print("paddings")
+    
+
     print("DCT")
-    y_dct = (dct.DCT(padding_matrix_to_8_8(submatrix)) for submatrix in y_split)
-    cb_dct = (dct.DCT(padding_matrix_to_8_8(submatrix)) for submatrix in cb_split)
-    cr_dct = (dct.DCT(padding_matrix_to_8_8(submatrix)) for submatrix in cr_split)
+    y_dct = [dct.DCT(padding_matrix_to_8_8(submatrix)) for submatrix in y_split]
+    cb_dct = [dct.DCT(padding_matrix_to_8_8(submatrix)) for submatrix in cb_split]
+    cr_dct = [dct.DCT(padding_matrix_to_8_8(submatrix)) for submatrix in cr_split]
 
     print("Quantization")
-    y_quantization = (dct.quantization(submatrix) for submatrix in y_dct)
-    cb_quantization = (dct.quantization(submatrix) for submatrix in cb_dct)
-    cr_quantization = (dct.quantization(submatrix) for submatrix in cr_dct)
+    y_quantization = [dct.quantization(submatrix) for submatrix in y_dct]
+    cb_quantization = [dct.quantization(submatrix) for submatrix in cb_dct]
+    cr_quantization = [dct.quantization(submatrix) for submatrix in cr_dct]
+
+    if entropy:
+        print("Compressed entropy: " + str(ent.entropy(np.array([y_quantization, cb_quantization, cr_quantization]))))
 
 if __name__ == "__main__":
     import argparse
+    import imghdr
     from pyfiglet import Figlet
 
     # fonts from http://www.figlet.org/examples.html
@@ -123,6 +134,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='Compress image by JPEG algorithm')
     parser.add_argument('PATH')
+    parser.add_argument('-e', action='store_true', help='Show entropy of images')
     args = parser.parse_args()
-    print(args.PATH)
-    compress_image(args.PATH)
+    if imghdr.what(args.PATH) != 'bmp':
+        print("{} format is not supported for now".format(imghdr.what(args.PATH)), file=sys.stderr)
+    else:
+        compress_image(args.PATH, args.e)
