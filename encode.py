@@ -39,6 +39,9 @@ def seperate_y_cb_cr(YCbCr_matrix):
 def YCbCr_Downsample(matrix):
     return [row[::2] for row in matrix[::2]]
 
+def CbCr_Upsample(matrix:np.ndarray)->np.ndarray:
+    return matrix.repeat(2, axis=0).repeat(2, axis=1)
+
 
 def split_matrix_into_submatrixs(matrix:list):
     """Split the bitmap to 8*8 matrixs
@@ -104,7 +107,6 @@ def compress_image(path, entropy=False):
     cr_split = split_matrix_into_submatrixs(cr_downsample)
 
     print("paddings")
-    
 
     print("DCT")
     y_dct = [dct.DCT(padding_matrix_to_8_8(submatrix)) for submatrix in y_split]
@@ -118,8 +120,18 @@ def compress_image(path, entropy=False):
 
     if entropy:
         print("Compressed entropy: " + str(ent.entropy(np.array([y_quantization, cb_quantization, cr_quantization]))))
+    
+    y_un_quantization = [dct.un_quantization(submatrix) for submatrix in y_quantization]
+    cb_un_quantization = [dct.un_quantization(submatrix) for submatrix in cb_quantization]
+    cr_un_quantization = [dct.un_quantization(submatrix) for submatrix in cr_quantization]
 
-if __name__ == "__main__":
+    y_invert_dct = [dct.inverse_DCT(matrix) for matrix in y_un_quantization]
+    cb_invert_dct = [dct.inverse_DCT(matrix) for matrix in cb_un_quantization]
+    cr_invert_dct = [dct.inverse_DCT(matrix) for matrix in cr_un_quantization]
+
+
+    
+def main(*argv):
     import argparse
     import imghdr
     from pyfiglet import Figlet
@@ -140,3 +152,6 @@ if __name__ == "__main__":
         print("{} format is not supported for now".format(imghdr.what(args.PATH)), file=sys.stderr)
     else:
         compress_image(args.PATH, args.e)
+
+if __name__ == "__main__":
+    main(sys.argv)
