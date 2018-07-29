@@ -210,29 +210,27 @@ class case_split_matrix_into_submatrixs(unittest.TestCase):
 
 class case_padding_matrix_to_8_8(unittest.TestCase):
     def test_padding_matrix_to_8_8(self):
-        original = [
+        original = np.array([
             [-76, -73],
             [-65, -69],
             [-66, -69],
             [-65, -70],
             [-61, -67]
-        ]
-        average = encode.average(original)
-        expected = [
-            [-76, -73, average, average, average, average, average, average],
-            [-65, -69, average, average, average, average, average, average],
-            [-66, -69, average, average, average, average, average, average],
-            [-65, -70, average, average, average, average, average, average],
-            [-61, -67, average, average, average, average, average, average],
-            [average, average, average, average,
-                average, average, average, average],
-            [average, average, average, average,
-                average, average, average, average],
-            [average, average, average, average,
-                average, average, average, average]
-        ]
-        actual = [[col for col in row]
-                  for row in encode.padding_matrix_to_8_8(original)]
+        ])
+        expected = np.array([
+            [-76, -73, 0, 0, 0, 0, 0, 0],
+            [-65, -69, 0, 0, 0, 0, 0, 0],
+            [-66, -69, 0, 0, 0, 0, 0, 0],
+            [-65, -70, 0, 0, 0, 0, 0, 0],
+            [-61, -67, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0,
+                0, 0, 0, 0],
+            [0, 0, 0, 0,
+                0, 0, 0, 0],
+            [0, 0, 0, 0,
+                0, 0, 0, 0]
+        ])
+        actual = encode.padding_matrix_to_8_8(original)
 
         np.testing.assert_array_equal(
             expected, actual,
@@ -371,3 +369,68 @@ class case_entropy(unittest.TestCase):
         expected = 1.18
         actual = entropy.entropy(original)
         self.assertAlmostEqual(expected, actual, places=2)
+
+class case_concatenate_submatrixes_to_big_matrix(unittest.TestCase):
+    def test_concatenate_submatrixes_to_big_matrix_tiny(self):
+        original = [
+            np.array([
+                [1,1],
+                [1,1]
+            ]),
+            np.array([
+                [2,2],
+                [2,2]
+            ]),
+            np.array([
+                [3,3],
+                [3,3]
+            ]),
+            np.array([
+                [4,4],
+                [4,4]
+            ])
+        ]
+        expected = np.array([
+            [1,1,2,2],
+            [1,1,2,2],
+            [3,3,4,4],
+            [3,3,4,4]
+        ])
+        actual = encode.concatenate_submatrixes_to_big_matrix(original, (2,2))
+        np.testing.assert_array_equal(expected, actual)
+
+    def test_concatenate_submatrixes_to_big_matrix_odd_shape(self):
+        original = [
+            np.array([
+                [1,1],
+                [1,1]
+            ]),
+            np.array([
+                [2,2],
+                [2,2]
+            ]),
+            np.array([
+                [3,3],
+                [3,3]
+            ]),
+            np.array([
+                [4,4],
+                [4,4]
+            ]),
+            np.array([
+                [5,5],
+                [5,5]
+            ]),
+            np.array([
+                [6,6],
+                [6,6]
+            ])
+        ]
+        expected = np.array([
+            [1,1,2,2,3,3],
+            [1,1,2,2,3,3],
+            [4,4,5,5,6,6],
+            [4,4,5,5,6,6]
+        ])
+        actual = encode.concatenate_submatrixes_to_big_matrix(original, (3,2))
+        np.testing.assert_array_equal(expected, actual)
