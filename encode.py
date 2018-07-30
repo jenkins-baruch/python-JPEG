@@ -68,6 +68,9 @@ def padding_matrix_to_8_8(matrix:np.ndarray)->np.ndarray:
 def concatenate_submatrixes_to_big_matrix(submatrixes:List[np.ndarray], shape:Tuple[int]):
     return np.block([submatrixes[i:i+shape[0]] for i in range(0,len(submatrixes),shape[0])])
 
+def concatenate_Y_Cb_Cr(Y:np.ndarray, Cb: np.ndarray, Cr:np.ndarray)->np.ndarray:
+    return np.dstack((Y,Cb,Cr))
+
 
 def compress_image(path, entropy=False):
     print("Reading file")
@@ -87,9 +90,9 @@ def compress_image(path, entropy=False):
     cr_downsample = YCbCr_Downsample(cr)
 
     # TODO round up
-    y_shape = y.shape
-    cb_shape = cb.shape
-    cr_shape = cr.shape
+    y_shape = (math.ceil(y.shape[0]/8), math.ceil(y.shape[1]/8))
+    cb_shape = (math.ceil(cb_downsample.shape[0]/8), math.ceil(cb_downsample.shape[1]/8))
+    cr_shape = (math.ceil(cr_downsample.shape[0]/8), math.ceil(cr_downsample.shape[1]/8))
     
     print("Splitting to 8x8 submatrixes")
     y_split = split_matrix_into_submatrixs(y)
@@ -124,6 +127,18 @@ def compress_image(path, entropy=False):
     cb_invert_dct = [dct.inverse_DCT(matrix) for matrix in cb_un_quantization]
     cr_invert_dct = [dct.inverse_DCT(matrix) for matrix in cr_un_quantization]
 
+    print("Concatenate")
+    y_big = concatenate_submatrixes_to_big_matrix(y_invert_dct, y_shape)
+    cb_big = concatenate_submatrixes_to_big_matrix(cb_invert_dct, cb_shape)
+    cr_big = concatenate_submatrixes_to_big_matrix(cr_invert_dct, cr_shape)
+
+    print("Upsample")
+    cb_upsample = CbCr_Upsample(cb_big)
+    cr_upsample = CbCr_Upsample(cr_big)
+
+    new_image = concatenate_Y_Cb_Cr(y_big, cb_upsample, cr_upsample)
+
+    Image.fromarray(new_image, mode='YCbCr').show()
 
     
 def main(*argv):

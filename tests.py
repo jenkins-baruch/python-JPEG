@@ -434,3 +434,30 @@ class case_concatenate_submatrixes_to_big_matrix(unittest.TestCase):
         ])
         actual = encode.concatenate_submatrixes_to_big_matrix(original, (3,2))
         np.testing.assert_array_equal(expected, actual)
+
+class case_concatenate_Y_Cb_Cr(unittest.TestCase):
+    def test_concatenate_Y_Cb_Cr(self):
+        original = [
+            np.array([
+                [1,2,3],
+                [4,5,6],
+                [7,8,9]
+            ]),
+            np.array([
+                [7,8,9],
+                [1,2,3],
+                [4,5,6]
+            ]),
+            np.array([
+                [4,5,6],
+                [7,8,9],
+                [1,2,3]
+            ])
+        ]
+        expected = np.array([
+            [[1,7,4],[2,8,5],[3,9,6]],
+            [[4,1,7],[5,2,8],[6,3,9]],
+            [[7,4,1],[8,5,2],[9,6,3]]
+        ])
+        actual = encode.concatenate_Y_Cb_Cr(*original)
+        np.testing.assert_array_equal(expected,actual)
