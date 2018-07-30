@@ -7,3 +7,4 @@ localscript.py
 .coverage
 coverage.xml
 pylint.out
+nosetests.xml

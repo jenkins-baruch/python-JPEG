@@ -141,7 +141,7 @@ def compress_image(path, entropy=False):
     Image.fromarray(new_image, mode='YCbCr').show()
 
     
-def main(*argv):
+def main(*argv):    # pragma: no cover
     import argparse
     import imghdr
     from pyfiglet import Figlet
@@ -167,5 +167,5 @@ def main(*argv):
     
     return 1
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main(sys.argv)
