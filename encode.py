@@ -72,7 +72,7 @@ def concatenate_Y_Cb_Cr(Y:np.ndarray, Cb: np.ndarray, Cr:np.ndarray)->np.ndarray
     return np.dstack((Y,Cb,Cr))
 
 
-def compress_image(path, entropy=False):
+def compress_image(path, entropy=False):    # pragma: no cover
     print("Reading file")
     bitmap = get_bitmap_from_bmp(path)
 
