@@ -33,6 +33,14 @@ pipeline {
         sh 'git push --set-upstream origin master'
       }
     }
+    stage('Generate sample'){
+      when {
+        branch 'master'
+      }
+      steps{
+        sh 'convert Flowchart/flowchart.pdf Flowchart/flowchart.png'
+      }
+    }
   }
   environment {
     PATH = "$PATH:/var/lib/jenkins/.local/bin"
