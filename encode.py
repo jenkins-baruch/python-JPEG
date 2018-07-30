@@ -164,6 +164,8 @@ def main(*argv):
         print("{} format is not supported for now".format(imghdr.what(args.PATH)), file=sys.stderr)
     else:
         compress_image(args.PATH, args.e)
+    
+    return 1
 
 if __name__ == "__main__":
     main(sys.argv)

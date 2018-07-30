@@ -461,3 +461,7 @@ class case_concatenate_Y_Cb_Cr(unittest.TestCase):
         ])
         actual = encode.concatenate_Y_Cb_Cr(*original)
         np.testing.assert_array_equal(expected,actual)
+
+class case_main(unittest.TestCase):
+    def test_main(self):
+        self.assertEqual(1,encode.main("img/colored.bmp"))
