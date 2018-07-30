@@ -6,7 +6,7 @@ pipeline {
         sh 'touch $WORKSPACE/nosetests.xml'
         echo 'Generate requirements file'
         sh 'pipreqs --force $WORKSPACE/'
-        sh 'pip3 install --quiet -r $WORKSPACE/requirements.txt'
+        sh 'pip3 install --quiet -r $WORKSPACE/requirements.txt --user'
       }
     }
     stage('test') {

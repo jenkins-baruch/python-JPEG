@@ -1,0 +1,12 @@
+[nosetests]
+with-coverage=1
+cover-erase=1
+cover-inclusive=1
+cover-min-percentage=80
+with-xunit=1
+;-i=*.py
+
+[report]
+exclude_lines =
+    def main
+    if __name__ == .__main__.:
