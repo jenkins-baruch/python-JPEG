@@ -3,14 +3,9 @@ import math
 import dct
 import numpy as np
 from PIL import Image
-from matplotlib import image, pyplot
 import itertools
 import entropy as ent
 from typing import List, Tuple
-
-
-def get_bitmap_from_bmp(path: str) -> np.ndarray:
-    return image.imread(path)
 
 
 def rgb_pixel_to_ycbcr(rgb: list)->List[int]:
@@ -89,7 +84,6 @@ def compress_image(path, entropy=False):    # pragma: no cover
     cb_downsample = YCbCr_Downsample(cb)
     cr_downsample = YCbCr_Downsample(cr)
 
-    # TODO round up
     y_shape = (math.ceil(y.shape[0]/8), math.ceil(y.shape[1]/8))
     cb_shape = (math.ceil(cb_downsample.shape[0]/8), math.ceil(cb_downsample.shape[1]/8))
     cr_shape = (math.ceil(cr_downsample.shape[0]/8), math.ceil(cr_downsample.shape[1]/8))
