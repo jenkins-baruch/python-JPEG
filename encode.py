@@ -3,14 +3,9 @@ import math
 import dct
 import numpy as np
 from PIL import Image
-from matplotlib import image, pyplot
 import itertools
 import entropy as ent
 from typing import List, Tuple
-
-
-def get_bitmap_from_bmp(path: str) -> np.ndarray:
-    return image.imread(path)
 
 
 def rgb_pixel_to_ycbcr(rgb: list)->List[int]:
