@@ -89,7 +89,6 @@ def compress_image(path, entropy=False):    # pragma: no cover
     cb_downsample = YCbCr_Downsample(cb)
     cr_downsample = YCbCr_Downsample(cr)
 
-    # TODO round up
     y_shape = (math.ceil(y.shape[0]/8), math.ceil(y.shape[1]/8))
     cb_shape = (math.ceil(cb_downsample.shape[0]/8), math.ceil(cb_downsample.shape[1]/8))
     cr_shape = (math.ceil(cr_downsample.shape[0]/8), math.ceil(cr_downsample.shape[1]/8))
