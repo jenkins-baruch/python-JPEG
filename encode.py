@@ -10,9 +10,9 @@ from typing import List, Tuple
 
 def rgb_pixel_to_ycbcr(rgb: list)->List[int]:
     return [
-        int(round(0 + .299 * rgb[0] + .587 * rgb[1] + .114 * rgb[2])),  # Y'
-        int(round(128 - .168736 * rgb[0] - .331264 * rgb[1] + .5 * rgb[2])),  # Cb
-        int(round(128 + .5 * rgb[0] - .418688 * rgb[1] - .081312 * rgb[2]))  # Cr
+        int(math.ceil(0 + .299 * rgb[0] + .587 * rgb[1] + .114 * rgb[2])),  # Y'
+        int(math.ceil(128 - .168736 * rgb[0] - .331264 * rgb[1] + .5 * rgb[2])),  # Cb
+        int(math.ceil(128 + .5 * rgb[0] - .418688 * rgb[1] - .081312 * rgb[2]))  # Cr
     ]
 
     
