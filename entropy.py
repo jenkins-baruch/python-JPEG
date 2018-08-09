@@ -10,4 +10,5 @@ def __get_entropy(freqs:list)->float:
     return -sum(p*math.log2(p) for p in freqs)
 
 def entropy(matrix:np.ndarray)->float:
+    # TODO: Remove nonzero
     return __get_entropy(__get_frequencies(matrix, np.count_nonzero(matrix)))

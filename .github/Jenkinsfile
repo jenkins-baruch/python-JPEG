@@ -16,29 +16,33 @@ pipeline {
         sh 'coverage xml'
       }
     }
-    stage('publish') {
-      steps {
-        junit '**/nosetests.xml'
-        cobertura(coberturaReportFile: '**/coverage.xml')
-      }
-    }
-    stage('format'){
-      when {
-        branch 'master'
-      }
-      steps{
-        sh 'yapf -i --style .github/.style.yapf `ls *.py`'
-        sh 'git add -u'
-        sh 'git commit -m "format"'
-        sh 'git push --set-upstream origin master'
-      }
-    }
-    stage('Generate sample'){
-      when {
-        branch 'master'
-      }
-      steps{
-        sh 'convert Flowchart/flowchart.pdf Flowchart/flowchart.png'
+    stage('End Tasks'){
+      parallel{
+        stage('publish') {
+          steps {
+            junit '**/nosetests.xml'
+            cobertura(coberturaReportFile: '**/coverage.xml')
+          }
+        }
+        stage('format'){
+          when {
+            branch 'master'
+          }
+          steps{
+            sh 'yapf -i --style .github/.style.yapf `ls *.py`'
+            sh 'git add -u'
+            sh 'git commit -m "format"'
+            sh 'git push --set-upstream origin master'
+          }
+        }
+        stage('Generate sample'){
+          when {
+            branch 'master'
+          }
+          steps{
+            sh 'convert Flowchart/flowchart.pdf Flowchart/flowchart.png'
+          }
+        }
       }
     }
   }
