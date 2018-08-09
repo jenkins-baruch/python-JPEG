@@ -79,7 +79,7 @@ def concatenate_Y_Cb_Cr(Y: np.ndarray, Cb: np.ndarray, Cr: np.ndarray)->np.ndarr
 def compress_image(path, entropy=False):    # pragma: no cover
     print("Reading file")
     bitmap = imagetools.get_bitmap_from_bmp(path)
-
+    
     if entropy:
         print("Bitmap entropy: " + str(ent.entropy(bitmap)))
 
