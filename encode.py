@@ -2,22 +2,26 @@ import sys
 import math
 import dct
 import numpy as np
-from PIL import Image
 import itertools
 import entropy as ent
 from typing import List, Tuple
 import imagetools
 
 
-def rgb_pixel_to_ycbcr(rgb: list)->List[int]:
+def rgb_pixel_to_ycbcr(bgr: list)->List[np.uint8]:
     return [
-        np.uint8(0 + (0.299 * rgb[0]) +
-                 (0.587 * rgb[1]) + (0.114 * rgb[2])),  # Y'
-        np.uint8(128 - (0.168736 * rgb[0]) - \
-                 (0.331264 * rgb[1]) + (0.5 * rgb[2])),  # Cb
-        np.uint8(128 + (0.5 * rgb[0]) - (0.418688 * \
-                                         rgb[1]) - (0.081312 * rgb[2]))  # Cr
+        round(0.299 * bgr[2] + 0.587 * bgr[1] + 0.114 * bgr[0]),  # Y'
+        round((bgr[2]-round((0.299 * bgr[2] + 0.587 * bgr[1] + 0.114 * bgr[0])))*0.713 + 128),    # Cr
+        round((bgr[0]-round((0.299 * bgr[2] + 0.587 * bgr[1] + 0.114 * bgr[0])))*0.564 + 128)    # Cb
     ]
+    # return [
+    #     np.uint8(0 + (0.299 * rgb[0]) +
+    #              (0.587 * rgb[1]) + (0.114 * rgb[2])),  # Y'
+    #     np.uint8(128 - (0.168736 * rgb[0]) - \
+    #              (0.331264 * rgb[1]) + (0.5 * rgb[2])),  # Cb
+    #     np.uint8(128 + (0.5 * rgb[0]) - (0.418688 * \
+    #                                      rgb[1]) - (0.081312 * rgb[2]))  # Cr
+    # ]
 
 
 def RGB_to_YCbCr(matrix3D: np.ndarray)->np.ndarray:

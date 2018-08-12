@@ -2,11 +2,11 @@ import unittest
 import encode
 import dct
 import numpy as np
-from matplotlib import pyplot
+#from matplotlib import pyplot, image
+from cv2 import cv2
 import os
 import entropy
 import imagetools
-from PIL import Image
 
 path = os.getcwd()
 
@@ -49,7 +49,7 @@ class case_get_bitmap_from_bmp(unittest.TestCase):
 class case_rgb_pixel_to_ycbcr(unittest.TestCase):
     def test_whitepixel(self):
         original = [255, 255, 255]
-        expected = [255, 128, 127]
+        expected = [255, 128, 128]
         actual = encode.rgb_pixel_to_ycbcr(original)
         self.assertSequenceEqual(
             expected, actual,
@@ -67,7 +67,7 @@ class case_rgb_pixel_to_ycbcr(unittest.TestCase):
 
     def test_colorpixel(self):
         original = [48, 113, 219]  # #3071db Tchelet
-        expected = [105, 191, 86]
+        expected = [137, 186, 78]
         actual = encode.rgb_pixel_to_ycbcr(original)
         self.assertSequenceEqual(
             expected, actual,
@@ -84,10 +84,10 @@ class case_RGB_to_YCbCr(unittest.TestCase):
             [(255, 255, 255), (48, 113, 219), (255, 255, 255)]
         ])
         expected = np.array([
-            [(255, 128, 128), (106, 192, 87), (0, 128, 128)],
-            [(0, 128, 128), (106, 192, 87), (255, 128, 128)],
-            [(106, 192, 87), (0, 128, 128), (0, 128, 128)],
-            [(255, 128, 128), (106, 192, 87), (255, 128, 128)]
+            [(255, 128, 128), (137, 186, 78), (0, 128, 128)],
+            [(0, 128, 128), (137, 186, 78), (255, 128, 128)],
+            [(137, 186, 78), (0, 128, 128), (0, 128, 128)],
+            [(255, 128, 128), (137, 186, 78), (255, 128, 128)]
         ])
         actual = encode.RGB_to_YCbCr(original)
         np.testing.assert_array_equal(
@@ -96,10 +96,11 @@ class case_RGB_to_YCbCr(unittest.TestCase):
             .format(original, actual, expected))
     
     def test_vs_pil(self):
-        im = Image.open("img/colored.bmp")
-        expected = np.array(im.convert("YCbCr"))
-        actual = encode.RGB_to_YCbCr(np.array(im))
-        np.testing.assert_array_almost_equal(expected, actual, 20)
+        im = cv2.imread("img/colored.bmp")
+        expected = cv2.cvtColor(im, cv2.COLOR_BGR2YCrCb)
+        actual = encode.RGB_to_YCbCr(im)
+        different = np.abs(actual - expected).sum() / np.prod(im.shape)
+        self.assertLessEqual(different, 10/100)
         
 
 

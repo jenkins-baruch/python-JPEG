@@ -1,6 +1,6 @@
 import numpy as np
-from PIL import Image
 from matplotlib import image, pyplot
+import cv2
 
 
 def get_bitmap_from_bmp(path: str) -> np.ndarray:
@@ -8,8 +8,10 @@ def get_bitmap_from_bmp(path: str) -> np.ndarray:
 
 
 def save_matrix(matrix: np.ndarray, *, mode: str, dest: str):
-    Image.fromarray(matrix, mode=mode).save(dest)
+    image.imsave(dest, matrix)
+    # Image.fromarray(matrix, mode=mode).save(dest)
 
 
 def show_matrix(matrix: np.ndarray, *, mode: str):
-    Image.fromarray(matrix, mode=mode).show()
+    pyplot.imshow(matrix)
+    #Image.fromarray(matrix, mode=mode).show()
