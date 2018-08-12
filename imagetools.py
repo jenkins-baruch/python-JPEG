@@ -1,6 +1,5 @@
 import numpy as np
-from matplotlib import image, pyplot
-import cv2
+from cv2 import cv2
 from typing import List
 
 def BGR_pixel_to_YCrCb(bgr: list)->List[np.uint8]:
@@ -24,14 +23,14 @@ def BGR_to_YCrCb(matrix3D: np.ndarray)->np.ndarray:
 
 
 def get_bitmap_from_bmp(path: str) -> np.ndarray:
-    return image.imread(path)
+    return cv2.imread(path)
 
 
 def save_matrix(matrix: np.ndarray, *, mode: str, dest: str):
-    image.imsave(dest, matrix)
+    cv2.imsave(dest, matrix)
     # Image.fromarray(matrix, mode=mode).save(dest)
 
 
 def show_matrix(matrix: np.ndarray, *, mode: str):
-    pyplot.imshow(matrix)
+    cv2.imshow(matrix)
     #Image.fromarray(matrix, mode=mode).show()

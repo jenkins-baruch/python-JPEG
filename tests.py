@@ -2,7 +2,6 @@ import unittest
 import encode
 import dct
 import numpy as np
-#from matplotlib import pyplot, image
 from cv2 import cv2
 import os
 import entropy
@@ -12,7 +11,7 @@ path = os.getcwd()
 
 
 def get_colored_matrix(x, y):
-    return np.array([[[row % x, col % y, (row + col) % x] for col in range(y)]
+    return np.array([[[(row + col) % x, col % y, row % x] for col in range(y)]
                      for row in range(x)])
 
 

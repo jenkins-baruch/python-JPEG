@@ -10,8 +10,8 @@ import imagetools
 import encode
 
 
-
 path = sys.argv[1]
+
 img_matrix = imagetools.get_bitmap_from_bmp(path)
 
 ycrcb = imagetools.BGR_to_YCrCb(img_matrix)
