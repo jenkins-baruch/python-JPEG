@@ -2,9 +2,11 @@ import unittest
 import encode
 import dct
 import numpy as np
-from matplotlib import pyplot
+#from matplotlib import pyplot, image
+from cv2 import cv2
 import os
 import entropy
+import imagetools
 
 path = os.getcwd()
 
@@ -22,25 +24,25 @@ class case_get_bitmap_from_bmp(unittest.TestCase):
     def test_whiteImage_getAllWhite(self):
         test_matrix = generate_one_color_matrix(8**3, 8**3, [255, 255, 255])
         np.testing.assert_array_equal(
-            encode.get_bitmap_from_bmp(os.path.join("img", "white.bmp")),
+            imagetools.get_bitmap_from_bmp(os.path.join("img", "white.bmp")),
             test_matrix)
 
     def test_BlackImage_getAllBlack(self):
         test_matrix = generate_one_color_matrix(8**3, 8**3, [0, 0, 0])
         np.testing.assert_array_equal(
-            encode.get_bitmap_from_bmp(os.path.join("img", "black.bmp")),
+            imagetools.get_bitmap_from_bmp(os.path.join("img", "black.bmp")),
             test_matrix)
 
     def test_ColoredImage_getAllColored(self):
         test_matrix = get_colored_matrix(255, 255)
         np.testing.assert_array_equal(
-            encode.get_bitmap_from_bmp(os.path.join("img", "colored.bmp")),
+            imagetools.get_bitmap_from_bmp(os.path.join("img", "colored.bmp")),
             test_matrix)
 
     def test_NotProd8Size_ColoredImage(self):
         test_matrix = get_colored_matrix(100, 100)
         np.testing.assert_array_equal(
-            encode.get_bitmap_from_bmp(
+            imagetools.get_bitmap_from_bmp(
                 os.path.join("img", "colored_100x100.bmp")), test_matrix)
 
 
@@ -65,7 +67,7 @@ class case_rgb_pixel_to_ycbcr(unittest.TestCase):
 
     def test_colorpixel(self):
         original = [48, 113, 219]  # #3071db Tchelet
-        expected = [106, 192, 87]
+        expected = [137, 186, 78]
         actual = encode.rgb_pixel_to_ycbcr(original)
         self.assertSequenceEqual(
             expected, actual,
@@ -75,22 +77,31 @@ class case_rgb_pixel_to_ycbcr(unittest.TestCase):
 
 class case_RGB_to_YCbCr(unittest.TestCase):
     def test_matrix(self):
-        original = [
+        original = np.array([
             [(255, 255, 255), (48, 113, 219), (0, 0, 0)],
             [(0, 0, 0), (48, 113, 219), (255, 255, 255)],
             [(48, 113, 219), (0, 0, 0), (0, 0, 0)],
             [(255, 255, 255), (48, 113, 219), (255, 255, 255)]
-        ]
-        expected = [[(255, 128, 128), (106, 192, 87), (0, 128, 128)],
-                    [(0, 128, 128), (106, 192, 87), (255, 128, 128)],
-                    [(106, 192, 87), (0, 128, 128),
-                     (0, 128, 128)], [(255, 128, 128), (106, 192, 87),
-                                      (255, 128, 128)]]
-        actual = list(list(x) for x in encode.RGB_to_YCbCr(original))
+        ])
+        expected = np.array([
+            [(255, 128, 128), (137, 186, 78), (0, 128, 128)],
+            [(0, 128, 128), (137, 186, 78), (255, 128, 128)],
+            [(137, 186, 78), (0, 128, 128), (0, 128, 128)],
+            [(255, 128, 128), (137, 186, 78), (255, 128, 128)]
+        ])
+        actual = encode.RGB_to_YCbCr(original)
         np.testing.assert_array_equal(
-            expected, actual,
+            expected, actual, 
             "The original pixel- {} converted to {} and not to {} that expected"
             .format(original, actual, expected))
+    
+    def test_vs_pil(self):
+        im = cv2.imread("img/colored.bmp")
+        expected = cv2.cvtColor(im, cv2.COLOR_BGR2YCrCb)
+        actual = encode.RGB_to_YCbCr(im)
+        different = np.abs(actual - expected).sum() / np.prod(im.shape)
+        self.assertLessEqual(different, 10/100)
+        
 
 
 class case_YCbCr_Downsample(unittest.TestCase):
