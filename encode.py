@@ -8,15 +8,15 @@ from typing import List, Tuple
 import imagetools
 
 
-def seperate_y_cb_cr(YCbCr_matrix: np.ndarray)->List[np.ndarray]:
-    return [YCbCr_matrix[..., 0], YCbCr_matrix[..., 1], YCbCr_matrix[..., 2]]
+def seperate_to_three_colors(YCrCb_matrix: np.ndarray)->List[np.ndarray]:
+    return [YCrCb_matrix[..., 0], YCrCb_matrix[..., 1], YCrCb_matrix[..., 2]]
 
 
-def YCbCr_Downsample(matrix: np.ndarray):
+def Downsample(matrix: np.ndarray):
     return matrix[::2, ::2]
 
 
-def CbCr_Upsample(matrix: np.ndarray)->np.ndarray:
+def Upsample(matrix: np.ndarray)->np.ndarray:
     return matrix.repeat(2, axis=0).repeat(2, axis=1)
 
 
@@ -59,15 +59,15 @@ def compress_image(path, entropy=False):    # pragma: no cover
     if entropy:
         print("Bitmap entropy: " + str(ent.entropy(bitmap)))
 
-    print("Converting to YCbCr")
-    ycbcr_bitmap = imagetools.RGB_to_YCbCr(bitmap)
+    print("Converting to YCrCb")
+    ycrcb_bitmap = imagetools.BGR_to_YCrCb(bitmap)
 
     print("Seperating bitmap to Y, Cb, Cr matrixes")
-    y, cb, cr = seperate_y_cb_cr(ycbcr_bitmap)
+    y, cb, cr = seperate_to_three_colors(ycrcb_bitmap)
 
     print("Downsampling")
-    cb_downsample = YCbCr_Downsample(cb)
-    cr_downsample = YCbCr_Downsample(cr)
+    cb_downsample = Downsample(cb)
+    cr_downsample = Downsample(cr)
 
     y_shape = (math.ceil(y.shape[0]/8), math.ceil(y.shape[1]/8))
     cb_shape = (
@@ -121,12 +121,12 @@ def compress_image(path, entropy=False):    # pragma: no cover
     cr_big = concatenate_submatrixes_to_big_matrix(cr_invert_dct, cr_shape)
 
     print("Upsample")
-    cb_upsample = CbCr_Upsample(cb_big)
-    cr_upsample = CbCr_Upsample(cr_big)
+    cb_upsample = Upsample(cb_big)
+    cr_upsample = Upsample(cr_big)
 
     new_image = concatenate_Y_Cb_Cr(y_big, cb_upsample, cr_upsample)
 
-    #Image.fromarray(new_image, mode='YCbCr').show()
+    #Image.fromarray(new_image, mode='YCrCb').show()
 
 
 def main(*argv):    # pragma: no cover

@@ -11,7 +11,7 @@ quantization_matrix = [[16, 11, 10, 16, 24, 40, 51,
                                     101], [72, 92, 95, 98, 112, 100, 103, 99]]
 
 def __normalize_to_zero(matrix:np.ndarray):
-    """Normalize YCbCr values- remove 128 from each object
+    """Normalize YCrCb values- remove 128 from each object
 
     Arguments:
         submatrix {ndarray} -- 8*8 Submatrix

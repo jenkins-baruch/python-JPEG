@@ -14,10 +14,10 @@ import encode
 path = sys.argv[1]
 img_matrix = imagetools.get_bitmap_from_bmp(path)
 
-ycbcr = imagetools.RGB_to_YCbCr(img_matrix)
-imagetools.show_matrix(ycbcr, mode='YCbCr')
-imagetools.save_matrix(ycbcr, mode="YCbCr",
-                       dest="Flowchart/results/ycbcr.jpeg")
-jpg = imagetools.get_bitmap_from_bmp("Flowchart/results/ycbcr.jpeg")
+ycrcb = imagetools.BGR_to_YCrCb(img_matrix)
+imagetools.show_matrix(ycrcb, mode='')
+imagetools.save_matrix(ycrcb, mode="",
+                       dest="Flowchart/results/ycrcb.jpeg")
+jpg = imagetools.get_bitmap_from_bmp("Flowchart/results/ycrcb.jpeg")
 input()
-imagetools.show_matrix(jpg, mode='YCbCr')
+imagetools.show_matrix(jpg, mode='')

@@ -46,11 +46,11 @@ class case_get_bitmap_from_bmp(unittest.TestCase):
                 os.path.join("img", "colored_100x100.bmp")), test_matrix)
 
 
-class case_rgb_pixel_to_ycbcr(unittest.TestCase):
+class case_bgr_pixel_to_ycrcb(unittest.TestCase):
     def test_whitepixel(self):
         original = [255, 255, 255]
         expected = [255, 128, 128]
-        actual = imagetools.rgb_pixel_to_ycbcr(original)
+        actual = imagetools.BGR_pixel_to_YCrCb(original)
         self.assertSequenceEqual(
             expected, actual,
             "The original pixel- {} converted to {} and not to {} that expected"
@@ -59,7 +59,7 @@ class case_rgb_pixel_to_ycbcr(unittest.TestCase):
     def test_blackpixel(self):
         original = [0, 0, 0]
         expected = [0, 128, 128]
-        actual = imagetools.rgb_pixel_to_ycbcr(original)
+        actual = imagetools.BGR_pixel_to_YCrCb(original)
         self.assertSequenceEqual(
             expected, actual,
             "The original pixel- {} converted to {} and not to {} that expected"
@@ -68,14 +68,14 @@ class case_rgb_pixel_to_ycbcr(unittest.TestCase):
     def test_colorpixel(self):
         original = [48, 113, 219]  # #3071db Tchelet
         expected = [137, 186, 78]
-        actual = imagetools.rgb_pixel_to_ycbcr(original)
+        actual = imagetools.BGR_pixel_to_YCrCb(original)
         self.assertSequenceEqual(
             expected, actual,
             "The original pixel- {} converted to {} and not to {} that expected"
             .format(original, actual, expected))
 
 
-class case_RGB_to_YCbCr(unittest.TestCase):
+class case_BGR_to_YCrCb(unittest.TestCase):
     def test_matrix(self):
         original = np.array([
             [(255, 255, 255), (48, 113, 219), (0, 0, 0)],
@@ -89,7 +89,7 @@ class case_RGB_to_YCbCr(unittest.TestCase):
             [(137, 186, 78), (0, 128, 128), (0, 128, 128)],
             [(255, 128, 128), (137, 186, 78), (255, 128, 128)]
         ])
-        actual = imagetools.RGB_to_YCbCr(original)
+        actual = imagetools.BGR_to_YCrCb(original)
         np.testing.assert_array_equal(
             expected, actual, 
             "The original pixel- {} converted to {} and not to {} that expected"
@@ -98,14 +98,14 @@ class case_RGB_to_YCbCr(unittest.TestCase):
     def test_vs_pil(self):
         im = cv2.imread("img/colored.bmp")
         expected = cv2.cvtColor(im, cv2.COLOR_BGR2YCrCb)
-        actual = imagetools.RGB_to_YCbCr(im)
+        actual = imagetools.BGR_to_YCrCb(im)
         different = np.abs(actual - expected).sum() / np.prod(im.shape)
         self.assertLessEqual(different, 10/100)
         
 
 
-class case_YCbCr_Downsample(unittest.TestCase):
-    def test_YCbCr_Downsample(self):
+class case_YCrCb_Downsample(unittest.TestCase):
+    def test_YCrCb_Downsample(self):
         original = np.array([
             [150, 2, 255, 100],
             [123,234,23,34],
@@ -116,13 +116,13 @@ class case_YCbCr_Downsample(unittest.TestCase):
             [150, 255],
             [65,234]
         ]
-        actual = encode.YCbCr_Downsample(original)
+        actual = encode.Downsample(original)
         np.testing.assert_array_equal(
             expected, actual,
             "The original pixel- {} converted to {} and not to {} that expected"
             .format(original, actual, expected))
 
-    def test_YCbCr_Downsample_odd(self):
+    def test_YCrCb_Downsample_odd(self):
         original = np.array([
             [150, 2, 255, 100, 89],
             [123,234,23,34, 0],
@@ -135,7 +135,7 @@ class case_YCbCr_Downsample(unittest.TestCase):
             [65,234,176],
             [57,187,76]
         ]
-        actual = encode.YCbCr_Downsample(original)
+        actual = encode.Downsample(original)
         np.testing.assert_array_equal(
             expected, actual,
             "The original pixel- {} converted to {} and not to {} that expected"
@@ -165,7 +165,7 @@ class case_seperate_y_cb_cr(unittest.TestCase):
                 [68,104]
             ]
         ]
-        y, cb, cr = encode.seperate_y_cb_cr(original)
+        y, cb, cr = encode.seperate_to_three_colors(original)
         actual = [
             [[cell for cell in row] for row in y],
             [[cell for cell in row] for row in cb],
