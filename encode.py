@@ -8,34 +8,6 @@ from typing import List, Tuple
 import imagetools
 
 
-def rgb_pixel_to_ycbcr(bgr: list)->List[np.uint8]:
-    return [
-        round(0.299 * bgr[2] + 0.587 * bgr[1] + 0.114 * bgr[0]),  # Y'
-        round((bgr[2]-round((0.299 * bgr[2] + 0.587 * bgr[1] + 0.114 * bgr[0])))*0.713 + 128),    # Cr
-        round((bgr[0]-round((0.299 * bgr[2] + 0.587 * bgr[1] + 0.114 * bgr[0])))*0.564 + 128)    # Cb
-    ]
-    # return [
-    #     np.uint8(0 + (0.299 * rgb[0]) +
-    #              (0.587 * rgb[1]) + (0.114 * rgb[2])),  # Y'
-    #     np.uint8(128 - (0.168736 * rgb[0]) - \
-    #              (0.331264 * rgb[1]) + (0.5 * rgb[2])),  # Cb
-    #     np.uint8(128 + (0.5 * rgb[0]) - (0.418688 * \
-    #                                      rgb[1]) - (0.081312 * rgb[2]))  # Cr
-    # ]
-
-
-def RGB_to_YCbCr(matrix3D: np.ndarray)->np.ndarray:
-    """Converting pixels from RGB (Red, Green, Blue) to YCbCr (luma, blue-difference, red-difference)
-
-    Arguments:
-        matrix {ndarray} -- The image Bitmap as 2D array
-
-    Returns:
-        ndarray -- The new Bitmap with YCbCr as 2D array
-    """
-    return np.apply_along_axis(rgb_pixel_to_ycbcr, 2, matrix3D)
-
-
 def seperate_y_cb_cr(YCbCr_matrix: np.ndarray)->List[np.ndarray]:
     return [YCbCr_matrix[..., 0], YCbCr_matrix[..., 1], YCbCr_matrix[..., 2]]
 
@@ -88,7 +60,7 @@ def compress_image(path, entropy=False):    # pragma: no cover
         print("Bitmap entropy: " + str(ent.entropy(bitmap)))
 
     print("Converting to YCbCr")
-    ycbcr_bitmap = RGB_to_YCbCr(bitmap)
+    ycbcr_bitmap = imagetools.RGB_to_YCbCr(bitmap)
 
     print("Seperating bitmap to Y, Cb, Cr matrixes")
     y, cb, cr = seperate_y_cb_cr(ycbcr_bitmap)
@@ -154,7 +126,7 @@ def compress_image(path, entropy=False):    # pragma: no cover
 
     new_image = concatenate_Y_Cb_Cr(y_big, cb_upsample, cr_upsample)
 
-    Image.fromarray(new_image, mode='YCbCr').show()
+    #Image.fromarray(new_image, mode='YCbCr').show()
 
 
 def main(*argv):    # pragma: no cover

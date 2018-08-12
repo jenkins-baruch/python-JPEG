@@ -50,7 +50,7 @@ class case_rgb_pixel_to_ycbcr(unittest.TestCase):
     def test_whitepixel(self):
         original = [255, 255, 255]
         expected = [255, 128, 128]
-        actual = encode.rgb_pixel_to_ycbcr(original)
+        actual = imagetools.rgb_pixel_to_ycbcr(original)
         self.assertSequenceEqual(
             expected, actual,
             "The original pixel- {} converted to {} and not to {} that expected"
@@ -59,7 +59,7 @@ class case_rgb_pixel_to_ycbcr(unittest.TestCase):
     def test_blackpixel(self):
         original = [0, 0, 0]
         expected = [0, 128, 128]
-        actual = encode.rgb_pixel_to_ycbcr(original)
+        actual = imagetools.rgb_pixel_to_ycbcr(original)
         self.assertSequenceEqual(
             expected, actual,
             "The original pixel- {} converted to {} and not to {} that expected"
@@ -68,7 +68,7 @@ class case_rgb_pixel_to_ycbcr(unittest.TestCase):
     def test_colorpixel(self):
         original = [48, 113, 219]  # #3071db Tchelet
         expected = [137, 186, 78]
-        actual = encode.rgb_pixel_to_ycbcr(original)
+        actual = imagetools.rgb_pixel_to_ycbcr(original)
         self.assertSequenceEqual(
             expected, actual,
             "The original pixel- {} converted to {} and not to {} that expected"
@@ -89,7 +89,7 @@ class case_RGB_to_YCbCr(unittest.TestCase):
             [(137, 186, 78), (0, 128, 128), (0, 128, 128)],
             [(255, 128, 128), (137, 186, 78), (255, 128, 128)]
         ])
-        actual = encode.RGB_to_YCbCr(original)
+        actual = imagetools.RGB_to_YCbCr(original)
         np.testing.assert_array_equal(
             expected, actual, 
             "The original pixel- {} converted to {} and not to {} that expected"
@@ -98,7 +98,7 @@ class case_RGB_to_YCbCr(unittest.TestCase):
     def test_vs_pil(self):
         im = cv2.imread("img/colored.bmp")
         expected = cv2.cvtColor(im, cv2.COLOR_BGR2YCrCb)
-        actual = encode.RGB_to_YCbCr(im)
+        actual = imagetools.RGB_to_YCbCr(im)
         different = np.abs(actual - expected).sum() / np.prod(im.shape)
         self.assertLessEqual(different, 10/100)
         
