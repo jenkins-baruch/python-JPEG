@@ -8,3 +8,5 @@ localscript.py
 coverage.xml
 pylint.out
 nosetests.xml
+**~$**.*x
+/.ipynb_checkpoints/

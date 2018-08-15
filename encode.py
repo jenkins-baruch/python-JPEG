@@ -9,7 +9,7 @@ import imagetools
 
 
 def seperate_to_three_colors(YCrCb_matrix: np.ndarray)->List[np.ndarray]:
-    return [YCrCb_matrix[..., 0], YCrCb_matrix[..., 1], YCrCb_matrix[..., 2]]
+    return [YCrCb_matrix[..., 0].copy(), YCrCb_matrix[..., 1].copy(), YCrCb_matrix[..., 2].copy()]
 
 
 def Downsample(matrix: np.ndarray):
@@ -48,7 +48,7 @@ def concatenate_submatrixes_to_big_matrix(submatrixes: List[np.ndarray], shape: 
     return np.block([submatrixes[i:i+shape[0]] for i in range(0, len(submatrixes), shape[0])])
 
 
-def concatenate_Y_Cb_Cr(Y: np.ndarray, Cb: np.ndarray, Cr: np.ndarray)->np.ndarray:
+def concatenate_three_colors(Y: np.ndarray, Cb: np.ndarray, Cr: np.ndarray)->np.ndarray:
     return np.dstack((Y, Cb, Cr))
 
 
@@ -124,7 +124,9 @@ def compress_image(path, entropy=False):    # pragma: no cover
     cb_upsample = Upsample(cb_big)
     cr_upsample = Upsample(cr_big)
 
-    new_image = concatenate_Y_Cb_Cr(y_big, cb_upsample, cr_upsample)
+    new_image = concatenate_three_colors(y_big, cb_upsample, cr_upsample)
+
+    imagetools.save_matrix(new_image, mode='YCbCr', dest='img/result.png')
 
     #Image.fromarray(new_image, mode='YCrCb').show()
 

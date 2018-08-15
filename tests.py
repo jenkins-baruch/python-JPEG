@@ -94,12 +94,12 @@ class case_BGR_to_YCrCb(unittest.TestCase):
             "The original pixel- {} converted to {} and not to {} that expected"
             .format(original, actual, expected))
     
-    def test_vs_pil(self):
+    def test_vs_cv2(self):
         im = cv2.imread("img/colored.bmp")
         expected = cv2.cvtColor(im, cv2.COLOR_BGR2YCrCb)
         actual = imagetools.BGR_to_YCrCb(im)
-        different = np.abs(actual - expected).sum() / np.prod(im.shape)
-        self.assertLessEqual(different, 10/100)
+        different = np.count_nonzero(actual - expected) / np.prod(im.shape)
+        self.assertLessEqual(different, 1/100)
         
 
 
@@ -469,5 +469,5 @@ class case_concatenate_Y_Cb_Cr(unittest.TestCase):
             [[4,1,7],[5,2,8],[6,3,9]],
             [[7,4,1],[8,5,2],[9,6,3]]
         ])
-        actual = encode.concatenate_Y_Cb_Cr(*original)
+        actual = encode.concatenate_three_colors(*original)
         np.testing.assert_array_equal(expected,actual)
