@@ -38,12 +38,22 @@ def get_bitmap_from_bmp(path: str) -> np.ndarray:
     return cv2.imread(path)
 
 
-def save_matrix(matrix: np.ndarray, *, mode: str, dest: str):
+def save_matrix(matrix: np.ndarray, mode:str = 'BGR', dest: str = 'tmp.png'):
+    if mode == 'YCrCb':
+        matrix = YCrCb_to_BGR(matrix)
+        mode = 'BGR'
+    if mode != 'BGR':
+        raise Exception('{} currently not supported to save.'.format(mode))
     cv2.imwrite(dest, matrix)
 
 
 def show_matrix(matrix: np.ndarray, mode='BGR', name='tmp'):
     if mode == 'YCrCb':
         matrix = YCrCb_to_BGR(matrix)
+        mode = 'BGR'
+    if mode != 'BGR':
+        raise Exception('{} currently not supported to show.'.format(mode))
     cv2.imshow(name, matrix)
     cv2.waitKey(20)
+    print("Enter to close image: ")
+    cv2.destroyAllWindows()
