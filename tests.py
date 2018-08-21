@@ -117,12 +117,9 @@ class case_YCrCb_to_BGR(unittest.TestCase):
             [(255, 255, 255), (48, 113, 219), (255, 255, 255)]
         ])
         actual = imagetools.YCrCb_to_BGR(original)
-        np.testing.assert_array_equal(
-            expected, actual, 
-            "The original pixel- {} converted to {} and not to {} that expected"
-            .format(original, actual, expected))
+        max_different = np.max(np.abs(expected - actual))
+        self.assertLessEqual(max_different, 1, "There is different in size {} between expected and actual\nexpected:\n{}\nactual:\n{}".format(max_different, expected, actual))
         
-
 
 class case_YCrCb_Downsample(unittest.TestCase):
     def test_YCrCb_Downsample(self):
@@ -292,12 +289,9 @@ class case_discerete_cosine_transform(unittest.TestCase):
             [-0.17, 0.14, -1.07, -4.19, -1.17, -0.10, 0.50, 1.68]])
         actual = dct.DCT(original)
 
-        np.testing.assert_array_almost_equal(
-            expected,
-            actual,
-            decimal=2,
-            err_msg="The original matrix- {} converted to {} and not to {} that expected"
-            .format(original, actual, expected))
+        max_different = np.max(np.abs(expected-actual))
+        self.assertLessEqual(max_different, 0.01,
+            "There is different in size {} between expected and actual\nexpected:\n{}\nactual:\n{}".format(max_different, expected, actual))
 
 
 class case_quantization(unittest.TestCase):

@@ -2,15 +2,20 @@ import numpy as np
 from cv2 import cv2
 from typing import List
 
-def BGR_pixel_to_YCrCb(bgr: list)->List[np.uint8]:
+
+def BGR_pixel_to_YCrCb(bgr: list) -> List[np.uint8]:
     return [
         round(0.299 * bgr[2] + 0.587 * bgr[1] + 0.114 * bgr[0]),  # Y'
-        round((bgr[2]-round((0.299 * bgr[2] + 0.587 * bgr[1] + 0.114 * bgr[0])))*0.713 + 128),    # Cr
-        round((bgr[0]-round((0.299 * bgr[2] + 0.587 * bgr[1] + 0.114 * bgr[0])))*0.564 + 128)    # Cb
+        round((bgr[2] - round(
+            (0.299 * bgr[2] + 0.587 * bgr[1] + 0.114 * bgr[0]))) * 0.713 +
+              128),  # Cr
+        round((bgr[0] - round(
+            (0.299 * bgr[2] + 0.587 * bgr[1] + 0.114 * bgr[0]))) * 0.564 +
+              128)  # Cb
     ]
 
 
-def BGR_to_YCrCb(matrix3D: np.ndarray)->np.ndarray:
+def BGR_to_YCrCb(matrix3D: np.ndarray) -> np.ndarray:
     """Converting pixels from BGR (Red, Green, Blue) to YCrCb (luma, blue-difference, red-difference)
 
     Arguments:
@@ -21,27 +26,26 @@ def BGR_to_YCrCb(matrix3D: np.ndarray)->np.ndarray:
     """
     return np.apply_along_axis(BGR_pixel_to_YCrCb, 2, matrix3D)
 
-def YCrCb_pixel_to_BGR(ycrcb: list)->List[np.uint8]:
+
+def YCrCb_pixel_to_BGR(ycrcb: list) -> List[np.uint8]:
     return [
-        ycrcb[0] + 1.773* (ycrcb[2] - 128),  # B
-        ycrcb[0] - 0.714 * (ycrcb[1]-128) - 0.344 * (ycrcb[2]-128),    # G
-        ycrcb[0] + 1.403 * (ycrcb[1]-128)    # R
+        round(ycrcb[0] + 1.773 * (ycrcb[2] - 128)),  # B
+        round(ycrcb[0] - 0.714 * (ycrcb[1] - 128) -
+              0.344 * (ycrcb[2] - 128)),  # G
+        round(ycrcb[0] + 1.403 * (ycrcb[1] - 128))  # R
     ]
 
-def __normalize_pixel_to_uint8(pixel: List[float]) -> List[np.uint8]:
-    return [
-            np.uint8(round((pix if pix <= 255 else 255)) if pix > 0 else 0) for pix in pixel
-            ]
-    
-def YCrCb_to_BGR(matrix3D: np.ndarray)->np.ndarray:
-    return np.apply_along_axis(__normalize_pixel_to_uint8, 2, np.apply_along_axis(YCrCb_pixel_to_BGR, 2, matrix3D))
+
+def YCrCb_to_BGR(matrix3D: np.ndarray) -> np.ndarray:
+    return np.apply_along_axis(YCrCb_pixel_to_BGR, 2,
+                               matrix3D).clip(0, 255).astype(np.uint8)
 
 
 def get_bitmap_from_bmp(path: str) -> np.ndarray:
     return cv2.imread(path)
 
 
-def save_matrix(matrix: np.ndarray, mode:str = 'BGR', dest: str = 'tmp.png'):
+def save_matrix(matrix: np.ndarray, mode: str = 'BGR', dest: str = 'tmp.png'):
     if mode == 'YCrCb':
         matrix = YCrCb_to_BGR(matrix)
         mode = 'BGR'

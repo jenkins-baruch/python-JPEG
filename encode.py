@@ -46,9 +46,9 @@ def split_matrix_into_submatrixs(matrix: np.ndarray,
     ]
 
 
-def padding_matrix(matrix: np.ndarray, tosize=8) -> np.ndarray:
-    return np.pad(matrix, ((0, tosize - matrix.shape[0]),
-                           (0, tosize - matrix.shape[1])), 'constant')
+# def padding_matrix(matrix: np.ndarray, tosize=8) -> np.ndarray:
+#     return np.pad(matrix, ((0, tosize - matrix.shape[0]),
+#                            (0, tosize - matrix.shape[1])), 'constant')
 
 
 def concatenate_submatrixes_to_big_matrix(submatrixes: List[np.ndarray],
@@ -67,6 +67,12 @@ def concatenate_three_colors(Y: np.ndarray, Cb: np.ndarray,
 def shape_for_contacting(shape: Tuple) -> Tuple:
     return (math.ceil(shape[0] / 8), math.ceil(shape[1] / 8))
 
+def crop_bitmap(bitmap:np.ndarray, size:int=8)->np.ndarray:
+    return bitmap[
+            math.floor(bitmap.shape[0]%size/2) : bitmap.shape[0] - math.ceil(bitmap.shape[0]%8/2),
+            math.floor(bitmap.shape[1]%size/2) : bitmap.shape[1] - math.ceil(bitmap.shape[1]%size/2),
+                ]
+
 
 def compress_image(path, entropy=False):  # pragma: no cover
     print("Reading file")
@@ -74,9 +80,12 @@ def compress_image(path, entropy=False):  # pragma: no cover
 
     if entropy:
         print("Bitmap entropy: " + str(ent.entropy(bitmap)))
-
+    
+    print("Crop image")
+    ycrcb_crop = crop_bitmap(bitmap)
+    
     print("Converting to YCrCb")
-    ycrcb_bitmap = imagetools.BGR_to_YCrCb(bitmap)
+    ycrcb_bitmap = imagetools.BGR_to_YCrCb(ycrcb_crop)
 
     print("Seperating bitmap to Y, Cb, Cr matrixes")
     y, cb, cr = seperate_to_three_colors(ycrcb_bitmap)
@@ -96,24 +105,10 @@ def compress_image(path, entropy=False):  # pragma: no cover
     cb_split = split_matrix_into_submatrixs(cb_downsample)
     cr_split = split_matrix_into_submatrixs(cr_downsample)
 
-    print("paddings")
-    y_padding = [
-        matrix if matrix.shape == (8, 8) else padding_matrix(matrix)
-        for matrix in y_split
-    ]
-    cb_padding = [
-        matrix if matrix.shape == (8, 8) else padding_matrix(matrix)
-        for matrix in cb_split
-    ]
-    cr_padding = [
-        matrix if matrix.shape == (8, 8) else padding_matrix(matrix)
-        for matrix in cr_split
-    ]
-
     print("DCT")
-    y_dct = [dct.DCT(submatrix) for submatrix in y_padding]
-    cb_dct = [dct.DCT(submatrix) for submatrix in cb_padding]
-    cr_dct = [dct.DCT(submatrix) for submatrix in cr_padding]
+    y_dct = [dct.DCT(submatrix) for submatrix in y_split]
+    cb_dct = [dct.DCT(submatrix) for submatrix in cb_split]
+    cr_dct = [dct.DCT(submatrix) for submatrix in cr_split]
 
     print("Quantization")
     y_quantization = [dct.quantization(submatrix) for submatrix in y_dct]
