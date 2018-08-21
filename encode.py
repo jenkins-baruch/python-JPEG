@@ -8,19 +8,23 @@ from typing import List, Tuple
 import imagetools
 
 
-def seperate_to_three_colors(YCrCb_matrix: np.ndarray)->List[np.ndarray]:
-    return [YCrCb_matrix[..., 0].copy(), YCrCb_matrix[..., 1].copy(), YCrCb_matrix[..., 2].copy()]
+def seperate_to_three_colors(YCrCb_matrix: np.ndarray) -> List[np.ndarray]:
+    return [
+        YCrCb_matrix[..., 0].copy(), YCrCb_matrix[..., 1].copy(),
+        YCrCb_matrix[..., 2].copy()
+    ]
 
 
 def Downsample(matrix: np.ndarray):
     return matrix[::2, ::2]
 
 
-def Upsample(matrix: np.ndarray)->np.ndarray:
+def Upsample(matrix: np.ndarray) -> np.ndarray:
     return matrix.repeat(2, axis=0).repeat(2, axis=1)
 
 
-def split_matrix_into_submatrixs(matrix: np.ndarray)->List[np.ndarray]:
+def split_matrix_into_submatrixs(matrix: np.ndarray,
+                                 size: int = 8) -> List[np.ndarray]:
     """Split the bitmap to 8*8 matrixs
 
     Arguments:
@@ -31,31 +35,43 @@ def split_matrix_into_submatrixs(matrix: np.ndarray)->List[np.ndarray]:
     """
     return [
         np.array([
-            [matrix[row_index][col_index]
-             for col_index in range(col, min(col + 8, len(matrix[0])))
-             ]  # row in matrix
-            for row_index in range(row, min(row + 8, len(matrix)))
+            [
+                matrix[row_index][col_index]
+                for col_index in range(col, min(col + size, len(matrix[0])))
+            ]  # row in matrix
+            for row_index in range(row, min(row + size, len(matrix)))
         ])  # 8*8 matrix
-        for col in range(0, len(matrix[0]), 8)
-        for row in range(0, len(matrix), 8)]
+        for row in range(0, len(matrix), size)
+        for col in range(0, len(matrix[0]), size)
+    ]
 
 
-def padding_matrix_to_8_8(matrix: np.ndarray)->np.ndarray:
-    return np.pad(matrix, ((0, 8-matrix.shape[0]), (0, 8-matrix.shape[1])), 'constant')
+def padding_matrix(matrix: np.ndarray, tosize=8) -> np.ndarray:
+    return np.pad(matrix, ((0, tosize - matrix.shape[0]),
+                           (0, tosize - matrix.shape[1])), 'constant')
 
 
-def concatenate_submatrixes_to_big_matrix(submatrixes: List[np.ndarray], shape: Tuple[int]):
-    return np.block([submatrixes[i:i+shape[0]] for i in range(0, len(submatrixes), shape[0])])
+def concatenate_submatrixes_to_big_matrix(submatrixes: List[np.ndarray],
+                                          shape: Tuple[int]):
+    return np.block([
+        submatrixes[i:i + shape[1]]
+        for i in range(0, len(submatrixes), shape[1])
+    ])
 
 
-def concatenate_three_colors(Y: np.ndarray, Cb: np.ndarray, Cr: np.ndarray)->np.ndarray:
+def concatenate_three_colors(Y: np.ndarray, Cb: np.ndarray,
+                             Cr: np.ndarray) -> np.ndarray:
     return np.dstack((Y, Cb, Cr))
 
 
-def compress_image(path, entropy=False):    # pragma: no cover
+def shape_for_contacting(shape: Tuple) -> Tuple:
+    return (math.ceil(shape[0] / 8), math.ceil(shape[1] / 8))
+
+
+def compress_image(path, entropy=False):  # pragma: no cover
     print("Reading file")
     bitmap = imagetools.get_bitmap_from_bmp(path)
-    
+
     if entropy:
         print("Bitmap entropy: " + str(ent.entropy(bitmap)))
 
@@ -69,11 +85,11 @@ def compress_image(path, entropy=False):    # pragma: no cover
     cb_downsample = Downsample(cb)
     cr_downsample = Downsample(cr)
 
-    y_shape = (math.ceil(y.shape[0]/8), math.ceil(y.shape[1]/8))
-    cb_shape = (
-        math.ceil(cb_downsample.shape[0]/8), math.ceil(cb_downsample.shape[1]/8))
-    cr_shape = (
-        math.ceil(cr_downsample.shape[0]/8), math.ceil(cr_downsample.shape[1]/8))
+    y_shape = (math.ceil(y.shape[0] / 8), math.ceil(y.shape[1] / 8))
+    cb_shape = (math.ceil(cb_downsample.shape[0] / 8),
+                math.ceil(cb_downsample.shape[1] / 8))
+    cr_shape = (math.ceil(cr_downsample.shape[0] / 8),
+                math.ceil(cr_downsample.shape[1] / 8))
 
     print("Splitting to 8x8 submatrixes")
     y_split = split_matrix_into_submatrixs(y)
@@ -81,12 +97,18 @@ def compress_image(path, entropy=False):    # pragma: no cover
     cr_split = split_matrix_into_submatrixs(cr_downsample)
 
     print("paddings")
-    y_padding = [matrix if matrix.shape == (
-        8, 8) else padding_matrix_to_8_8(matrix) for matrix in y_split]
-    cb_padding = [matrix if matrix.shape == (
-        8, 8) else padding_matrix_to_8_8(matrix) for matrix in cb_split]
-    cr_padding = [matrix if matrix.shape == (
-        8, 8) else padding_matrix_to_8_8(matrix) for matrix in cr_split]
+    y_padding = [
+        matrix if matrix.shape == (8, 8) else padding_matrix(matrix)
+        for matrix in y_split
+    ]
+    cb_padding = [
+        matrix if matrix.shape == (8, 8) else padding_matrix(matrix)
+        for matrix in cb_split
+    ]
+    cr_padding = [
+        matrix if matrix.shape == (8, 8) else padding_matrix(matrix)
+        for matrix in cr_split
+    ]
 
     print("DCT")
     y_dct = [dct.DCT(submatrix) for submatrix in y_padding]
@@ -99,16 +121,20 @@ def compress_image(path, entropy=False):    # pragma: no cover
     cr_quantization = [dct.quantization(submatrix) for submatrix in cr_dct]
 
     if entropy:
-        print("Compressed entropy: " +
-              str(ent.entropy(np.array([y_quantization, cb_quantization, cr_quantization]))))
+        print("Compressed entropy: " + str(
+            ent.entropy(
+                np.array([y_quantization, cb_quantization, cr_quantization]))))
 
     print("UnQuantization")
-    y_un_quantization = [dct.un_quantization(
-        submatrix) for submatrix in y_quantization]
-    cb_un_quantization = [dct.un_quantization(
-        submatrix) for submatrix in cb_quantization]
-    cr_un_quantization = [dct.un_quantization(
-        submatrix) for submatrix in cr_quantization]
+    y_un_quantization = [
+        dct.un_quantization(submatrix) for submatrix in y_quantization
+    ]
+    cb_un_quantization = [
+        dct.un_quantization(submatrix) for submatrix in cb_quantization
+    ]
+    cr_un_quantization = [
+        dct.un_quantization(submatrix) for submatrix in cr_quantization
+    ]
 
     print("Invert DCT")
     y_invert_dct = [dct.inverse_DCT(matrix) for matrix in y_un_quantization]
@@ -126,14 +152,14 @@ def compress_image(path, entropy=False):    # pragma: no cover
 
     new_image = concatenate_three_colors(y_big, cb_upsample, cr_upsample)
 
-    imagetools.save_matrix(new_image, mode='YCbCr', dest='img/result.png')
+    imagetools.show_matrix(new_image, mode='YCrCb')
+    imagetools.save_matrix(new_image, mode='YCrCb', dest='img/result.png')
 
     #Image.fromarray(new_image, mode='YCrCb').show()
 
 
-def main(*argv):    # pragma: no cover
+def main(*argv):  # pragma: no cover
     import argparse
-    import imghdr
     from pyfiglet import Figlet
 
     # fonts from http://www.figlet.org/examples.html
@@ -146,18 +172,14 @@ def main(*argv):    # pragma: no cover
     parser = argparse.ArgumentParser(
         description='Compress image by JPEG algorithm')
     parser.add_argument('PATH')
-    parser.add_argument('-e', action='store_true',
-                        help='Show entropy of images')
-    parser.add_argument('-d', action='store_true',
-                        help='Request input for attach debugger')
+    parser.add_argument(
+        '-e', action='store_true', help='Show entropy of images')
+    parser.add_argument(
+        '-d', action='store_true', help='Request input for attach debugger')
     args = parser.parse_args()
     if args.d:
         input("Attach debugger and Enter: ")
-    if imghdr.what(args.PATH) != 'bmp':
-        print("{} format is not supported for now".format(
-            imghdr.what(args.PATH)), file=sys.stderr)
-    else:
-        compress_image(args.PATH, args.e)
+    compress_image(args.PATH, args.e)
 
     return 1
 

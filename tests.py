@@ -100,6 +100,27 @@ class case_BGR_to_YCrCb(unittest.TestCase):
         actual = imagetools.BGR_to_YCrCb(im)
         different = np.count_nonzero(actual - expected) / np.prod(im.shape)
         self.assertLessEqual(different, 1/100)
+
+
+class case_YCrCb_to_BGR(unittest.TestCase):
+    def test_matrix(self):
+        original = np.array([
+            [(255, 128, 128), (137, 186, 78), (0, 128, 128)],
+            [(0, 128, 128), (137, 186, 78), (255, 128, 128)],
+            [(137, 186, 78), (0, 128, 128), (0, 128, 128)],
+            [(255, 128, 128), (137, 186, 78), (255, 128, 128)]
+        ])
+        expected = np.array([
+            [(255, 255, 255), (48, 113, 219), (0, 0, 0)],
+            [(0, 0, 0), (48, 113, 219), (255, 255, 255)],
+            [(48, 113, 219), (0, 0, 0), (0, 0, 0)],
+            [(255, 255, 255), (48, 113, 219), (255, 255, 255)]
+        ])
+        actual = imagetools.YCrCb_to_BGR(original)
+        np.testing.assert_array_equal(
+            expected, actual, 
+            "The original pixel- {} converted to {} and not to {} that expected"
+            .format(original, actual, expected))
         
 
 
@@ -187,10 +208,10 @@ class case_split_matrix_into_submatrixs(unittest.TestCase):
                 [x * y for x in range(8)] for y in range(8)
             ],
             [
-                [x * y for x in range(8)] for y in range(8, 16)
+                [x * y for x in range(8, 16)] for y in range(8)
             ],
             [
-                [x * y for x in range(8, 16)] for y in range(8)
+                [x * y for x in range(8)] for y in range(8, 16)
             ],
             [
                 [x * y for x in range(8, 16)] for y in range(8, 16)
@@ -206,8 +227,8 @@ class case_split_matrix_into_submatrixs(unittest.TestCase):
     def test_split_matrix_into_submatrixs_odd(self):
         original = [[x * y for x in range(9)] for y in range(9)]
         expected = [[[x * y for x in range(8)] for y in range(8)],
-                    [[x * y for x in range(8)] for y in range(8, 9)],
                     [[x * y for x in range(8, 9)] for y in range(8)],
+                    [[x * y for x in range(8)] for y in range(8, 9)],
                     [[x * y for x in range(8, 9)] for y in range(8, 9)]]
         actual = list(
             list(list(list(row) for row in submatrix))
@@ -240,7 +261,7 @@ class case_padding_matrix_to_8_8(unittest.TestCase):
             [0, 0, 0, 0,
                 0, 0, 0, 0]
         ])
-        actual = encode.padding_matrix_to_8_8(original)
+        actual = encode.padding_matrix(original)
 
         np.testing.assert_array_equal(
             expected, actual,
@@ -260,7 +281,7 @@ class case_discerete_cosine_transform(unittest.TestCase):
             [85, 71, 64, 59, 55, 61, 65, 83],
             [87, 79, 69, 68, 65, 76, 78, 94]
         ])
-        expected = [[
+        expected = np.array([[
             -415.38, -30.19, -61.20, 27.24, 56.12, -20.10, -2.39, 0.46
         ], [4.47, -21.86, -60.76, 10.25, 13.15, -7.09, -8.54, 4.88], [
             -46.83, 7.37, 77.13, -24.56, -28.91, 9.93, 5.42, -5.65
@@ -268,9 +289,8 @@ class case_discerete_cosine_transform(unittest.TestCase):
             1.95], [12.12, -6.55, -13.20, -3.95, -1.87, 1.75, -2.79,
                     3.14], [-7.73, 2.91, 2.38, -5.94, -2.38, 0.94, 4.30, 1.85],
             [-1.03, 0.18, 0.42, -2.42, -0.88, -3.02, 4.12, -0.66],
-            [-0.17, 0.14, -1.07, -4.19, -1.17, -0.10, 0.50, 1.68]]
-        actual = [[col for col in row]
-                  for row in dct.DCT(original)]
+            [-0.17, 0.14, -1.07, -4.19, -1.17, -0.10, 0.50, 1.68]])
+        actual = dct.DCT(original)
 
         np.testing.assert_array_almost_equal(
             expected,
@@ -282,7 +302,7 @@ class case_discerete_cosine_transform(unittest.TestCase):
 
 class case_quantization(unittest.TestCase):
     def test_quantization(self):
-        original = [[
+        original = np.array([[
             -415.38, -30.19, -61.20, 27.24, 56.12, -20.10, -2.39, 0.46
         ], [4.47, -21.86, -60.76, 10.25, 13.15, -7.09, -8.54, 4.88], [
             -46.83, 7.37, 77.13, -24.56, -28.91, 9.93, 5.42, -5.65
@@ -290,14 +310,13 @@ class case_quantization(unittest.TestCase):
             1.95], [12.12, -6.55, -13.20, -3.95, -1.87, 1.75, -2.79,
                     3.14], [-7.73, 2.91, 2.38, -5.94, -2.38, 0.94, 4.30, 1.85],
             [-1.03, 0.18, 0.42, -2.42, -0.88, -3.02, 4.12, -0.66],
-            [-0.17, 0.14, -1.07, -4.19, -1.17, -0.10, 0.50, 1.68]]
-        expected = [[-26, -3, -6, 2, 2, -1, 0, 0], [0, -2, -4, 1, 1, 0, 0, 0],
+            [-0.17, 0.14, -1.07, -4.19, -1.17, -0.10, 0.50, 1.68]])
+        expected = np.array([[-26, -3, -6, 2, 2, -1, 0, 0], [0, -2, -4, 1, 1, 0, 0, 0],
                     [-3, 1, 5, -1, -1, 0, 0, 0], [-3, 1, 2, -1, 0, 0, 0,
                                                   0], [1, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0,
-                                               0], [0, 0, 0, 0, 0, 0, 0, 0]]
-        actual = [[col for col in row]
-                  for row in dct.quantization(original)]
+                                               0], [0, 0, 0, 0, 0, 0, 0, 0]])
+        actual = dct.quantization(original)
 
         np.testing.assert_array_equal(
             expected, actual,
@@ -307,22 +326,21 @@ class case_quantization(unittest.TestCase):
 
 class case_un_quantization(unittest.TestCase):
     def test_un_quantization(self):
-        original = [
+        original = np.array([
             [-26, -3, -6, 2, 2, -1, 0, 0],
             [0, -2, -4, 1, 1, 0, 0, 0],
             [-3, 1, 5, -1, -1, 0, 0, 0],
             [-3, 1, 2, -1, 0, 0, 0, 0],
             [1, 0, 0, 0, 0, 0, 0, 0]
-        ]
-        expected = [
+        ])
+        expected = np.array([
             [-416, -33, -60, 32, 48, -40, 0, 0],
             [0, -24, -56, 19, 26, 0, 0, 0],
             [-42, 13, 80, -24, -40, 0, 0, 0],
             [-42, 17, 44, -29, 0, 0, 0, 0],
             [18, 0, 0, 0, 0, 0, 0, 0]
-        ]
-        actual = [[col for col in row]
-                  for row in dct.un_quantization(original)]
+        ])
+        actual = dct.un_quantization(original)
 
         np.testing.assert_array_equal(
             expected, actual,
@@ -442,7 +460,7 @@ class case_concatenate_submatrixes_to_big_matrix(unittest.TestCase):
             [4,4,5,5,6,6],
             [4,4,5,5,6,6]
         ])
-        actual = encode.concatenate_submatrixes_to_big_matrix(original, (3,2))
+        actual = encode.concatenate_submatrixes_to_big_matrix(original, (2,3))
         np.testing.assert_array_equal(expected, actual)
 
 class case_concatenate_Y_Cb_Cr(unittest.TestCase):

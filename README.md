@@ -40,6 +40,12 @@ we can remove data from blue and red, and the impact of whole image will be less
 
 ![BGR Downsampling](Flowchart/bgr_downsapling.png)
 
-#### Y'CrCb
+#### Y'CrCb Downsampling
 
 ![Y'CrCb Downsampling](Flowchart/ycrcb_downsapling.png)
+
+# Result
+
+![](img/result.png)
+
+Photo via [Good Free Photos](https://www.goodfreephotos.com/)
