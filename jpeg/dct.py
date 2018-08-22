@@ -2,14 +2,20 @@ import math
 
 import numpy as np
 
-quantization_matrix = np.array([[16, 11, 10, 16, 24, 40, 51,
-                                 61], [12, 12, 14, 19, 26, 58, 60,
-                                       55], [14, 13, 16, 24, 40, 57, 69,
-                                             56], [14, 17, 22, 29, 51, 87, 80, 62],
-                                [18, 22, 37, 56, 68, 109, 103,
-                                 77], [24, 35, 55, 64, 81, 104, 113,
-                                       92], [49, 64, 78, 87, 103, 121, 120,
-                                             101], [72, 92, 95, 98, 112, 100, 103, 99]])
+quantization_matrices = {
+    8: np.array([
+        [16, 11, 10, 16, 24, 40, 51, 61],
+        [12, 12, 14, 19, 26, 58, 60, 55],
+        [14, 13, 16, 24, 40, 57, 69, 56],
+        [14, 17, 22, 29, 51, 87, 80, 62],
+        [18, 22, 37, 56, 68, 109, 103, 77],
+        [24, 35, 55, 64, 81, 104, 113, 92],
+        [49, 64, 78, 87, 103, 121, 120, 101],
+        [72, 92, 95, 98, 112, 100, 103, 99]
+    ]),
+    16: np.block([[np.ones((8, 8)), np.zeros((8, 8))], [np.zeros((8, 16))]]),
+    32: np.block([[np.ones((16, 16)), np.zeros((16, 16))], [np.zeros((16, 32))]])
+}
 
 
 def __normalize_to_zero(matrix: np.ndarray) -> np.ndarray:
@@ -67,13 +73,13 @@ def __f_xy(x, y, matrix):
 
 
 def quantization(submatrix: np.ndarray) -> np.ndarray:
-    return np.array([[round(submatrix[row, col] / quantization_matrix[row, col])
+    return np.array([[round(submatrix[row, col] / quantization_matrices[submatrix.shape[0]][row, col])
                       for col in range(len(submatrix[row]))]
                      for row in range(len(submatrix))])
 
 
 def un_quantization(matrix: np.ndarray) -> np.ndarray:
-    return np.array([[matrix[row, col] * quantization_matrix[row, col]
+    return np.array([[matrix[row, col] * quantization_matrices[matrix.shape[0]][row, col]
                       for col in range(len(matrix[row]))]
                      for row in range(len(matrix))])
 

@@ -16,15 +16,30 @@ def main():  # pragma: no cover
 
     parser = argparse.ArgumentParser(
         description='Compress image by JPEG algorithm')
-    parser.add_argument('PATH')
+    parser.add_argument(
+        'SRC',
+        help='The relative or absolute path to image that you want to compress'
+    )
+    parser.add_argument(
+        'DST',
+        help=
+        'The destinition path for compressed image. The DST may not end with file extension',
+        default='result')
+    parser.add_argument(
+        '-s',
+        '--size',
+        default=8,
+        type=int,
+        choices=[8, 16, 32],
+        help='Sub-matrix size*size. Note that The complexity is exponential')
     parser.add_argument(
         '-e', action='store_true', help='Show entropy of images')
-    parser.add_argument(
-        '-d', action='store_true', help='Request input for attach debugger')
+    # parser.add_argument(
+    #     '-d', action='store_true', help='Request input for attach debugger')
     args = parser.parse_args()
     if args.d:
         input("Attach debugger and Enter: ")
-    compress_image(args.PATH, args.e)
+    compress_image(args.SRC, args.DST, args.e, args.s)
 
     return 0
 

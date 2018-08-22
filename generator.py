@@ -12,7 +12,7 @@ if __name__ == '__main__':
     # Read image
     path = sys.argv[1]
     print("Read image " + path)
-    img = imagetools.get_bitmap_from_bmp(path)
+    img = encode.crop_bitmap(imagetools.get_bitmap_from_bmp(path))
     imagetools.save_matrix(img, dest=os.path.join(src_dir, 'original.png'))
 
     # Convert to YCrCb
@@ -78,28 +78,42 @@ if __name__ == '__main__':
 
 
     def local_dct(y, cr, cb, dst, size=8):
-        y_shape = encode.shape_for_contacting(y.shape)
-        cb_shape = encode.shape_for_contacting(cb.shape)
-        cr_shape = encode.shape_for_contacting(cr.shape)
+        y_shape = encode.shape_for_contacting(y.shape, size)
+        cb_shape = encode.shape_for_contacting(cb.shape, size)
+        cr_shape = encode.shape_for_contacting(cr.shape, size)
         print("Split and padding to submatrices")
         img_channel_y_split = [matrix for matrix in encode.split_matrix_into_sub_matrices(y, size)]
         img_channel_cr_split = [matrix for matrix in encode.split_matrix_into_sub_matrices(cr, size)]
         img_channel_cb_split = [matrix for matrix in encode.split_matrix_into_sub_matrices(cb, size)]
 
-        print("DCT and Quantization submatrices")
+        print("DCT submatrices")
         img_channel_y_split = [
-            dct.quantization(dct.DCT(submatrix))
+            dct.DCT(submatrix)
             for submatrix in img_channel_y_split
         ]
         img_channel_cr_split = [
-            dct.quantization(dct.DCT(submatrix))
+            dct.DCT(submatrix)
             for submatrix in img_channel_cr_split
         ]
         img_channel_cb_split = [
-            dct.quantization(dct.DCT(submatrix))
+            dct.DCT(submatrix)
             for submatrix in img_channel_cb_split
         ]
 
+        if size == 8:
+            print("Quantization submatrices")
+            img_channel_y_split = [
+                dct.quantization(submatrix)
+                for submatrix in img_channel_y_split
+            ]
+            img_channel_cr_split = [
+                dct.quantization(submatrix)
+                for submatrix in img_channel_cr_split
+            ]
+            img_channel_cb_split = [
+                dct.quantization(submatrix)
+                for submatrix in img_channel_cb_split
+            ]
         print("Invert DCT and UnQuantization")
         img_channel_y_split = [
             dct.inverse_DCT(dct.un_quantization(submatrix))
@@ -130,4 +144,4 @@ if __name__ == '__main__':
 
     local_dct(img_channel_y, img_channel_cr, img_channel_cb, "ycrcb_split8_dct")
 
-    # local_dct(img_channel_y, img_channel_cr, img_channel_cb, "ycrcb_split32_dct",          32)
+    local_dct(img_channel_y, img_channel_cr, img_channel_cb, "ycrcb_split32_dct",          32)

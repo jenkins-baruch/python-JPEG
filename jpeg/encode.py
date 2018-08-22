@@ -23,13 +23,13 @@ def upsample(matrix: np.ndarray) -> np.ndarray:
 
 def split_matrix_into_sub_matrices(matrix: np.ndarray,
                                    size: int = 8) -> List[np.ndarray]:
-    """Split the bitmap to 8*8 matrices
+    """Split the bitmap to size*size matrices
 
     Arguments:
         matrix {ndarray} -- The image bitmap
 
     Returns:
-        list -- list of all 8*8 ndarrays matrix
+        list -- list of all size*size ndarrays matrix
     """
     return [
         np.array([
@@ -57,20 +57,20 @@ def concatenate_three_colors(Y: np.ndarray, Cb: np.ndarray,
     return np.dstack((Y, Cb, Cr))
 
 
-def shape_for_contacting(shape: Tuple) -> Tuple:
-    return math.ceil(shape[0] / 8), math.ceil(shape[1] / 8)
+def shape_for_contacting(shape: Tuple, size=8) -> Tuple:
+    return math.ceil(shape[0] / size), math.ceil(shape[1] / size)
 
 
 def crop_bitmap(bitmap: np.ndarray, size: int = 8) -> np.ndarray:
-    return bitmap[
-           math.floor(bitmap.shape[0] % size / 2): bitmap.shape[0] - math.ceil(bitmap.shape[0] % 8 / 2),
-           math.floor(bitmap.shape[1] % size / 2): bitmap.shape[1] - math.ceil(bitmap.shape[1] % size / 2),
-           ]
+    return bitmap[math.floor(bitmap.shape[0] % size / 2):bitmap.shape[0] -
+                                                         math.ceil(bitmap.shape[0] % 8 / 2),
+           math.floor(bitmap.shape[1] % size / 2):bitmap.shape[1] -
+                                                  math.ceil(bitmap.shape[1] % size / 2), ]
 
 
-def compress_image(path, entropy=False):  # pragma: no cover
+def compress_image(src_path, dest_path, entropy=False, size=8):  # pragma: no cover
     print("Reading file")
-    bitmap = imagetools.get_bitmap_from_bmp(path)
+    bitmap = imagetools.get_bitmap_from_bmp(src_path)
 
     if entropy:
         print("Bitmap entropy: " + str(ent.entropy(bitmap)))
@@ -88,9 +88,9 @@ def compress_image(path, entropy=False):  # pragma: no cover
     cb_downsample = downsample(cb)
     cr_downsample = downsample(cr)
 
-    y_shape = shape_for_contacting(y.shape)
-    cb_shape = shape_for_contacting(cb_downsample.shape)
-    cr_shape = shape_for_contacting(cr_downsample.shape)
+    y_shape = shape_for_contacting(y.shape, size)
+    cb_shape = shape_for_contacting(cb_downsample.shape, size)
+    cr_shape = shape_for_contacting(cr_downsample.shape, size)
 
     print("Splitting to 8x8 sub-matrices")
     y_split = split_matrix_into_sub_matrices(y)
@@ -137,8 +137,9 @@ def compress_image(path, entropy=False):  # pragma: no cover
     cb_upsample = upsample(cb_big)
     cr_upsample = upsample(cr_big)
 
-    print('y_big: {}, cr_downsample: {}, cb_downsample: {}'.format(y_big.shape, cr_upsample.shape, cb_upsample.shape))
+    print('y_big: {}, cr_downsample: {}, cb_downsample: {}'.format(
+        y_big.shape, cr_upsample.shape, cb_upsample.shape))
     new_image = concatenate_three_colors(y_big, cb_upsample, cr_upsample)
 
-    imagetools.show_matrix(new_image, mode='YCrCb')
-    imagetools.save_matrix(new_image, mode='YCrCb', dest='img/result.png')
+    # imagetools.show_matrix(new_image, mode='YCrCb')
+    imagetools.save_matrix(new_image, mode='YCrCb', dest=dest_path + '.png')
