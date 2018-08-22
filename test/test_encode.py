@@ -40,6 +40,24 @@ class case_YCrCb_Downsample(unittest.TestCase):
             "The original pixel- {} converted to {} and not to {} that expected"
             .format(original, actual, expected))
 
+class case_upsample(unittest.TestCase):
+    def test_upsample(self):
+        original = np.array([
+            [150, 255],
+            [65,234]
+        ])
+        expected = np.array([
+            [150, 150, 255, 255],
+            [150,150,255,255],
+            [65,65,234,234],
+            [65,65,234,234]
+        ])
+        actual = encode.Upsample(original)
+        np.testing.assert_array_equal(
+            expected, actual,
+            "The original pixel- {} converted to {} and not to {} that expected"
+            .format(original, actual, expected))
+
 class case_seperate_y_cb_cr(unittest.TestCase):
     def test_seperate_y_cb_cr(self):
         original = np.array([
@@ -209,3 +227,36 @@ class case_concatenate_Y_Cb_Cr(unittest.TestCase):
         ])
         actual = encode.concatenate_three_colors(*original)
         np.testing.assert_array_equal(expected,actual)
+
+class case_shape_for_contacting(unittest.TestCase):
+    def test_shape_for_contacting(self):
+        original = (9,10)
+        excepted = (2, 2)
+        actual = encode.shape_for_contacting(original)
+        self.assertEqual(excepted, actual)
+
+class case_crop_bitmap(unittest.TestCase):
+    def test_crop_bitmap(self):
+        original = np.array([
+            [1,2,3,4,5,6,7,8,9],
+            [1,2,3,4,5,6,7,8,9],
+            [1,2,3,4,5,6,7,8,9],
+            [1,2,3,4,5,6,7,8,9],
+            [1,2,3,4,5,6,7,8,9],
+            [1,2,3,4,5,6,7,8,9],
+            [1,2,3,4,5,6,7,8,9],
+            [1,2,3,4,5,6,7,8,9],
+            [1,2,3,4,5,6,7,8,9]
+        ])
+        excepted = np.array([
+            [1,2,3,4,5,6,7,8],
+            [1,2,3,4,5,6,7,8],
+            [1,2,3,4,5,6,7,8],
+            [1,2,3,4,5,6,7,8],
+            [1,2,3,4,5,6,7,8],
+            [1,2,3,4,5,6,7,8],
+            [1,2,3,4,5,6,7,8],
+            [1,2,3,4,5,6,7,8],
+        ])
+        actual = encode.crop_bitmap(original)
+        np.testing.assert_array_equal(excepted, actual)

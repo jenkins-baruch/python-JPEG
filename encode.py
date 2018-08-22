@@ -46,11 +46,6 @@ def split_matrix_into_submatrixs(matrix: np.ndarray,
     ]
 
 
-# def padding_matrix(matrix: np.ndarray, tosize=8) -> np.ndarray:
-#     return np.pad(matrix, ((0, tosize - matrix.shape[0]),
-#                            (0, tosize - matrix.shape[1])), 'constant')
-
-
 def concatenate_submatrixes_to_big_matrix(submatrixes: List[np.ndarray],
                                           shape: Tuple[int]):
     return np.block([
@@ -94,11 +89,9 @@ def compress_image(path, entropy=False):  # pragma: no cover
     cb_downsample = Downsample(cb)
     cr_downsample = Downsample(cr)
 
-    y_shape = (math.ceil(y.shape[0] / 8), math.ceil(y.shape[1] / 8))
-    cb_shape = (math.ceil(cb_downsample.shape[0] / 8),
-                math.ceil(cb_downsample.shape[1] / 8))
-    cr_shape = (math.ceil(cr_downsample.shape[0] / 8),
-                math.ceil(cr_downsample.shape[1] / 8))
+    y_shape = shape_for_contacting(y.shape)
+    cb_shape = shape_for_contacting(cb.shape)
+    cr_shape = shape_for_contacting(cr.shape)
 
     print("Splitting to 8x8 submatrixes")
     y_split = split_matrix_into_submatrixs(y)
