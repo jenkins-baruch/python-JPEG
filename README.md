@@ -1,6 +1,6 @@
 # JPEG Algorithm with Python
 
-## By [Meny Buganim](todo), [Lital Hayat](todo) and [Baruch Rothkoff](todo)
+## By [Meny Buganim], ID: 302490610, [Lital Hayat], ID: 205632649 and [Baruch Rothkoff], ID: 311603252
 
 ### Build status
 
@@ -8,7 +8,7 @@
 
 ## Flow and explanation of JPEG algorithm
 
-Note that because during the work we compare our results vs [cv2 library (OpenCV for Python)](TODO), who is display color in different order, our colors represented as **BGR** (instead of **RGB**) and **Y'CrCb** (instead of **Y'CbCr**)
+Note that because during the work we compare our results vs [cv2 library (OpenCV for Python)](TODO), which display color in different order, our colors represented as **BGR** (instead of **RGB**) and **Y'CrCb** (instead of **Y'CbCr**)
 
 ### Original Image
 
@@ -30,13 +30,13 @@ But Y'CrCb shouls be different division (Without lossing the data!):
 |:-: | :-: | :-: |
 | ![Y'](Flowchart/channel_y.png) | ![Cr](Flowchart/channel_cr.png) | ![Cb](Flowchart/channel_cb.png) |
 
-We do this because the humen eyes are more luma sensitive to red and blue, so
+We do this because the human eyes are more luma sensitive to red and blue, so
 
 ### Downsampling
 
-we can remove data from blue and red, and the impact of whole image will be less than downsapling BGR image, like that:
+we can remove data from blue and red, and the impact of whole image will be less than downsampling BGR image, like that:
 
-#### BGR Downsapling
+#### BGR Downsampling
 
 ![BGR Downsampling](Flowchart/bgr_downsapling.png)
 
