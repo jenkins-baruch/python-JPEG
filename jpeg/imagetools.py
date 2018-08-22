@@ -3,7 +3,7 @@ from cv2 import cv2
 from typing import List
 
 
-def BGR_pixel_to_YCrCb(bgr: list) -> List[np.uint8]:
+def BGR_pixel_to_YCrCb(bgr: list) -> List[int]:
     return [
         round(0.299 * bgr[2] + 0.587 * bgr[1] + 0.114 * bgr[0]),  # Y'
         round((bgr[2] - round(
@@ -15,7 +15,7 @@ def BGR_pixel_to_YCrCb(bgr: list) -> List[np.uint8]:
     ]
 
 
-def BGR_to_YCrCb(matrix3D: np.ndarray) -> np.ndarray:
+def bgr_to_ycrcb(matrix3d: np.ndarray) -> np.ndarray:
     """Converting pixels from BGR (Red, Green, Blue) to YCrCb (luma, blue-difference, red-difference)
 
     Arguments:
@@ -24,7 +24,7 @@ def BGR_to_YCrCb(matrix3D: np.ndarray) -> np.ndarray:
     Returns:
         ndarray -- The new Bitmap with YCrCb as 2D array
     """
-    return np.apply_along_axis(BGR_pixel_to_YCrCb, 2, matrix3D)
+    return np.apply_along_axis(BGR_pixel_to_YCrCb, 2, matrix3d)
 
 
 def ycrcb_pixel_to_bgr(ycrcb: list) -> List[int]:
@@ -36,7 +36,7 @@ def ycrcb_pixel_to_bgr(ycrcb: list) -> List[int]:
     ]
 
 
-def YCrCb_to_BGR(matrix3d: np.ndarray) -> np.ndarray:
+def ycrcb_to_bgr(matrix3d: np.ndarray) -> np.ndarray:
     return np.apply_along_axis(ycrcb_pixel_to_bgr, 2,
                                matrix3d).clip(0, 255).astype(np.uint8)
 
@@ -47,7 +47,7 @@ def get_bitmap_from_bmp(path: str) -> np.ndarray:
 
 def save_matrix(matrix: np.ndarray, mode: str = 'BGR', dest: str = 'tmp.png'):
     if mode == 'YCrCb':
-        matrix = YCrCb_to_BGR(matrix)
+        matrix = ycrcb_to_bgr(matrix)
         mode = 'BGR'
     if mode != 'BGR':
         raise Exception('{} currently not supported to save.'.format(mode))
@@ -56,7 +56,7 @@ def save_matrix(matrix: np.ndarray, mode: str = 'BGR', dest: str = 'tmp.png'):
 
 def show_matrix(matrix: np.ndarray, mode='BGR', name='tmp'):
     if mode == 'YCrCb':
-        matrix = YCrCb_to_BGR(matrix)
+        matrix = ycrcb_to_bgr(matrix)
         mode = 'BGR'
     if mode != 'BGR':
         raise Exception('{} currently not supported to show.'.format(mode))

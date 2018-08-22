@@ -49,7 +49,7 @@ def __G_uv(u, v, matrix):
         for y in range(len(matrix[0])))
 
 
-def __discerete_cosine_transform(matrix: np.ndarray) -> np.ndarray:
+def __discrete_cosine_transform(matrix: np.ndarray) -> np.ndarray:
     return np.array([[__G_uv(y, x, matrix)
                       for x in range(len(matrix[y]))]
                      for y in range(len(matrix))])
@@ -85,7 +85,7 @@ def un_quantization(matrix: np.ndarray) -> np.ndarray:
 
 
 def DCT(matrix: np.ndarray) -> np.ndarray:
-    return __discerete_cosine_transform(__normalize_to_zero(matrix))
+    return __discrete_cosine_transform(__normalize_to_zero(matrix))
 
 
 def inverse_DCT(matrix):

@@ -44,17 +44,17 @@ def split_matrix_into_sub_matrices(matrix: np.ndarray,
     ]
 
 
-def concatenate_sub_matrices_to_big_matrix(submatrixes: List[np.ndarray],
+def concatenate_sub_matrices_to_big_matrix(submatrices: List[np.ndarray],
                                            shape: Tuple[int]):
     return np.block([
-        submatrixes[i:i + shape[1]]
-        for i in range(0, len(submatrixes), shape[1])
+        submatrices[i:i + shape[1]]
+        for i in range(0, len(submatrices), shape[1])
     ])
 
 
-def concatenate_three_colors(Y: np.ndarray, Cb: np.ndarray,
-                             Cr: np.ndarray) -> np.ndarray:
-    return np.dstack((Y, Cb, Cr))
+def concatenate_three_colors(y: np.ndarray, cr: np.ndarray,
+                             cb: np.ndarray) -> np.ndarray:
+    return np.dstack((y, cr, cb))
 
 
 def shape_for_contacting(shape: Tuple, size=8) -> Tuple:
@@ -79,9 +79,9 @@ def compress_image(src_path, dest_path, entropy=False, size=8):  # pragma: no co
     ycrcb_crop = crop_bitmap(bitmap)
 
     print("Converting to YCrCb")
-    ycrcb_bitmap = imagetools.BGR_to_YCrCb(ycrcb_crop)
+    ycrcb_bitmap = imagetools.bgr_to_ycrcb(ycrcb_crop)
 
-    print("Seperating bitmap to Y, Cb, Cr matrixes")
+    print("Separating bitmap to Y, Cb, Cr matrices")
     y, cb, cr = split_to_three_colors(ycrcb_bitmap)
 
     print("Downsampling")
@@ -141,5 +141,4 @@ def compress_image(src_path, dest_path, entropy=False, size=8):  # pragma: no co
         y_big.shape, cr_upsample.shape, cb_upsample.shape))
     new_image = concatenate_three_colors(y_big, cb_upsample, cr_upsample)
 
-    # imagetools.show_matrix(new_image, mode='YCrCb')
     imagetools.save_matrix(new_image, mode='YCrCb', dest=dest_path + '.png')

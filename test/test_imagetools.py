@@ -72,7 +72,7 @@ class case_BGR_to_YCrCb(unittest.TestCase):
             [(137, 186, 78), (0, 128, 128), (0, 128, 128)],
             [(255, 128, 128), (137, 186, 78), (255, 128, 128)]
         ])
-        actual = imagetools.BGR_to_YCrCb(original)
+        actual = imagetools.bgr_to_ycrcb(original)
         np.testing.assert_array_equal(
             expected, actual, 
             "The original pixel- {} converted to {} and not to {} that expected"
@@ -81,7 +81,7 @@ class case_BGR_to_YCrCb(unittest.TestCase):
     def test_vs_cv2(self):
         im = cv2.imread(os.path.join(src, "colored.bmp"))
         expected = cv2.cvtColor(im, cv2.COLOR_BGR2YCrCb)
-        actual = imagetools.BGR_to_YCrCb(im)
+        actual = imagetools.bgr_to_ycrcb(im)
         different = np.count_nonzero(actual - expected) / np.prod(im.shape)
         self.assertLessEqual(different, 1/100)
 
@@ -100,7 +100,7 @@ class case_YCrCb_to_BGR(unittest.TestCase):
             [(48, 113, 219), (0, 0, 0), (0, 0, 0)],
             [(255, 255, 255), (48, 113, 219), (255, 255, 255)]
         ])
-        actual = imagetools.YCrCb_to_BGR(original)
+        actual = imagetools.ycrcb_to_bgr(original)
         max_different = np.max(np.abs(expected - actual))
         self.assertLessEqual(max_different, 1, "There is different in size {} between expected and actual\nexpected:\n{}\nactual:\n{}".format(max_different, expected, actual))
         

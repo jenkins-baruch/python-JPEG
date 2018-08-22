@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
     # Convert to YCrCb
     print("Convert to YCrCb")
-    img_ycrcb = imagetools.BGR_to_YCrCb(img)
+    img_ycrcb = imagetools.bgr_to_ycrcb(img)
 
     print("Seperate colors")
     img_channel_y, img_channel_cr, img_channel_cb = encode.split_to_three_colors(
@@ -67,8 +67,7 @@ if __name__ == '__main__':
     img_channel_r_downsampled = encode.upsample(encode.downsample(img_channel_r))
 
     imagetools.save_matrix(
-        encode.concatenate_three_colors(img_channel_y, img_channel_cr_downsampled,
-                                        img_channel_cb_downsampled),
+        encode.concatenate_three_colors(img_channel_y, img_channel_cr_downsampled, img_channel_cb_downsampled),
         mode='YCrCb',
         dest=os.path.join(src_dir, 'ycrcb_downsapling.png'))
     imagetools.save_matrix(
@@ -144,4 +143,4 @@ if __name__ == '__main__':
 
     local_dct(img_channel_y, img_channel_cr, img_channel_cb, "ycrcb_split8_dct")
 
-    local_dct(img_channel_y, img_channel_cr, img_channel_cb, "ycrcb_split32_dct",          32)
+    local_dct(img_channel_y, img_channel_cr, img_channel_cb, "ycrcb_split32_dct", 32)
