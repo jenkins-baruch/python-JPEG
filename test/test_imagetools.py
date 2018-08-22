@@ -1,8 +1,8 @@
 from cv2 import cv2
 import unittest
-import numpy as np
 from test import *
-import imagetools
+from jpeg import imagetools
+
 
 class case_get_bitmap_from_bmp(unittest.TestCase):
     def test_whiteImage_getAllWhite(self):

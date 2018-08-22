@@ -27,7 +27,7 @@ def BGR_to_YCrCb(matrix3D: np.ndarray) -> np.ndarray:
     return np.apply_along_axis(BGR_pixel_to_YCrCb, 2, matrix3D)
 
 
-def YCrCb_pixel_to_BGR(ycrcb: list) -> List[np.uint8]:
+def ycrcb_pixel_to_bgr(ycrcb: list) -> List[int]:
     return [
         round(ycrcb[0] + 1.773 * (ycrcb[2] - 128)),  # B
         round(ycrcb[0] - 0.714 * (ycrcb[1] - 128) -
@@ -36,9 +36,9 @@ def YCrCb_pixel_to_BGR(ycrcb: list) -> List[np.uint8]:
     ]
 
 
-def YCrCb_to_BGR(matrix3D: np.ndarray) -> np.ndarray:
-    return np.apply_along_axis(YCrCb_pixel_to_BGR, 2,
-                               matrix3D).clip(0, 255).astype(np.uint8)
+def YCrCb_to_BGR(matrix3d: np.ndarray) -> np.ndarray:
+    return np.apply_along_axis(ycrcb_pixel_to_bgr, 2,
+                               matrix3d).clip(0, 255).astype(np.uint8)
 
 
 def get_bitmap_from_bmp(path: str) -> np.ndarray:
