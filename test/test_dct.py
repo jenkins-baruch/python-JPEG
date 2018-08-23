@@ -65,21 +65,26 @@ class case_un_quantization(unittest.TestCase):
             [0, -2, -4, 1, 1, 0, 0, 0],
             [-3, 1, 5, -1, -1, 0, 0, 0],
             [-3, 1, 2, -1, 0, 0, 0, 0],
-            [1, 0, 0, 0, 0, 0, 0, 0]
+            [1, 0, 0, 0, 0, 0, 0, 0],
+            [0,0,0,0,0,0,0,0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0]
         ])
         expected = np.array([
             [-416, -33, -60, 32, 48, -40, 0, 0],
             [0, -24, -56, 19, 26, 0, 0, 0],
             [-42, 13, 80, -24, -40, 0, 0, 0],
             [-42, 17, 44, -29, 0, 0, 0, 0],
-            [18, 0, 0, 0, 0, 0, 0, 0]
+            [18, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0]
         ])
         actual = dct.un_quantization(original)
 
         np.testing.assert_array_equal(
             expected, actual,
-            "The original matrix- {} converted to {} and not to {} that expected".
-                format(original, actual, expected))
+            "The original matrix- {} converted to {} and not to {} that expected".format(original, actual, expected))
 
 
 class case_inverse_DCT(unittest.TestCase):
