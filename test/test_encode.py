@@ -211,8 +211,9 @@ class CaseConcatenateSubmatricesToBigMatrix(unittest.TestCase):
         np.testing.assert_array_equal(expected, actual)
 
 
-class case_concatenate_Y_Cb_Cr(unittest.TestCase):
-    def test_concatenate_Y_Cb_Cr(self):
+class CaseConcatenateYCrCb(unittest.TestCase):
+    @staticmethod
+    def test_concatenate_Y_Cr_Cb():
         original = [
             np.array([
                 [1, 2, 3],
@@ -239,7 +240,7 @@ class case_concatenate_Y_Cb_Cr(unittest.TestCase):
         np.testing.assert_array_equal(expected, actual)
 
 
-class case_shape_for_contacting(unittest.TestCase):
+class CaseShapeForContacting(unittest.TestCase):
     def test_shape_for_contacting(self):
         original = (9, 10)
         excepted = (2, 2)
@@ -247,8 +248,9 @@ class case_shape_for_contacting(unittest.TestCase):
         self.assertEqual(excepted, actual)
 
 
-class case_crop_bitmap(unittest.TestCase):
-    def test_crop_bitmap(self):
+class CaseCropBitmap(unittest.TestCase):
+    @staticmethod
+    def test_crop_bitmap():
         original = np.array([
             [1, 2, 3, 4, 5, 6, 7, 8, 9],
             [1, 2, 3, 4, 5, 6, 7, 8, 9],
