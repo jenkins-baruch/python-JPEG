@@ -1,6 +1,6 @@
 # JPEG Algorithm with Python
 
-## By [Meny Buganim], ID: 302490610, [Lital Hayat], ID: 205632649 and [Baruch Rothkoff], ID: 311603252
+## By [Meny Buganim](https://github.com/MenyBgu), [Lital Hayat](mailto:Litali94@gmail.com) and [Baruch Rothkoff](https://github.com/baruchiro), ID: 311603252
 
 ### Build status
 
