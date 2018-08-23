@@ -76,9 +76,9 @@ After we have a 64 scalars for each `8*8=64` sub-matrix, we divide them by 64 co
 
 This is comparison between 8x8 DCT and 32x32 DCT:
 
-| 8x8 | 32x32 |
-|:-: | :-: |
-| ![8x8](src/ycrcb_split8_dct.png) | ![32x32](src/ycrcb_split32_dct.png) |
+| 8x8 | 16x16 | 32x32 |
+|:-: | :-: | :-: |
+| ![8x8](src/ycrcb_split8_dct.png) | ![16x16](src/ycrcb_split16_dct.png) | ![32x32](src/ycrcb_split32_dct.png) |
 
 ## Result
 
