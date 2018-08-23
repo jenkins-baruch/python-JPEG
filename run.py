@@ -37,9 +37,9 @@ def main():  # pragma: no cover
     # parser.add_argument(
     #     '-d', action='store_true', help='Request input for attach debugger')
     args = parser.parse_args()
-    if args.d:
-        input("Attach debugger and Enter: ")
-    compress_image(args.SRC, args.DST, args.e, args.s)
+    # if args.d:
+    #     input("Attach debugger and Enter: ")
+    compress_image(args.SRC, args.DST, args.e, args.size)
 
     return 0
 

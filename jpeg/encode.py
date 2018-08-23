@@ -63,12 +63,13 @@ def shape_for_contacting(shape: Tuple, size=8) -> Tuple:
 
 def crop_bitmap(bitmap: np.ndarray, size: int = 8) -> np.ndarray:
     return bitmap[math.floor(bitmap.shape[0] % size / 2):bitmap.shape[0] -
-                                                         math.ceil(bitmap.shape[0] % 8 / 2),
-           math.floor(bitmap.shape[1] % size / 2):bitmap.shape[1] -
-                                                  math.ceil(bitmap.shape[1] % size / 2), ]
+                  math.ceil(bitmap.shape[0] % 8 / 2),
+                  math.floor(bitmap.shape[1] % size / 2):bitmap.shape[1] -
+                  math.ceil(bitmap.shape[1] % size / 2), ]
 
 
-def compress_image(src_path, dest_path, entropy=False, size=8):  # pragma: no cover
+def compress_image(src_path, dest_path, entropy=False,
+                   size=8):  # pragma: no cover
     print("Reading file")
     bitmap = imagetools.get_bitmap_from_bmp(src_path)
 
@@ -137,8 +138,6 @@ def compress_image(src_path, dest_path, entropy=False, size=8):  # pragma: no co
     cb_upsample = upsample(cb_big)
     cr_upsample = upsample(cr_big)
 
-    print('y_big: {}, cr_downsample: {}, cb_downsample: {}'.format(
-        y_big.shape, cr_upsample.shape, cb_upsample.shape))
     new_image = concatenate_three_colors(y_big, cb_upsample, cr_upsample)
 
     imagetools.save_matrix(new_image, mode='YCrCb', dest=dest_path + '.png')
