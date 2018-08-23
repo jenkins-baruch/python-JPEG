@@ -10,3 +10,4 @@ pylint.out
 nosetests.xml
 **~$**.*x
 /.ipynb_checkpoints/
+/.idea/

@@ -1,8 +1,8 @@
-from cv2 import cv2
 import unittest
-import numpy as np
+
+from jpeg import dct
 from test import *
-import dct
+
 
 class case_discerete_cosine_transform(unittest.TestCase):
     def test_discerete_cosine_transform(self):
@@ -16,20 +16,23 @@ class case_discerete_cosine_transform(unittest.TestCase):
             [85, 71, 64, 59, 55, 61, 65, 83],
             [87, 79, 69, 68, 65, 76, 78, 94]
         ])
-        expected = np.array([[
-            -415.38, -30.19, -61.20, 27.24, 56.12, -20.10, -2.39, 0.46
-        ], [4.47, -21.86, -60.76, 10.25, 13.15, -7.09, -8.54, 4.88], [
-            -46.83, 7.37, 77.13, -24.56, -28.91, 9.93, 5.42, -5.65
-        ], [-48.53, 12.07, 34.10, -14.76, -10.24, 6.30, 1.83,
-            1.95], [12.12, -6.55, -13.20, -3.95, -1.87, 1.75, -2.79,
-                    3.14], [-7.73, 2.91, 2.38, -5.94, -2.38, 0.94, 4.30, 1.85],
+        expected = np.array([
+            [-415.38, -30.19, -61.20, 27.24, 56.12, -20.10, -2.39, 0.46],
+            [4.47, -21.86, -60.76, 10.25, 13.15, -7.09, -8.54, 4.88],
+            [-46.83, 7.37, 77.13, -24.56, -28.91, 9.93, 5.42, -5.65],
+            [-48.53, 12.07, 34.10, -14.76, -10.24, 6.30, 1.83, 1.95],
+            [12.12, -6.55, -13.20, -3.95, -1.87, 1.75, -2.79, 3.14],
+            [-7.73, 2.91, 2.38, -5.94, -2.38, 0.94, 4.30, 1.85],
             [-1.03, 0.18, 0.42, -2.42, -0.88, -3.02, 4.12, -0.66],
-            [-0.17, 0.14, -1.07, -4.19, -1.17, -0.10, 0.50, 1.68]])
+            [-0.17, 0.14, -1.07, -4.19, -1.17, -0.10, 0.50, 1.68]
+        ])
         actual = dct.DCT(original)
 
-        max_different = np.max(np.abs(expected-actual))
+        max_different = np.max(np.abs(expected - actual))
         self.assertLessEqual(max_different, 0.01,
-            "There is different in size {} between expected and actual\nexpected:\n{}\nactual:\n{}".format(max_different, expected, actual))
+                             "There is different in size {} between expected and actual\nexpected:\n{}\nactual:\n{}".format(
+                                 max_different, expected, actual))
+
 
 class case_quantization(unittest.TestCase):
     def test_quantization(self):
@@ -43,16 +46,17 @@ class case_quantization(unittest.TestCase):
             [-1.03, 0.18, 0.42, -2.42, -0.88, -3.02, 4.12, -0.66],
             [-0.17, 0.14, -1.07, -4.19, -1.17, -0.10, 0.50, 1.68]])
         expected = np.array([[-26, -3, -6, 2, 2, -1, 0, 0], [0, -2, -4, 1, 1, 0, 0, 0],
-                    [-3, 1, 5, -1, -1, 0, 0, 0], [-3, 1, 2, -1, 0, 0, 0,
-                                                  0], [1, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0,
-                                               0], [0, 0, 0, 0, 0, 0, 0, 0]])
+                             [-3, 1, 5, -1, -1, 0, 0, 0], [-3, 1, 2, -1, 0, 0, 0,
+                                                           0], [1, 0, 0, 0, 0, 0, 0, 0],
+                             [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0,
+                                                        0], [0, 0, 0, 0, 0, 0, 0, 0]])
         actual = dct.quantization(original)
 
         np.testing.assert_array_equal(
             expected, actual,
             "The original matrix- {} converted to {} and not to {} that expected".
-            format(original, actual, expected))
+                format(original, actual, expected))
+
 
 class case_un_quantization(unittest.TestCase):
     def test_un_quantization(self):
@@ -61,21 +65,27 @@ class case_un_quantization(unittest.TestCase):
             [0, -2, -4, 1, 1, 0, 0, 0],
             [-3, 1, 5, -1, -1, 0, 0, 0],
             [-3, 1, 2, -1, 0, 0, 0, 0],
-            [1, 0, 0, 0, 0, 0, 0, 0]
+            [1, 0, 0, 0, 0, 0, 0, 0],
+            [0,0,0,0,0,0,0,0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0]
         ])
         expected = np.array([
             [-416, -33, -60, 32, 48, -40, 0, 0],
             [0, -24, -56, 19, 26, 0, 0, 0],
             [-42, 13, 80, -24, -40, 0, 0, 0],
             [-42, 17, 44, -29, 0, 0, 0, 0],
-            [18, 0, 0, 0, 0, 0, 0, 0]
+            [18, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0]
         ])
         actual = dct.un_quantization(original)
 
         np.testing.assert_array_equal(
             expected, actual,
-            "The original matrix- {} converted to {} and not to {} that expected".
-            format(original, actual, expected))
+            "The original matrix- {} converted to {} and not to {} that expected".format(original, actual, expected))
+
 
 class case_inverse_DCT(unittest.TestCase):
     def test_inverse_DCT(self):
@@ -105,4 +115,4 @@ class case_inverse_DCT(unittest.TestCase):
         np.testing.assert_array_equal(
             expected, actual,
             "The original matrix- {} converted to {} and not to {} that expected".
-            format(original, actual, expected))
+                format(original, actual, expected))
