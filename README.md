@@ -10,7 +10,7 @@
 
 ### The project objectives were:
 
-1. To learn how *Jpeg algorithm* work
+1. To learn how *JPEG algorithm* work
 2. Accumulation of programming experience, especially in a *functional programming* paradigm.
 
 ### The project objectives were *not*:
@@ -66,7 +66,7 @@ we can remove data from blue and red, and the impact of whole image will be less
 
 ### DCT
 
-The next step is the significan stage in Jpeg algorithm. Based on Linear Algebra, the **D**iscrete **C**osine **T**ransform represent vectors as linear combination of cosine waves ith different frequency, and then, because the humen eye sensitive only to limited frequency range, we can remove some frequencies and the image still log similar.
+The next step is the significan stage in JPEG algorithm. Based on Linear Algebra, the **D**iscrete **C**osine **T**ransform represent vectors as linear combination of cosine waves with different frequency, and then, because the human eye sensitive only to limited frequency range, we can remove some frequencies and the image still log similar.
 
 In general, we split the image matrix to 8*8 sub-matrices, so we can treat them as a vectors in **R**64. Then, we have a 64 linear independent cosine vectors which spread the space, so each sub-matrix can be represent as 64 scalars that product the independent vectors.
 
@@ -88,7 +88,7 @@ This result image should be identical to 8x8 DCT image above, but we get it by r
 python run.py .\src\original.png .\src\result
 ```
 
-The script `run.py` will guid you about the additional parameters you may put in. (You can try to run the command `run.py -h` for get help)
+The script `run.py` will guide you about the additional parameters you may put in. (You can try to run the command `run.py -h` for get help)
 
 Make sure you install all requirements by runnig the command:
 
