@@ -1,5 +1,5 @@
 import unittest
-import entropy
+from jpeg import entropy
 import numpy as np
 
 class case_entropy(unittest.TestCase):
