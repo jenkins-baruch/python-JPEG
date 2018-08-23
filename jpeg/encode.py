@@ -45,7 +45,7 @@ def split_matrix_into_sub_matrices(matrix: np.ndarray,
 
 
 def concatenate_sub_matrices_to_big_matrix(submatrices: List[np.ndarray],
-                                           shape: Tuple[int]):
+                                           shape: Tuple[int, int]):
     return np.block([
         submatrices[i:i + shape[1]]
         for i in range(0, len(submatrices), shape[1])
