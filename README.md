@@ -28,7 +28,7 @@
 
 ## Flow and explanation of JPEG algorithm
 
-Note that during the work we compare our results vs [cv2 library (OpenCV for Python)](TODO), which display color in different order. our colors represented as **BGR** (instead of **RGB**) and **Y'CrCb** (instead of **Y'CbCr**)
+Note that during the work we compare our results vs [cv2 library (OpenCV for Python)](https://github.com/skvark/opencv-python), which display color in different order. our colors represented as **BGR** (instead of **RGB**) and **Y'CrCb** (instead of **Y'CbCr**)
 
 ### Original Image
 
