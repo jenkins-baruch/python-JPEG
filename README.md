@@ -13,7 +13,7 @@
 1. To learn how *Jpeg algorithm* work, and
 2. Accumulation of programming experience, especially in a *functional programming* paradigm.
 
-### The project objectives were **not**:
+### The project objectives were *not*:
 
 1. Implementing best performance Jpeg algorithm
 2. Deep dive into *Jpeg file format* and other files formats.
