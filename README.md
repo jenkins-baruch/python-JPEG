@@ -1,6 +1,6 @@
 # JPEG Algorithm with Python
 
-## By [Meny Buganim](todo), [Lital Hayat](todo) and [Baruch Rothkoff](todo)
+## By [Meny Buganim](https://github.com/MenyBgu), [Lital Hayat](mailto:Litali94@gmail.com) and [Baruch Rothkoff](https://github.com/baruchiro), ID: 311603252
 
 [![Build Status](http://54.218.224.31:8080/job/python-JPEG/job/master/badge/icon)](http://54.218.224.31:8080/job/python-JPEG/job/master/)
 
@@ -28,7 +28,7 @@
 
 ## Flow and explanation of JPEG algorithm
 
-Note that because during the work we compare our results vs [cv2 library (OpenCV for Python)](TODO), who is display color in different order, our colors represented as **BGR** (instead of **RGB**) and **Y'CrCb** (instead of **Y'CbCr**)
+Note that because during the work we compare our results vs [cv2 library (OpenCV for Python)](TODO), which display color in different order, our colors represented as **BGR** (instead of **RGB**) and **Y'CrCb** (instead of **Y'CbCr**)
 
 ### Original Image
 
@@ -50,13 +50,13 @@ But Y'CrCb shouls be different division (Without lossing the data!):
 |:-: | :-: | :-: |
 | ![Y'](src/channel_y.png) | ![Cr](src/channel_cr.png) | ![Cb](src/channel_cb.png) |
 
-We do this because the humen eyes are more luma sensitive to red and blue, so-
+We do this because the human eyes are more luma sensitive to red and blue, so
 
 ### Downsampling
 
-we can remove data from blue and red, and the impact of whole image will be less than downsapling BGR image, like that:
+we can remove data from blue and red, and the impact of whole image will be less than downsampling BGR image, like that:
 
-#### BGR Downsapling
+#### BGR Downsampling
 
 ![BGR Downsampling](src/bgr_downsapling.png)
 
@@ -112,5 +112,6 @@ You welcome to
 * Suggestions for better organization of the project.
 * Adding processes to CI.
 * Advice, tips, criticism and questions.
+
 
 # Have a wonderful semester!
