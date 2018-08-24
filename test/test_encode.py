@@ -174,7 +174,7 @@ class CaseConcatenateSubmatricesToBigMatrix(unittest.TestCase):
         np.testing.assert_array_equal(expected, actual)
 
     @staticmethod
-    def test_concatenate_submatrixes_to_big_matrix_odd_shape():
+    def test_concatenate_submatrices_to_big_matrix_odd_shape():
         original = [
             np.array([
                 [1, 1],

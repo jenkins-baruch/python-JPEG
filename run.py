@@ -23,7 +23,7 @@ def main():  # pragma: no cover
     parser.add_argument(
         'DST',
         help=
-        'The destinition path for compressed image. The DST may not end with file extension',
+        'The destination path for compressed image. The DST may not end with file extension',
         default='result')
     parser.add_argument(
         '-s',
