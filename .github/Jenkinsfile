@@ -23,24 +23,32 @@ pipeline {
             junit '**/nosetests.xml'
             cobertura(coberturaReportFile: '**/coverage.xml')
           }
-        }
+        }try{
         stage('format'){
           when {
             branch 'master'
           }
           steps{
-            sh 'yapf -i --style .github/.style.yapf `ls *.py`'
-            sh 'git add -u'
-            sh 'git commit -m "format"'
-            sh 'git push --set-upstream origin master'
+            
+              sh 'yapf -i --style .github/.style.yapf `ls *.py`'
+              sh 'git add -u'
+              sh 'git commit -m "format"'
+              sh 'git push --set-upstream origin master'
+            
           }
-        }
+        }}catch(ex){
+              echo ex
+            }
         stage('Generate sample'){
           when {
             branch 'master'
           }
           steps{
-            sh 'convert Flowchart/flowchart.pdf Flowchart/flowchart.png'
+            try{
+              sh 'convert Flowchart/flowchart.pdf Flowchart/flowchart.png'
+            }catch(ex){
+              echo ex
+            }
           }
         }
       }

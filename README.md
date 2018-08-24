@@ -96,6 +96,8 @@ Make sure you install all requirements by runnig the command:
 pip install -r requirements.txt
 ```
 
+![Result](src\result.png)
+
 ## How to contribute
 
 Oh, there are so many contributions are welcome!
