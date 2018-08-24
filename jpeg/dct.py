@@ -1,7 +1,6 @@
 import math
 
 import numpy as np
-
 quantization_matrices = {
     8: np.array([
         [16, 11, 10, 16, 24, 40, 51, 61],
@@ -12,10 +11,12 @@ quantization_matrices = {
         [24, 35, 55, 64, 81, 104, 113, 92],
         [49, 64, 78, 87, 103, 121, 120, 101],
         [72, 92, 95, 98, 112, 100, 103, 99]
-    ]),
-    16: np.block([[np.ones((8, 8)), np.zeros((8, 8))], [np.zeros((8, 16))]]),
-    32: np.block([[np.ones((16, 16)), np.zeros((16, 16))], [np.zeros((16, 32))]])
+    ])
 }
+# quantization_matrices[16] = np.block([[quantization_matrices[8], np.zeros((8, 8))], [np.zeros((8, 16))]])
+# quantization_matrices[32] = np.block([[quantization_matrices[16], np.zeros((16, 16))], [np.zeros((16, 32))]])
+quantization_matrices[16] = quantization_matrices[8].repeat(2, axis=0).repeat(2, axis=1)
+quantization_matrices[32] = quantization_matrices[16].repeat(2, axis=0).repeat(2, axis=1)
 
 
 def __normalize_to_zero(matrix: np.ndarray) -> np.ndarray:
@@ -74,6 +75,8 @@ def __f_xy(x, y, matrix):
 
 def quantization(submatrix: np.ndarray) -> np.ndarray:
     return np.array([[round(submatrix[row, col] / quantization_matrices[submatrix.shape[0]][row, col])
+                      if quantization_matrices[submatrix.shape[0]][row, col] != 0
+                      else 0
                       for col in range(len(submatrix[row]))]
                      for row in range(len(submatrix))])
 
