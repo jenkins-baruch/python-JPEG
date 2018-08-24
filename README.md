@@ -1,6 +1,6 @@
 # JPEG Algorithm with Python
 
-## By [Meny Buganim](todo), [Lital Hayat](todo) and [Baruch Rothkoff](todo)
+## By [Meny Buganim](https://github.com/MenyBgu), [Lital Hayat](mailto:Litali94@gmail.com) and [Baruch Rothkoff](https://github.com/baruchiro)
 
 [![Build Status](http://54.218.224.31:8080/job/python-JPEG/job/master/badge/icon)](http://54.218.224.31:8080/job/python-JPEG/job/master/)
 
@@ -10,25 +10,25 @@
 
 ### The project objectives were:
 
-1. To learn how *Jpeg algorithm* work, and
+1. To learn how *Jpeg algorithm* work
 2. Accumulation of programming experience, especially in a *functional programming* paradigm.
 
-### The project objectives were **not**:
+### The project objectives were *not*:
 
 1. Implementing best performance Jpeg algorithm
 2. Deep dive into *Jpeg file format* and other files formats.
 
 #### Additional points
 
-* **TDD** (*T*est *D*riven *D*evelopment): We started to work on this project with TDD methodology, but we noticed that since these are mathematical operations on matrices, in order to write the tests we need to know what the expected result is, and in order to know the expected result we need to write the code.  
- But do not worry, we've still written tests, and still worked hard to get them through.
-* **CI Pipline**: We have an Amazon machine that runs the Jenkins program, and for every push of a branch to a server, or PR, it runs the tests to check that everything is fine.  
+* **TDD** (*T*est *D*riven *D*evelopment): We started to work on this project with TDD methodology, but we noticed that since these are mathematical operations on matrices, in order to write the tests we need to know what is the expected result, and to know the expected result we need to write the code.  
+ But do not worry, we've still written tests, and still worked hard to pass them.
+* **CI Pipline**: We have an Amazon machine that runs the Jenkins program, and for every push of a branch to server, or PR, she runs the tests to check that everything is done properly.  
  [You can see Jenkinspiel here](.github/jenkinsfile).  
- In addition, we will be happy to [help](https://github.com/jenkins-baruch/python-JPEG/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3ACI) in adding stages to the pipline.
+ In addition, we will be happy to [help](https://github.com/jenkins-baruch/python-JPEG/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3ACI) add a stages to the pipline.
 
 ## Flow and explanation of JPEG algorithm
 
-Note that because during the work we compare our results vs [cv2 library (OpenCV for Python)](TODO), who is display color in different order, our colors represented as **BGR** (instead of **RGB**) and **Y'CrCb** (instead of **Y'CbCr**)
+Note that during the work we compare our results vs [cv2 library (OpenCV for Python)](https://github.com/skvark/opencv-python), which display color in different order. our colors represented as **BGR** (instead of **RGB**) and **Y'CrCb** (instead of **Y'CbCr**)
 
 ### Original Image
 
@@ -50,13 +50,13 @@ But Y'CrCb shouls be different division (Without lossing the data!):
 |:-: | :-: | :-: |
 | ![Y'](src/channel_y.png) | ![Cr](src/channel_cr.png) | ![Cb](src/channel_cb.png) |
 
-We do this because the humen eyes are more luma sensitive to red and blue, so-
+We do this because the human eyes are more luma sensitive to red and blue, so
 
 ### Downsampling
 
-we can remove data from blue and red, and the impact of whole image will be less than downsapling BGR image, like that:
+we can remove data from blue and red, and the impact of whole image will be less than downsampling BGR image, like that:
 
-#### BGR Downsapling
+#### BGR Downsampling
 
 ![BGR Downsampling](src/bgr_downsapling.png)
 
@@ -112,5 +112,6 @@ You welcome to
 * Suggestions for better organization of the project.
 * Adding processes to CI.
 * Advice, tips, criticism and questions.
+
 
 # Have a wonderful semester!
