@@ -1,4 +1,4 @@
-opencv_python==3.4.2.17
-numpy==1.14.5
 pyfiglet==0.7.5
+numpy==1.15.0
+opencv_python==3.4.2.17
 typing==3.6.4

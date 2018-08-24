@@ -142,5 +142,5 @@ if __name__ == '__main__':
 
 
     local_dct(img_channel_y, img_channel_cr, img_channel_cb, "ycrcb_split8_dct")
-
+    local_dct(img_channel_y, img_channel_cr, img_channel_cb, "ycrcb_split16_dct", 16)
     local_dct(img_channel_y, img_channel_cr, img_channel_cb, "ycrcb_split32_dct", 32)
