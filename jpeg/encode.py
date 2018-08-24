@@ -98,10 +98,10 @@ def compress_image(src_path, dest_path, entropy=False,
     cb_split = split_matrix_into_sub_matrices(cb_downsample)
     cr_split = split_matrix_into_sub_matrices(cr_downsample)
 
-    print("DCT")
-    y_dct = [dct.DCT(sub_matrix) for sub_matrix in y_split]
-    cb_dct = [dct.DCT(sub_matrix) for sub_matrix in cb_split]
-    cr_dct = [dct.DCT(sub_matrix) for sub_matrix in cr_split]
+    print("dct")
+    y_dct = [dct.dct(sub_matrix) for sub_matrix in y_split]
+    cb_dct = [dct.dct(sub_matrix) for sub_matrix in cb_split]
+    cr_dct = [dct.dct(sub_matrix) for sub_matrix in cr_split]
 
     print("Quantization")
     y_quantization = [dct.quantization(submatrix) for submatrix in y_dct]
@@ -124,10 +124,10 @@ def compress_image(src_path, dest_path, entropy=False,
         dct.un_quantization(submatrix) for submatrix in cr_quantization
     ]
 
-    print("Invert DCT")
-    y_invert_dct = [dct.inverse_DCT(matrix) for matrix in y_un_quantization]
-    cb_invert_dct = [dct.inverse_DCT(matrix) for matrix in cb_un_quantization]
-    cr_invert_dct = [dct.inverse_DCT(matrix) for matrix in cr_un_quantization]
+    print("Invert dct")
+    y_invert_dct = [dct.inverse_dct(matrix) for matrix in y_un_quantization]
+    cb_invert_dct = [dct.inverse_dct(matrix) for matrix in cb_un_quantization]
+    cr_invert_dct = [dct.inverse_dct(matrix) for matrix in cr_un_quantization]
 
     print("Concatenate")
     y_big = concatenate_sub_matrices_to_big_matrix(y_invert_dct, y_shape)

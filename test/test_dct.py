@@ -26,7 +26,7 @@ class CaseDiscreteCosineTransform(unittest.TestCase):
             [-1.03, 0.18, 0.42, -2.42, -0.88, -3.02, 4.12, -0.66],
             [-0.17, 0.14, -1.07, -4.19, -1.17, -0.10, 0.50, 1.68]
         ])
-        actual = dct.DCT(original)
+        actual = dct.dct(original)
 
         max_different = np.max(np.abs(expected - actual))
         self.assertLessEqual(max_different, 0.01,
@@ -56,8 +56,8 @@ class CaseQuantization(unittest.TestCase):
 
         np.testing.assert_array_equal(
             expected, actual,
-            "The original matrix- {} converted to {} and not to {} that expected".
-                format(original, actual, expected))
+            "The original matrix- {} converted to {} and not to {} that expected"
+            .format(original, actual, expected))
 
 
 class CaseUnQuantization(unittest.TestCase):
@@ -114,7 +114,7 @@ class CaseInverseDCT(unittest.TestCase):
             [81, 94, 75, 54, 68, 81, 81, 87]
         ]
         actual = [[col for col in row]
-                  for row in dct.inverse_DCT(original)]
+                  for row in dct.inverse_dct(original)]
 
         np.testing.assert_array_equal(
             expected, actual,

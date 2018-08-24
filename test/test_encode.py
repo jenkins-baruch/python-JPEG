@@ -64,7 +64,7 @@ class CaseUpsample(unittest.TestCase):
 
 class CaseSplitToThreeColors(unittest.TestCase):
     @staticmethod
-    def test_seperate_y_cb_cr():
+    def test_split_y_cb_cr():
         original = np.array([
             [[52, 55, 61], [66, 70, 61]],
             [[63, 59, 55], [90, 109, 85]],
@@ -145,7 +145,7 @@ class CaseSplitMatrixIntoSubmatrices(unittest.TestCase):
 
 class CaseConcatenateSubmatricesToBigMatrix(unittest.TestCase):
     @staticmethod
-    def test_concatenate_submatrixes_to_big_matrix_tiny():
+    def test_concatenate_submatrices_to_big_matrix_tiny():
         original = [
             np.array([
                 [1, 1],

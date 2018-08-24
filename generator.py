@@ -19,13 +19,13 @@ if __name__ == '__main__':
     print("Convert to YCrCb")
     img_ycrcb = imagetools.bgr_to_ycrcb(img)
 
-    print("Seperate colors")
+    print("Split colors")
     img_channel_y, img_channel_cr, img_channel_cb = encode.split_to_three_colors(
         img_ycrcb)
     img_channel_b, img_channel_g, img_channel_r = encode.split_to_three_colors(
         img)
 
-    print("Const matrixes")
+    print("Const matrices")
     ycrcb_channel_const = np.ones_like(img_channel_y) * 127.5
     gbr_channel_const = np.zeros_like(img_channel_b)
 
@@ -85,17 +85,17 @@ if __name__ == '__main__':
         img_channel_cr_split = [matrix for matrix in encode.split_matrix_into_sub_matrices(cr, size)]
         img_channel_cb_split = [matrix for matrix in encode.split_matrix_into_sub_matrices(cb, size)]
 
-        print("DCT submatrices")
+        print("dct submatrices")
         img_channel_y_split = [
-            dct.DCT(submatrix)
+            dct.dct(submatrix)
             for submatrix in img_channel_y_split
         ]
         img_channel_cr_split = [
-            dct.DCT(submatrix)
+            dct.dct(submatrix)
             for submatrix in img_channel_cr_split
         ]
         img_channel_cb_split = [
-            dct.DCT(submatrix)
+            dct.dct(submatrix)
             for submatrix in img_channel_cb_split
         ]
 
@@ -113,17 +113,17 @@ if __name__ == '__main__':
                 dct.quantization(submatrix)
                 for submatrix in img_channel_cb_split
             ]
-        print("Invert DCT and UnQuantization")
+        print("Invert dct and UnQuantization")
         img_channel_y_split = [
-            dct.inverse_DCT(dct.un_quantization(submatrix))
+            dct.inverse_dct(dct.un_quantization(submatrix))
             for submatrix in img_channel_y_split
         ]
         img_channel_cr_split = [
-            dct.inverse_DCT(dct.un_quantization(submatrix))
+            dct.inverse_dct(dct.un_quantization(submatrix))
             for submatrix in img_channel_cr_split
         ]
         img_channel_cb_split = [
-            dct.inverse_DCT(dct.un_quantization(submatrix))
+            dct.inverse_dct(dct.un_quantization(submatrix))
             for submatrix in img_channel_cb_split
         ]
 

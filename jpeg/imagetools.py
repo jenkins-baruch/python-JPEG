@@ -3,7 +3,7 @@ from cv2 import cv2
 from typing import List
 
 
-def BGR_pixel_to_YCrCb(bgr: list) -> List[int]:
+def bgr_pixel_to_ycrcb(bgr: list) -> List[int]:
     return [
         round(0.299 * bgr[2] + 0.587 * bgr[1] + 0.114 * bgr[0]),  # Y'
         round((bgr[2] - round(
@@ -24,7 +24,7 @@ def bgr_to_ycrcb(matrix3d: np.ndarray) -> np.ndarray:
     Returns:
         ndarray -- The new Bitmap with YCrCb as 2D array
     """
-    return np.apply_along_axis(BGR_pixel_to_YCrCb, 2, matrix3d)
+    return np.apply_along_axis(bgr_pixel_to_ycrcb, 2, matrix3d)
 
 
 def ycrcb_pixel_to_bgr(ycrcb: list) -> List[int]:

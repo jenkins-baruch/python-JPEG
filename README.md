@@ -23,7 +23,7 @@
 * **TDD** (*T*est *D*riven *D*evelopment): We started to work on this project with TDD methodology, but we noticed that since these are mathematical operations on matrices, in order to write the tests we need to know what is the expected result, and to know the expected result we need to write the code.  
  But do not worry, we've still written tests, and still worked hard to pass them.
 * **CI Pipline**: We have an Amazon machine that runs the Jenkins program, and for every push of a branch to server, or PR, she runs the tests to check that everything is done properly.  
- [You can see Jenkinspiel here](.github/jenkinsfile).  
+ [You can see Jenkinsfile here](.github/Jenkinsfile).  
  In addition, we will be happy to [help](https://github.com/jenkins-baruch/python-JPEG/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3ACI) add a stages to the pipline.
 
 ## Flow and explanation of JPEG algorithm
@@ -36,7 +36,7 @@ Note that during the work we compare our results vs [cv2 library (OpenCV for Pyt
 
 ### Convert to Y'CrCb
 
-Y'CrCb is channels represention as luma component, blue-difference and red-difference ([from wikipedia](https://en.wikipedia.org/wiki/YCbCr)).
+Y'CrCb is channels representation as luma component, blue-difference and red-difference ([from Wikipedia](https://en.wikipedia.org/wiki/YCbCr)).
 
 We know that *BGR* is  *B*lue, *G*reen and *R*ed channels, like this:
 
@@ -44,7 +44,7 @@ We know that *BGR* is  *B*lue, *G*reen and *R*ed channels, like this:
 |:-: | :-: | :-: |
 | ![B](src/channel_b.png) | ![G](src/channel_g.png) | ![R](src/channel_r.png) |
 
-But Y'CrCb shouls be different division (Without lossing the data!):
+But Y'CrCb should be different division (Without loosing the data!):
 
 | Y' | Cr | Cb |
 |:-: | :-: | :-: |
@@ -66,7 +66,7 @@ we can remove data from blue and red, and the impact of whole image will be less
 
 ### DCT
 
-The next step is the significan stage in Jpeg algorithm. Based on Linear Algebra, the **D**iscrete **C**osine **T**ransform represent vectors as linear combination of cosine waves ith different frequency, and then, because the humen eye sensitive only to limited frequency range, we can remove some frequencies and the image still log similar.
+The next step is the significant stage in Jpeg algorithm. Based on Linear Algebra, the **D**iscrete **C**osine **T**ransform represent vectors as linear combination of cosine waves ith different frequency, and then, because the human eye sensitive only to limited frequency range, we can remove some frequencies and the image still log similar.
 
 In general, we split the image matrix to 8*8 sub-matrices, so we can treat them as a vectors in **R**64. Then, we have a 64 linear independent cosine vectors which spread the space, so each sub-matrix can be represent as 64 scalars that product the independent vectors.
 
@@ -90,20 +90,20 @@ python run.py .\src\original.png .\src\result
 
 The script `run.py` will guid you about the additional parameters you may put in. (You can try to run the command `run.py -h` for get help)
 
-Make sure you install all requirements by runnig the command:
+Make sure you install all requirements by running the command:
 
 ```cmd
 pip install -r requirements.txt
 ```
 
-![Result](src\result.png)
+![Result](src/result.png)
 
 ## How to contribute
 
 Oh, there are so many contributions are welcome!
 You welcome to
 
-* Open issuses about
+* Open issues about
   * English spelling errors
   * Best coding practices
   * Better explanations

@@ -43,7 +43,7 @@ def __alpha(u):
     return 1 / math.sqrt(2) if u == 0 else 1
 
 
-def __G_uv(u, v, matrix):
+def __g_uv(u, v, matrix):
     return (1 / 4) * __alpha(u) * __alpha(v) * sum(
         matrix[x][y] * __cos_element(x, u) * __cos_element(y, v)
         for x in range(len(matrix))
@@ -51,7 +51,7 @@ def __G_uv(u, v, matrix):
 
 
 def __discrete_cosine_transform(matrix: np.ndarray) -> np.ndarray:
-    return np.array([[__G_uv(y, x, matrix)
+    return np.array([[__g_uv(y, x, matrix)
                       for x in range(len(matrix[y]))]
                      for y in range(len(matrix))])
 
@@ -87,9 +87,9 @@ def un_quantization(matrix: np.ndarray) -> np.ndarray:
                      for row in range(len(matrix))])
 
 
-def DCT(matrix: np.ndarray) -> np.ndarray:
+def dct(matrix: np.ndarray) -> np.ndarray:
     return __discrete_cosine_transform(__normalize_to_zero(matrix))
 
 
-def inverse_DCT(matrix):
+def inverse_dct(matrix):
     return __un_normalize(__invert_discrete_cosine_transform(matrix))
