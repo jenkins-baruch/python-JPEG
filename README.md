@@ -29,11 +29,13 @@
 
 ## Flow and explanation of JPEG algorithm
 
+(Results from [generator.py](generator.py) file.)
+
 Note that during the work we compare our results vs [cv2 library (OpenCV for Python)](https://github.com/skvark/opencv-python), which display color in different order. our colors represented as **BGR** (instead of **RGB**) and **Y'CrCb** (instead of **Y'CbCr**)
 
 ### Original Image
 
-![Original Image](src/original.png)
+![Original Image](src/original_crop.png)
 
 ### Convert to Y'CrCb
 

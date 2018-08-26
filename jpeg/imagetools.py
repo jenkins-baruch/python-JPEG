@@ -30,8 +30,7 @@ def bgr_to_ycrcb(matrix3d: np.ndarray) -> np.ndarray:
 def ycrcb_pixel_to_bgr(ycrcb: list) -> List[int]:
     return [
         round(ycrcb[0] + 1.773 * (ycrcb[2] - 128)),  # B
-        round(ycrcb[0] - 0.714 * (ycrcb[1] - 128) -
-              0.344 * (ycrcb[2] - 128)),  # G
+        round(ycrcb[0] - 0.714 * (ycrcb[1] - 128) - 0.344 * (ycrcb[2] - 128)),  # G
         round(ycrcb[0] + 1.403 * (ycrcb[1] - 128))  # R
     ]
 

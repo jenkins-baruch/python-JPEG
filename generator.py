@@ -13,7 +13,8 @@ if __name__ == '__main__':
     path = sys.argv[1]
     print("Read image " + path)
     img = encode.crop_bitmap(imagetools.get_bitmap_from_bmp(path))
-    imagetools.save_matrix(img, dest=os.path.join(src_dir, 'original.png'))
+    imagetools.save_matrix(
+        img, dest=os.path.join(src_dir, 'original_crop.png'))
 
     # Convert to YCrCb
     print("Convert to YCrCb")
@@ -88,7 +89,6 @@ if __name__ == '__main__':
                                         img_channel_r_downsampled),
         dest=os.path.join(src_dir, 'bgr_downsapling.png'))
 
-
     def local_dct(y, cr, cb, dst, size=8):
         y_shape = encode.shape_for_contacting(y.shape, size)
         cb_shape = encode.shape_for_contacting(cb.shape, size)
@@ -159,7 +159,6 @@ if __name__ == '__main__':
             encode.concatenate_three_colors(y_big, cb_big, cr_big),
             mode='YCrCb',
             dest=os.path.join(src_dir, dst + '.png'))
-
 
     local_dct(img_channel_y, img_channel_cr, img_channel_cb,
               "ycrcb_split8_dct")
