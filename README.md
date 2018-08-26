@@ -4,13 +4,14 @@
 
 [![Build Status](http://54.218.224.31:8080/job/python-JPEG/job/master/badge/icon)](http://54.218.224.31:8080/job/python-JPEG/job/master/)
 
-[How to run](#Result)
+* ### [How to run](#Result)
+* ### [Code Explanation](README.ipynb)
 
 ## Project goals
 
 ### The project objectives were:
 
-1. To learn how *Jpeg algorithm* work, and
+1. To learn how *JPEG algorithm* work
 2. Accumulation of programming experience, especially in a *functional programming* paradigm.
 
 ### The project objectives were *not*:
@@ -20,19 +21,21 @@
 
 #### Additional points
 
-* **TDD** (*T*est *D*riven *D*evelopment): We started to work on this project with TDD methodology, but we noticed that since these are mathematical operations on matrices, in order to write the tests we need to know what the expected result is, and in order to know the expected result we need to write the code.  
- But do not worry, we've still written tests, and still worked hard to get them through.
-* **CI Pipline**: We have an Amazon machine that runs the Jenkins program, and for every push of a branch to a server, or PR, it runs the tests to check that everything is fine.  
- [You can see Jenkinspiel here](.github/jenkinsfile).  
- In addition, we will be happy to [help](https://github.com/jenkins-baruch/python-JPEG/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3ACI) in adding stages to the pipline.
+* **TDD** (*T*est *D*riven *D*evelopment): We started to work on this project with TDD methodology, but we noticed that since these are mathematical operations on matrices, in order to write the tests we need to know what is the expected result, and to know the expected result we need to write the code.  
+ But do not worry, we've still written tests, and still worked hard to pass them.
+* **CI Pipline**: We have an Amazon machine that runs the Jenkins program, and for every push of a branch to server, or PR, she runs the tests to check that everything is done properly.  
+ [You can see Jenkinsfile here](.github/Jenkinsfile).  
+ In addition, we will be happy to [help](https://github.com/jenkins-baruch/python-JPEG/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3ACI) add a stages to the pipline.
 
 ## Flow and explanation of JPEG algorithm
 
-Note that because during the work we compare our results vs [cv2 library (OpenCV for Python)](TODO), which display color in different order, our colors represented as **BGR** (instead of **RGB**) and **Y'CrCb** (instead of **Y'CbCr**)
+(Results from [generator.py](generator.py) file.)
+
+Note that during the work we compare our results vs [cv2 library (OpenCV for Python)](https://github.com/skvark/opencv-python), which display color in different order. our colors represented as **BGR** (instead of **RGB**) and **Y'CrCb** (instead of **Y'CbCr**)
 
 ### Original Image
 
-![Original Image](src/original.png)
+![Original Image](src/original_crop.png)
 
 ### Convert to Y'CrCb
 
@@ -66,7 +69,7 @@ we can remove data from blue and red, and the impact of whole image will be less
 
 ### DCT
 
-The next step is the significant stage in Jpeg algorithm. Based on Linear Algebra, the **D**iscrete **C**osine **T**ransform represent vectors as linear combination of cosine waves with different frequency, and then, because the human eye sensitive only to limited frequency range, we can remove some frequencies and the image still log similar.
+The next step is the significant stage in Jpeg algorithm. Based on Linear Algebra, the **D**iscrete **C**osine **T**ransform represent vectors as linear combination of cosine waves with different frequency, and then, because the human eye sensitive only to limited frequency range, we can remove some frequencies and the image still look similar.
 
 In general, we split the image matrix to 8*8 sub-matrices, thus we can treat them as a vectors in **R**64. Then, we have a 64 linear independent cosine vectors which spread the space, so each sub-matrix can be represent as 64 scalars that product the independent vectors.
 
@@ -96,13 +99,12 @@ Make sure you install all requirements by running the command:
 pip install -r requirements.txt
 ```
 
-![Result](src\result.png)
+![Result](src/result.png)
 
 ## How to contribute
 
 Oh, there are so many contributions are welcome!
 Here they are
-
 
 * Open issues about
   * English spelling errors

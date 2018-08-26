@@ -1,7 +1,6 @@
 import math
 
 import numpy as np
-
 quantization_matrices = {
     8: np.array([
         [16, 11, 10, 16, 24, 40, 51, 61],
@@ -12,10 +11,12 @@ quantization_matrices = {
         [24, 35, 55, 64, 81, 104, 113, 92],
         [49, 64, 78, 87, 103, 121, 120, 101],
         [72, 92, 95, 98, 112, 100, 103, 99]
-    ]),
-    16: np.block([[np.ones((8, 8)), np.zeros((8, 8))], [np.zeros((8, 16))]]),
-    32: np.block([[np.ones((16, 16)), np.zeros((16, 16))], [np.zeros((16, 32))]])
+    ])
 }
+# quantization_matrices[16] = np.block([[quantization_matrices[8], np.zeros((8, 8))], [np.zeros((8, 16))]])
+# quantization_matrices[32] = np.block([[quantization_matrices[16], np.zeros((16, 16))], [np.zeros((16, 32))]])
+quantization_matrices[16] = quantization_matrices[8].repeat(2, axis=0).repeat(2, axis=1)
+quantization_matrices[32] = quantization_matrices[16].repeat(2, axis=0).repeat(2, axis=1)
 
 
 def __normalize_to_zero(matrix: np.ndarray) -> np.ndarray:
@@ -42,7 +43,7 @@ def __alpha(u):
     return 1 / math.sqrt(2) if u == 0 else 1
 
 
-def __G_uv(u, v, matrix):
+def __g_uv(u, v, matrix):
     return (1 / 4) * __alpha(u) * __alpha(v) * sum(
         matrix[x][y] * __cos_element(x, u) * __cos_element(y, v)
         for x in range(len(matrix))
@@ -50,7 +51,7 @@ def __G_uv(u, v, matrix):
 
 
 def __discrete_cosine_transform(matrix: np.ndarray) -> np.ndarray:
-    return np.array([[__G_uv(y, x, matrix)
+    return np.array([[__g_uv(y, x, matrix)
                       for x in range(len(matrix[y]))]
                      for y in range(len(matrix))])
 
@@ -74,6 +75,8 @@ def __f_xy(x, y, matrix):
 
 def quantization(submatrix: np.ndarray) -> np.ndarray:
     return np.array([[round(submatrix[row, col] / quantization_matrices[submatrix.shape[0]][row, col])
+                      if quantization_matrices[submatrix.shape[0]][row, col] != 0
+                      else 0
                       for col in range(len(submatrix[row]))]
                      for row in range(len(submatrix))])
 
@@ -84,9 +87,9 @@ def un_quantization(matrix: np.ndarray) -> np.ndarray:
                      for row in range(len(matrix))])
 
 
-def DCT(matrix: np.ndarray) -> np.ndarray:
+def dct(matrix: np.ndarray) -> np.ndarray:
     return __discrete_cosine_transform(__normalize_to_zero(matrix))
 
 
-def inverse_DCT(matrix):
+def inverse_dct(matrix):
     return __un_normalize(__invert_discrete_cosine_transform(matrix))
