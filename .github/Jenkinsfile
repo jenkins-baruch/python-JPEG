@@ -24,17 +24,19 @@ pipeline {
             cobertura(coberturaReportFile: '**/coverage.xml')
           }
         }
-        stage('format'){
-          when {
-            branch 'master'
+          stage('format'){
+            when {
+              branch 'master'
+            }
+            steps{
+              
+                sh 'yapf -i --style .github/.style.yapf `ls *.py`'
+                sh 'git add -u'
+                sh 'git commit -m "format"'
+                sh 'git push --set-upstream origin master'
+              
+            }
           }
-          steps{
-            sh 'yapf -i --style .github/.style.yapf `ls *.py`'
-            sh 'git add -u'
-            sh 'git commit -m "format"'
-            sh 'git push --set-upstream origin master'
-          }
-        }
         stage('Generate sample'){
           when {
             branch 'master'

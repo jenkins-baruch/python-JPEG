@@ -6,11 +6,8 @@ import numpy as np
 from jpeg import entropy as ent, imagetools, dct
 
 
-def split_to_three_colors(y_cr_cb_matrix: np.ndarray) -> List[np.ndarray]:
-    return [
-        y_cr_cb_matrix[..., 0].copy(), y_cr_cb_matrix[..., 1].copy(),
-        y_cr_cb_matrix[..., 2].copy()
-    ]
+def split_to_three_colors(matrix: np.ndarray) -> List[np.ndarray]:
+    return [matrix[..., 0], matrix[..., 1], matrix[..., 2]]
 
 
 def downsample(matrix: np.ndarray):
@@ -45,7 +42,7 @@ def split_matrix_into_sub_matrices(matrix: np.ndarray,
 
 
 def concatenate_sub_matrices_to_big_matrix(submatrices: List[np.ndarray],
-                                           shape: Tuple[int]):
+                                           shape: Tuple[int, int]):
     return np.block([
         submatrices[i:i + shape[1]]
         for i in range(0, len(submatrices), shape[1])
@@ -93,15 +90,15 @@ def compress_image(src_path, dest_path, entropy=False,
     cb_shape = shape_for_contacting(cb_downsample.shape, size)
     cr_shape = shape_for_contacting(cr_downsample.shape, size)
 
-    print("Splitting to 8x8 sub-matrices")
-    y_split = split_matrix_into_sub_matrices(y)
-    cb_split = split_matrix_into_sub_matrices(cb_downsample)
-    cr_split = split_matrix_into_sub_matrices(cr_downsample)
+    print("Splitting to {0}x{0} sub-matrices".format(size))
+    y_split = split_matrix_into_sub_matrices(y, size)
+    cb_split = split_matrix_into_sub_matrices(cb_downsample, size)
+    cr_split = split_matrix_into_sub_matrices(cr_downsample, size)
 
-    print("DCT")
-    y_dct = [dct.DCT(sub_matrix) for sub_matrix in y_split]
-    cb_dct = [dct.DCT(sub_matrix) for sub_matrix in cb_split]
-    cr_dct = [dct.DCT(sub_matrix) for sub_matrix in cr_split]
+    print("dct")
+    y_dct = [dct.dct(sub_matrix) for sub_matrix in y_split]
+    cb_dct = [dct.dct(sub_matrix) for sub_matrix in cb_split]
+    cr_dct = [dct.dct(sub_matrix) for sub_matrix in cr_split]
 
     print("Quantization")
     y_quantization = [dct.quantization(submatrix) for submatrix in y_dct]
@@ -111,7 +108,7 @@ def compress_image(src_path, dest_path, entropy=False,
     if entropy:
         print("Compressed entropy: " + str(
             ent.entropy(
-                np.array([y_quantization, cb_quantization, cr_quantization]))))
+                np.dstack([np.dstack(y_quantization), np.dstack(cb_quantization), np.dstack(cr_quantization)]))))
 
     print("UnQuantization")
     y_un_quantization = [
@@ -124,10 +121,10 @@ def compress_image(src_path, dest_path, entropy=False,
         dct.un_quantization(submatrix) for submatrix in cr_quantization
     ]
 
-    print("Invert DCT")
-    y_invert_dct = [dct.inverse_DCT(matrix) for matrix in y_un_quantization]
-    cb_invert_dct = [dct.inverse_DCT(matrix) for matrix in cb_un_quantization]
-    cr_invert_dct = [dct.inverse_DCT(matrix) for matrix in cr_un_quantization]
+    print("Invert dct")
+    y_invert_dct = [dct.inverse_dct(matrix) for matrix in y_un_quantization]
+    cb_invert_dct = [dct.inverse_dct(matrix) for matrix in cb_un_quantization]
+    cr_invert_dct = [dct.inverse_dct(matrix) for matrix in cr_un_quantization]
 
     print("Concatenate")
     y_big = concatenate_sub_matrices_to_big_matrix(y_invert_dct, y_shape)

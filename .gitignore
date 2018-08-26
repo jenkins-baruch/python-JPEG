@@ -11,3 +11,4 @@ nosetests.xml
 **~$**.*x
 /.ipynb_checkpoints/
 /.idea/
+/.ipynb_checkpoints/
