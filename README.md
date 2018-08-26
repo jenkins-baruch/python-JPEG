@@ -39,7 +39,7 @@ Note that during the work we compare our results vs [cv2 library (OpenCV for Pyt
 
 ### Convert to Y'CrCb
 
-Y'CrCb is channels representation as luma component, blue-difference and red-difference ([from Wikipedia](https://en.wikipedia.org/wiki/YCbCr)).
+Y'CrCb is channels representation as luma component, blue-difference and red-difference ([from wikipedia](https://en.wikipedia.org/wiki/YCbCr)).
 
 We know that *BGR* is  *B*lue, *G*reen and *R*ed channels, like this:
 
@@ -47,7 +47,7 @@ We know that *BGR* is  *B*lue, *G*reen and *R*ed channels, like this:
 |:-: | :-: | :-: |
 | ![B](src/channel_b.png) | ![G](src/channel_g.png) | ![R](src/channel_r.png) |
 
-But Y'CrCb should be different division (Without loosing the data!):
+But Y'CrCb should be different division (Without losing the data!):
 
 | Y' | Cr | Cb |
 |:-: | :-: | :-: |
@@ -69,13 +69,13 @@ we can remove data from blue and red, and the impact of whole image will be less
 
 ### DCT
 
-The next step is the significan stage in JPEG algorithm. Based on Linear Algebra, the **D**iscrete **C**osine **T**ransform represent vectors as linear combination of cosine waves with different frequency, and then, because the human eye sensitive only to limited frequency range, we can remove some frequencies and the image still look similar.
+The next step is the significant stage in Jpeg algorithm. Based on Linear Algebra, the **D**iscrete **C**osine **T**ransform represent vectors as linear combination of cosine waves with different frequency, and then, because the human eye sensitive only to limited frequency range, we can remove some frequencies and the image still look similar.
 
-In general, we split the image matrix to 8*8 sub-matrices, so we can treat them as a vectors in **R**64. Then, we have a 64 linear independent cosine vectors which spread the space, so each sub-matrix can be represent as 64 scalars that product the independent vectors.
+In general, we split the image matrix to 8*8 sub-matrices, thus we can treat them as a vectors in **R**64. Then, we have a 64 linear independent cosine vectors which spread the space, so each sub-matrix can be represent as 64 scalars that product the independent vectors.
 
 ### Quantization
 
-After we have a 64 scalars for each `8*8=64` sub-matrix, we divide them by 64 const values, who is investigated and found to be most suitable for this case, and the biggest numbers are coordinate with high-frequency vectors. After dividing the scalars, most of high-frequencies scalars get a value between 0-1, and after floor-rounding they are will be 0. This result leading to a situation when we restore the image, and do the opposite product operand, all the values that get a 0 in previous step, continuing to be 0 and not restoring to original value.
+After we have a 64 scalars for each `8*8=64` sub-matrix, we divide them by 64 const values, who is investigated and found to be most suitable for this case, and the biggest numbers are coordinate with high-frequency vectors. After dividing the scalars, most of high-frequencies scalars get a value between 0-1, and after floor-rounding they are will be 0. This result leading to a situation when we restore the image and do the opposite product operand, all the values that get a 0 in previous step, continuing to be 0 and not restoring to original value.
 
 This is comparison between 8x8 DCT and 32x32 DCT:
 
@@ -104,7 +104,7 @@ pip install -r requirements.txt
 ## How to contribute
 
 Oh, there are so many contributions are welcome!
-You welcome to
+Here they are
 
 * Open issues about
   * English spelling errors
