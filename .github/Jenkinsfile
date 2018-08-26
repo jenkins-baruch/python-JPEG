@@ -42,11 +42,7 @@ pipeline {
             branch 'master'
           }
           steps{
-            try{
-              sh 'convert Flowchart/flowchart.pdf Flowchart/flowchart.png'
-            }catch(ex){
-              echo ex
-            }
+            sh 'convert Flowchart/flowchart.pdf Flowchart/flowchart.png'
           }
         }
       }
