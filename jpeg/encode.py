@@ -50,8 +50,8 @@ def concatenate_sub_matrices_to_big_matrix(submatrices: List[np.ndarray],
 
 
 def concatenate_three_colors(y: np.ndarray, cr: np.ndarray,
-                             cb: np.ndarray) -> np.ndarray:
-    return np.dstack((y, cr, cb))
+                             cb: np.ndarray, out: np.ndarray = None) -> np.ndarray:
+    return np.stack((y, cr, cb), 2, out)
 
 
 def shape_for_contacting(shape: Tuple, size=8) -> Tuple:
@@ -74,67 +74,72 @@ def compress_image(src_path, dest_path, entropy=False,
         print("Bitmap entropy: " + str(ent.entropy(bitmap)))
 
     print("Crop image")
-    ycrcb_crop = crop_bitmap(bitmap)
+    bitmap = crop_bitmap(bitmap)
 
     print("Converting to YCrCb")
-    ycrcb_bitmap = imagetools.bgr_to_ycrcb(ycrcb_crop)
+    bitmap = imagetools.bgr_to_ycrcb(bitmap)
 
     print("Separating bitmap to Y, Cb, Cr matrices")
-    y, cb, cr = split_to_three_colors(ycrcb_bitmap)
+    y, cb, cr = split_to_three_colors(bitmap)
 
     print("Downsampling")
-    cb_downsample = downsample(cb)
-    cr_downsample = downsample(cr)
+    cr = downsample(cr)
+    cb = downsample(cb)
 
     y_shape = shape_for_contacting(y.shape, size)
-    cb_shape = shape_for_contacting(cb_downsample.shape, size)
-    cr_shape = shape_for_contacting(cr_downsample.shape, size)
+    cr_shape = shape_for_contacting(cr.shape, size)
+    cb_shape = shape_for_contacting(cb.shape, size)
 
     print("Splitting to {0}x{0} sub-matrices".format(size))
-    y_split = split_matrix_into_sub_matrices(y, size)
-    cb_split = split_matrix_into_sub_matrices(cb_downsample, size)
-    cr_split = split_matrix_into_sub_matrices(cr_downsample, size)
+    y = split_matrix_into_sub_matrices(y, size)
+    cr = split_matrix_into_sub_matrices(cr, size)
+    cb = split_matrix_into_sub_matrices(cb, size)
 
     print("dct")
-    y_dct = [dct.dct(sub_matrix) for sub_matrix in y_split]
-    cb_dct = [dct.dct(sub_matrix) for sub_matrix in cb_split]
-    cr_dct = [dct.dct(sub_matrix) for sub_matrix in cr_split]
+    y = [dct.dct(sub_matrix) for sub_matrix in y]
+    cr = [dct.dct(sub_matrix) for sub_matrix in cr]
+    cb = [dct.dct(sub_matrix) for sub_matrix in cb]
 
     print("Quantization")
-    y_quantization = [dct.quantization(submatrix) for submatrix in y_dct]
-    cb_quantization = [dct.quantization(submatrix) for submatrix in cb_dct]
-    cr_quantization = [dct.quantization(submatrix) for submatrix in cr_dct]
+    y = [dct.quantization(submatrix) for submatrix in y]
+    cr = [dct.quantization(submatrix) for submatrix in cr]
+    cb = [dct.quantization(submatrix) for submatrix in cb]
 
     if entropy:
         print("Compressed entropy: " + str(
             ent.entropy(
-                np.dstack([np.dstack(y_quantization), np.dstack(cb_quantization), np.dstack(cr_quantization)]))))
+                np.dstack([np.dstack(y), np.dstack(cr), np.dstack(cb)]))))
 
     print("UnQuantization")
-    y_un_quantization = [
-        dct.un_quantization(submatrix) for submatrix in y_quantization
+    y = [
+        dct.un_quantization(submatrix) for submatrix in y
     ]
-    cb_un_quantization = [
-        dct.un_quantization(submatrix) for submatrix in cb_quantization
+    cr = [
+        dct.un_quantization(submatrix) for submatrix in cr
     ]
-    cr_un_quantization = [
-        dct.un_quantization(submatrix) for submatrix in cr_quantization
+    cb = [
+        dct.un_quantization(submatrix) for submatrix in cb
     ]
 
     print("Invert dct")
-    y_invert_dct = [dct.inverse_dct(matrix) for matrix in y_un_quantization]
-    cb_invert_dct = [dct.inverse_dct(matrix) for matrix in cb_un_quantization]
-    cr_invert_dct = [dct.inverse_dct(matrix) for matrix in cr_un_quantization]
+    y = [dct.inverse_dct(matrix) for matrix in y]
+    cr = [dct.inverse_dct(matrix) for matrix in cr]
+    cb = [dct.inverse_dct(matrix) for matrix in cb]
 
     print("Concatenate")
-    y_big = concatenate_sub_matrices_to_big_matrix(y_invert_dct, y_shape)
-    cb_big = concatenate_sub_matrices_to_big_matrix(cb_invert_dct, cb_shape)
-    cr_big = concatenate_sub_matrices_to_big_matrix(cr_invert_dct, cr_shape)
+    y = concatenate_sub_matrices_to_big_matrix(y, y_shape)
+    cr = concatenate_sub_matrices_to_big_matrix(cr, cb_shape)
+    cb = concatenate_sub_matrices_to_big_matrix(cb, cr_shape)
 
     print("upsample")
-    cb_upsample = upsample(cb_big)
-    cr_upsample = upsample(cr_big)
+    cr = upsample(cr)
+    cb = upsample(cb)
 
-    new_image = concatenate_three_colors(y_big, cb_upsample, cr_upsample)
+    print("concatenate")
+    concatenate_three_colors(y, cr, cb, bitmap)
 
-    imagetools.save_matrix(new_image, mode='YCrCb', dest=dest_path + '.png')
+    print("ycrcb_to_bgr")
+    bitmap = imagetools.ycrcb_to_bgr(bitmap)
+
+    print("save_matrix")
+    imagetools.save_matrix(bitmap, dest=dest_path + '.png')

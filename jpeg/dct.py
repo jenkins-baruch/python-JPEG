@@ -1,6 +1,8 @@
 import math
+from functools import lru_cache
 
 import numpy as np
+
 quantization_matrices = {
     8: np.array([
         [16, 11, 10, 16, 24, 40, 51, 61],
@@ -35,10 +37,12 @@ def __un_normalize(matrix: np.ndarray):
     return matrix + 128
 
 
+#@lru_cache()
 def __cos_element(x, u):
     return math.cos((2 * x + 1) * u * math.pi / 16)
 
 
+#@lru_cache()
 def __alpha(u):
     return 1 / math.sqrt(2) if u == 0 else 1
 
@@ -50,12 +54,14 @@ def __g_uv(u, v, matrix):
         for y in range(len(matrix[0])))
 
 
+#@lru_cache()
 def __discrete_cosine_transform(matrix: np.ndarray) -> np.ndarray:
     return np.array([[__g_uv(y, x, matrix)
                       for x in range(len(matrix[y]))]
                      for y in range(len(matrix))])
 
 
+#@lru_cache()
 def __invert_discrete_cosine_transform(matrix: np.ndarray):
     return np.array([[__f_xy(x, y, matrix)
                       for x in range(len(matrix[y]))]
