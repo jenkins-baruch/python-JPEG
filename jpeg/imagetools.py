@@ -46,7 +46,8 @@ def get_bitmap_from_bmp(path: str) -> np.ndarray:
 def save_matrix(matrix: np.ndarray, mode: str = 'RGB', dest: str = 'tmp.png'):
     if mode == 'YCrCb':
         matrix = ycrcb_to_bgr(matrix)
-    elif mode == 'BGR':
+        mode = 'BGR'
+    if mode == 'BGR':
         matrix = cv2.cvtColor(matrix, cv2.COLOR_BGR2RGB)
     cv2.imwrite(dest, matrix)
 
