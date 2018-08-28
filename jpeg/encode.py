@@ -138,8 +138,8 @@ def compress_image(src_path, dest_path, entropy=False,
     print("concatenate")
     concatenate_three_colors(y, cr, cb, bitmap)
 
-    print("ycrcb_to_bgr")
-    bitmap = imagetools.ycrcb_to_bgr(bitmap)
+    # print("ycrcb_to_bgr")
+    # bitmap = imagetools.ycrcb_to_bgr(bitmap)
 
     print("save_matrix")
-    imagetools.save_matrix(bitmap, dest=dest_path + '.png')
+    imagetools.save_matrix(bitmap, mode='YCrCb', dest=dest_path + '.png')
