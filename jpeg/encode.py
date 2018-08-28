@@ -65,8 +65,7 @@ def crop_bitmap(bitmap: np.ndarray, size: int = 8) -> np.ndarray:
                   math.ceil(bitmap.shape[1] % size / 2), ]
 
 
-def compress_image(src_path, dest_path, entropy=False,
-                   size=8):  # pragma: no cover
+def compress_image(src_path, dest_path, entropy=False, size=8) -> bool:
     print("Reading file")
     bitmap = imagetools.get_bitmap_from_bmp(src_path)
 
@@ -138,3 +137,5 @@ def compress_image(src_path, dest_path, entropy=False,
     new_image = concatenate_three_colors(y_big, cb_upsample, cr_upsample)
 
     imagetools.save_matrix(new_image, mode='YCrCb', dest=dest_path + '.png')
+
+    return True

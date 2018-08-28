@@ -1,4 +1,5 @@
 [nosetests]
+--exclude-test-file=test/test_integration.py
 with-coverage=1
 cover-erase=1
 cover-inclusive=1
