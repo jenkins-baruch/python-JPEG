@@ -43,15 +43,15 @@ Y'CrCb is channels representation as luma component, blue-difference and red-dif
 
 We know that *BGR* is  *B*lue, *G*reen and *R*ed channels, like this:
 
-| B | G | R |
+| R | G | B |
 |:-: | :-: | :-: |
-| ![B](src/channel_b.png) | ![G](src/channel_g.png) | ![R](src/channel_r.png) |
+| ![B](src/RGB_channel_a.png) | ![G](src/RGB_channel_b.png) | ![R](src/RGB_channel_c.png) |
 
 But Y'CrCb should be different division (Without losing the data!):
 
 | Y' | Cr | Cb |
 |:-: | :-: | :-: |
-| ![Y'](src/channel_y.png) | ![Cr](src/channel_cr.png) | ![Cb](src/channel_cb.png) |
+| ![Y'](src/YCrCb_channel_a.png) | ![Cr](src/YCrCb_channel_b.png) | ![Cb](src/YCrCb_channel_c.png) |
 
 We do this because the human eyes are more luma sensitive to red and blue, so
 
@@ -61,11 +61,11 @@ we can remove data from blue and red, and the impact of whole image will be less
 
 #### BGR Downsampling
 
-![BGR Downsampling](src/bgr_downsapling.png)
+![BGR Downsampling](src/RGB_downsapling.png)
 
 #### Y'CrCb Downsampling
 
-![Y'CrCb Downsampling](src/ycrcb_downsapling.png)
+![Y'CrCb Downsampling](src/YCrCb_downsapling.png)
 
 ### DCT
 
