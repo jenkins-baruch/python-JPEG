@@ -14,8 +14,8 @@ quantization_matrices = {
         [72, 92, 95, 98, 112, 100, 103, 99]
     ])
 }
-# quantization_matrices[16] = np.block([[quantization_matrices[8], np.zeros((8, 8))], [np.zeros((8, 16))]])
-# quantization_matrices[32] = np.block([[quantization_matrices[16], np.zeros((16, 16))], [np.zeros((16, 32))]])
+# quantization_matrices[16] = np.block([[quantization_matrices[8], np.ones((8, 8) * 500)], [np.ones((8, 16) * 500)]])
+# quantization_matrices[32] = np.block([[quantization_matrices[16], np.ones((16, 16) * 500)], [np.ones((16, 32) * 500)]])
 quantization_matrices[16] = quantization_matrices[8].repeat(2, axis=0).repeat(2, axis=1)
 quantization_matrices[32] = quantization_matrices[16].repeat(2, axis=0).repeat(2, axis=1)
 
