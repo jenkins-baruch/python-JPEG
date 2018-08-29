@@ -11,7 +11,7 @@ pipeline {
     }
     stage('test') {
       steps {
-        sh 'nosetests --with-coverage --cover-package=jpeg --cover-erase --cover-inclusive --cover-min-percentage=80 --with-xunit'
+        sh 'nosetests --with-coverage --cover-package=jpeg --cover-erase --cover-inclusive --cover-min-percentage=80 --with-xunit --exclude-test=test.test_integration:CaseIntegrationTests'
         sh 'pylint -f parseable *.py | tee pylint.out'
         sh 'coverage xml'
       }
