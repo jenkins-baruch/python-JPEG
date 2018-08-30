@@ -3,6 +3,8 @@ pipeline {
   stages {
     stage('environment') {
       steps {
+        sh 'id'
+        sh 'pwd'
         sh 'touch $WORKSPACE/nosetests.xml'
         echo 'Generate requirements file'
         sh 'pipreqs --force $WORKSPACE/'
