@@ -65,8 +65,7 @@ def crop_bitmap(bitmap: np.ndarray, size: int = 8) -> np.ndarray:
                   math.ceil(bitmap.shape[1] % size / 2), ]
 
 
-def compress_image(src_path, dest_path, entropy=False,
-                   size=8):  # pragma: no cover
+def compress_image(src_path, dest_path, entropy=False, size=8) -> bool:
     print("Reading file")
     bitmap = imagetools.get_bitmap_from_bmp(src_path)
 
