@@ -211,7 +211,7 @@ class CaseConcatenateSubmatricesToBigMatrix(unittest.TestCase):
         np.testing.assert_array_equal(expected, actual)
 
 
-class CaseConcatenateYCrCb(unittest.TestCase):
+class CaseConcatenateColors(unittest.TestCase):
     @staticmethod
     def test_concatenate_Y_Cr_Cb():
         original = [
