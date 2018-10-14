@@ -16,153 +16,128 @@ if __name__ == '__main__':
     imagetools.save_matrix(
         img, dest=os.path.join(src_dir, 'original_crop.png'))
 
-    # Convert to YCrCb
-    print("Convert to YCrCb")
-    img_ycrcb = imagetools.bgr_to_ycrcb(img)
+    def split_and_downsample(matrix, mode):
+        if mode == 'BGR':
+            mode = 'RGB'
+        print("Split {} colors".format(mode))
+        img_channel_a, img_channel_b, img_channel_c = encode.split_to_three_colors(matrix)
 
-    print("Split colors")
-    img_channel_y, img_channel_cr, img_channel_cb = encode.split_to_three_colors(
-        img_ycrcb)
-    img_channel_b, img_channel_g, img_channel_r = encode.split_to_three_colors(
-        img)
+        channel_const = np.zeros_like(img_channel_a)
+        if mode == 'YCrCb':
+            channel_const = channel_const * 127.5
 
-    print("Const matrices")
-    ycrcb_channel_const = np.ones_like(img_channel_y) * 127.5
-    gbr_channel_const = np.zeros_like(img_channel_b)
+        print("Generate {} colors images".format(mode))
 
-    print("Generate YCrCb colors images")
-    img_matrix_y = encode.concatenate_three_colors(
-        img_channel_y, ycrcb_channel_const, ycrcb_channel_const)
-    img_matrix_cr = encode.concatenate_three_colors(
-        ycrcb_channel_const, img_channel_cr, ycrcb_channel_const)
-    img_matrix_cb = encode.concatenate_three_colors(
-        ycrcb_channel_const, ycrcb_channel_const, img_channel_cb)
+        imagetools.save_matrix(
+            encode.concatenate_three_colors(img_channel_a, channel_const, channel_const),
+            mode=mode,
+            dest=os.path.join(src_dir, mode + '_channel_a.png'))
 
-    imagetools.save_matrix(
-        img_matrix_y,
-        mode='YCrCb',
-        dest=os.path.join(src_dir, 'channel_y.png'))
-    imagetools.save_matrix(
-        img_matrix_cr,
-        mode='YCrCb',
-        dest=os.path.join(src_dir, 'channel_cr.png'))
-    imagetools.save_matrix(
-        img_matrix_cb,
-        mode='YCrCb',
-        dest=os.path.join(src_dir, 'channel_cb.png'))
+        imagetools.save_matrix(
+            encode.concatenate_three_colors(channel_const, img_channel_b, channel_const),
+            mode=mode,
+            dest=os.path.join(src_dir, mode + '_channel_b.png'))
 
-    print("Generate BGR colors images")
-    img_matrix_b = encode.concatenate_three_colors(
-        img_channel_b, gbr_channel_const, gbr_channel_const)
-    img_matrix_g = encode.concatenate_three_colors(
-        gbr_channel_const, img_channel_g, gbr_channel_const)
-    img_matrix_r = encode.concatenate_three_colors(
-        gbr_channel_const, gbr_channel_const, img_channel_r)
+        imagetools.save_matrix(
+            encode.concatenate_three_colors(channel_const, channel_const, img_channel_c),
+            mode=mode,
+            dest=os.path.join(src_dir, mode + '_channel_c.png'))
 
-    imagetools.save_matrix(
-        img_matrix_b, dest=os.path.join(src_dir, 'channel_b.png'))
-    imagetools.save_matrix(
-        img_matrix_g, dest=os.path.join(src_dir, 'channel_g.png'))
-    imagetools.save_matrix(
-        img_matrix_r, dest=os.path.join(src_dir, 'channel_r.png'))
+        print('Downsampling ' + mode)
+        img_channel_b = encode.upsample(encode.downsample(img_channel_b))
+        img_channel_c = encode.upsample(encode.downsample(img_channel_c))
 
-    print("Downsapling")
-    img_channel_cb_downsampled = encode.upsample(
-        encode.downsample(img_channel_cb))
-    img_channel_cr_downsampled = encode.upsample(
-        encode.downsample(img_channel_cr))
+        imagetools.save_matrix(
+            encode.concatenate_three_colors(img_channel_a,
+                                            img_channel_b,
+                                            img_channel_c),
+            mode=mode,
+            dest=os.path.join(src_dir, mode + '_downsapling.png'))
 
-    img_channel_g_downsampled = encode.upsample(
-        encode.downsample(img_channel_g))
-    img_channel_r_downsampled = encode.upsample(
-        encode.downsample(img_channel_r))
+    split_and_downsample(img, 'BGR')
+    print("bgr_to_ycrcb")
+    img = imagetools.bgr_to_ycrcb(img)
+    split_and_downsample(img, 'YCrCb')
 
-    imagetools.save_matrix(
-        encode.concatenate_three_colors(img_channel_y,
-                                        img_channel_cr_downsampled,
-                                        img_channel_cb_downsampled),
-        mode='YCrCb',
-        dest=os.path.join(src_dir, 'ycrcb_downsapling.png'))
-    imagetools.save_matrix(
-        encode.concatenate_three_colors(img_channel_b,
-                                        img_channel_g_downsampled,
-                                        img_channel_r_downsampled),
-        dest=os.path.join(src_dir, 'bgr_downsapling.png'))
 
-    def local_dct(y, cr, cb, dst, size=8):
+    def local_dct(matrix, dst, size=8):
+        y, cr, cb = encode.split_to_three_colors(matrix)
+
         y_shape = encode.shape_for_contacting(y.shape, size)
         cb_shape = encode.shape_for_contacting(cb.shape, size)
         cr_shape = encode.shape_for_contacting(cr.shape, size)
 
         print("Split and padding to submatrices")
-        img_channel_y_split = [
+        y = [
             matrix
             for matrix in encode.split_matrix_into_sub_matrices(y, size)
         ]
-        img_channel_cr_split = [
+        cr = [
             matrix
             for matrix in encode.split_matrix_into_sub_matrices(cr, size)
         ]
-        img_channel_cb_split = [
+        cb = [
             matrix
             for matrix in encode.split_matrix_into_sub_matrices(cb, size)
         ]
 
         print("dct submatrices")
-        img_channel_y_split = [
-            dct.dct(submatrix) for submatrix in img_channel_y_split
+        y = [
+            dct.dct(submatrix) for submatrix in y
         ]
-        img_channel_cr_split = [
-            dct.dct(submatrix) for submatrix in img_channel_cr_split
+        cr = [
+            dct.dct(submatrix) for submatrix in cr
         ]
-        img_channel_cb_split = [
-            dct.dct(submatrix) for submatrix in img_channel_cb_split
+        cb = [
+            dct.dct(submatrix) for submatrix in cb
         ]
 
-        if size == 8:
-            print("Quantization submatrices")
-            img_channel_y_split = [
-                dct.quantization(submatrix)
-                for submatrix in img_channel_y_split
-            ]
-            img_channel_cr_split = [
-                dct.quantization(submatrix)
-                for submatrix in img_channel_cr_split
-            ]
-            img_channel_cb_split = [
-                dct.quantization(submatrix)
-                for submatrix in img_channel_cb_split
-            ]
+
+        print("Quantization submatrices")
+        y = [
+            dct.quantization(submatrix)
+            for submatrix in y
+        ]
+        cr = [
+            dct.quantization(submatrix)
+            for submatrix in cr
+        ]
+        cb = [
+            dct.quantization(submatrix)
+            for submatrix in cb
+        ]
+
         print("Invert dct and UnQuantization")
-        img_channel_y_split = [
+        y = [
             dct.inverse_dct(dct.un_quantization(submatrix))
-            for submatrix in img_channel_y_split
+            for submatrix in y
         ]
-        img_channel_cr_split = [
+        cr = [
             dct.inverse_dct(dct.un_quantization(submatrix))
-            for submatrix in img_channel_cr_split
+            for submatrix in cr
         ]
-        img_channel_cb_split = [
+        cb = [
             dct.inverse_dct(dct.un_quantization(submatrix))
-            for submatrix in img_channel_cb_split
+            for submatrix in cb
         ]
 
         print("Concatenate")
-        y_big = encode.concatenate_sub_matrices_to_big_matrix(
-            img_channel_y_split, y_shape)
-        cb_big = encode.concatenate_sub_matrices_to_big_matrix(
-            img_channel_cr_split, cb_shape)
-        cr_big = encode.concatenate_sub_matrices_to_big_matrix(
-            img_channel_cb_split, cr_shape)
+        y = encode.concatenate_sub_matrices_to_big_matrix(
+            y, y_shape)
+        cr = encode.concatenate_sub_matrices_to_big_matrix(
+            cr, cr_shape)
+        cb = encode.concatenate_sub_matrices_to_big_matrix(
+            cb, cb_shape)
 
+        print("Save")
         imagetools.save_matrix(
-            encode.concatenate_three_colors(y_big, cb_big, cr_big),
+            encode.concatenate_three_colors(y, cr, cb, matrix),
             mode='YCrCb',
             dest=os.path.join(src_dir, dst + '.png'))
 
-    local_dct(img_channel_y, img_channel_cr, img_channel_cb,
-              "ycrcb_split8_dct")
-    local_dct(img_channel_y, img_channel_cr, img_channel_cb,
-              "ycrcb_split16_dct", 16)
-    local_dct(img_channel_y, img_channel_cr, img_channel_cb,
-              "ycrcb_split32_dct", 32)
+    print("dct8")
+    local_dct(img, "ycrcb_split8_dct")
+    print("dct16")
+    local_dct(img, "ycrcb_split16_dct", 16)
+    print("dct32")
+    local_dct(img, "ycrcb_split32_dct", 32)

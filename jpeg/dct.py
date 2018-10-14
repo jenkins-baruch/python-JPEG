@@ -1,6 +1,7 @@
 import math
-
+from functools import lru_cache
 import numpy as np
+from typing import Tuple
 
 quantization_matrices = {
     8: np.array([
@@ -14,8 +15,8 @@ quantization_matrices = {
         [72, 92, 95, 98, 112, 100, 103, 99]
     ])
 }
-# quantization_matrices[16] = np.block([[quantization_matrices[8], np.zeros((8, 8))], [np.zeros((8, 16))]])
-# quantization_matrices[32] = np.block([[quantization_matrices[16], np.zeros((16, 16))], [np.zeros((16, 32))]])
+# quantization_matrices[16] = np.block([[quantization_matrices[8], np.ones((8, 8) * 500)], [np.ones((8, 16) * 500)]])
+# quantization_matrices[32] = np.block([[quantization_matrices[16], np.ones((16, 16) * 500)], [np.ones((16, 32) * 500)]])
 quantization_matrices[16] = quantization_matrices[8].repeat(2, axis=0).repeat(2, axis=1)
 quantization_matrices[32] = quantization_matrices[16].repeat(2, axis=0).repeat(2, axis=1)
 
@@ -44,7 +45,8 @@ def __alpha(u):
     return 1 / math.sqrt(2) if u == 0 else 1
 
 
-def __g_uv(u, v, matrix):
+@lru_cache(maxsize=512)
+def __g_uv(u, v, matrix: Tuple[tuple]):
     return (1 / 4) * __alpha(u) * __alpha(v) * sum(
         matrix[x][y] * __cos_element(x, u) * __cos_element(y, v)
         for x in range(len(matrix))
@@ -52,18 +54,13 @@ def __g_uv(u, v, matrix):
 
 
 def __discrete_cosine_transform(matrix: np.ndarray) -> np.ndarray:
-    return np.array([[__g_uv(y, x, matrix)
+    return np.array([[__g_uv(y, x, __tuple_wrapper(matrix))
                       for x in range(len(matrix[y]))]
                      for y in range(len(matrix))])
 
 
-def __invert_discrete_cosine_transform(matrix: np.ndarray):
-    return np.array([[__f_xy(x, y, matrix)
-                      for x in range(len(matrix[y]))]
-                     for y in range(len(matrix))])
-
-
-def __f_xy(x, y, matrix):
+@lru_cache(maxsize=512)
+def __f_xy(x, y, matrix: Tuple[Tuple[float]]):
     return round(
         0.25 *
         sum(
@@ -72,6 +69,16 @@ def __f_xy(x, y, matrix):
             for u in range(len(matrix[0]))
             for v in range(len(matrix)))
     )
+
+
+def __tuple_wrapper(matrix: np.ndarray) -> Tuple[tuple]:
+    return tuple(map(tuple, matrix))
+
+
+def __invert_discrete_cosine_transform(matrix: np.ndarray):
+    return np.array([[__f_xy(x, y, __tuple_wrapper(matrix))
+                      for x in range(len(matrix[y]))]
+                     for y in range(len(matrix))])
 
 
 def quantization(submatrix: np.ndarray) -> np.ndarray:
