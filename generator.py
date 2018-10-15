@@ -17,29 +17,31 @@ if __name__ == '__main__':
         img, dest=os.path.join(src_dir, 'original_crop.png'))
 
     def split_and_downsample(matrix, mode):
-        if mode == 'BGR':
-            mode = 'RGB'
         print("Split {} colors".format(mode))
-        img_channel_a, img_channel_b, img_channel_c = encode.split_to_three_colors(matrix)
+        img_channel_a, img_channel_b, img_channel_c = encode.split_to_three_colors(
+            matrix)
 
         channel_const = np.zeros_like(img_channel_a)
         if mode == 'YCrCb':
-            channel_const = channel_const * 127.5
+            channel_const = channel_const + 127.5
 
         print("Generate {} colors images".format(mode))
 
         imagetools.save_matrix(
-            encode.concatenate_three_colors(img_channel_a, channel_const, channel_const),
+            encode.concatenate_three_colors(img_channel_a, channel_const,
+                                            channel_const),
             mode=mode,
             dest=os.path.join(src_dir, mode + '_channel_a.png'))
 
         imagetools.save_matrix(
-            encode.concatenate_three_colors(channel_const, img_channel_b, channel_const),
+            encode.concatenate_three_colors(channel_const, img_channel_b,
+                                            channel_const),
             mode=mode,
             dest=os.path.join(src_dir, mode + '_channel_b.png'))
 
         imagetools.save_matrix(
-            encode.concatenate_three_colors(channel_const, channel_const, img_channel_c),
+            encode.concatenate_three_colors(channel_const, channel_const,
+                                            img_channel_c),
             mode=mode,
             dest=os.path.join(src_dir, mode + '_channel_c.png'))
 
@@ -48,8 +50,7 @@ if __name__ == '__main__':
         img_channel_c = encode.upsample(encode.downsample(img_channel_c))
 
         imagetools.save_matrix(
-            encode.concatenate_three_colors(img_channel_a,
-                                            img_channel_b,
+            encode.concatenate_three_colors(img_channel_a, img_channel_b,
                                             img_channel_c),
             mode=mode,
             dest=os.path.join(src_dir, mode + '_downsapling.png'))
@@ -58,7 +59,6 @@ if __name__ == '__main__':
     print("bgr_to_ycrcb")
     img = imagetools.bgr_to_ycrcb(img)
     split_and_downsample(img, 'YCrCb')
-
 
     def local_dct(matrix, dst, size=8):
         y, cr, cb = encode.split_to_three_colors(matrix)
@@ -82,52 +82,30 @@ if __name__ == '__main__':
         ]
 
         print("dct submatrices")
-        y = [
-            dct.dct(submatrix) for submatrix in y
-        ]
-        cr = [
-            dct.dct(submatrix) for submatrix in cr
-        ]
-        cb = [
-            dct.dct(submatrix) for submatrix in cb
-        ]
-
+        y = [dct.dct(submatrix) for submatrix in y]
+        cr = [dct.dct(submatrix) for submatrix in cr]
+        cb = [dct.dct(submatrix) for submatrix in cb]
 
         print("Quantization submatrices")
-        y = [
-            dct.quantization(submatrix)
-            for submatrix in y
-        ]
-        cr = [
-            dct.quantization(submatrix)
-            for submatrix in cr
-        ]
-        cb = [
-            dct.quantization(submatrix)
-            for submatrix in cb
-        ]
+        y = [dct.quantization(submatrix) for submatrix in y]
+        cr = [dct.quantization(submatrix) for submatrix in cr]
+        cb = [dct.quantization(submatrix) for submatrix in cb]
 
         print("Invert dct and UnQuantization")
         y = [
-            dct.inverse_dct(dct.un_quantization(submatrix))
-            for submatrix in y
+            dct.inverse_dct(dct.un_quantization(submatrix)) for submatrix in y
         ]
         cr = [
-            dct.inverse_dct(dct.un_quantization(submatrix))
-            for submatrix in cr
+            dct.inverse_dct(dct.un_quantization(submatrix)) for submatrix in cr
         ]
         cb = [
-            dct.inverse_dct(dct.un_quantization(submatrix))
-            for submatrix in cb
+            dct.inverse_dct(dct.un_quantization(submatrix)) for submatrix in cb
         ]
 
         print("Concatenate")
-        y = encode.concatenate_sub_matrices_to_big_matrix(
-            y, y_shape)
-        cr = encode.concatenate_sub_matrices_to_big_matrix(
-            cr, cr_shape)
-        cb = encode.concatenate_sub_matrices_to_big_matrix(
-            cb, cb_shape)
+        y = encode.concatenate_sub_matrices_to_big_matrix(y, y_shape)
+        cr = encode.concatenate_sub_matrices_to_big_matrix(cr, cr_shape)
+        cb = encode.concatenate_sub_matrices_to_big_matrix(cb, cb_shape)
 
         print("Save")
         imagetools.save_matrix(
