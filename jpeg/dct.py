@@ -37,15 +37,17 @@ def __un_normalize(matrix: np.ndarray):
     return matrix + 128
 
 
+@lru_cache(maxsize=1024)
 def __cos_element(x, u):
     return math.cos((2 * x + 1) * u * math.pi / 16)
 
 
+@lru_cache(maxsize=1024)
 def __alpha(u):
     return 1 / math.sqrt(2) if u == 0 else 1
 
 
-@lru_cache(maxsize=512)
+@lru_cache(maxsize=1024)
 def __g_uv(u, v, matrix: Tuple[tuple]):
     return (1 / 4) * __alpha(u) * __alpha(v) * sum(
         matrix[x][y] * __cos_element(x, u) * __cos_element(y, v)
